@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="player_error">"抱歉,播放出错"</string>
+
+    <string-array name="video_ratio">
+        <item name="16_9">16:9</item>
+        <item name="4_3">4:3</item>
+        <item name="FullScreen">FullScreen</item>
+        <item name="Origin">Origin</item>
+    </string-array>
+
+</resources>

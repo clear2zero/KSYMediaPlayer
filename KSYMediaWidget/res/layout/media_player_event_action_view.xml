@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/event_action_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/player_controller_action_view_bg" >
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="#CCCCCC"
+        android:visibility="visible" >
+
+        <ImageView
+            android:id="@+id/back_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/player_controller_back_normal" />
+
+        <ImageView
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="2dp"
+	            android:layout_marginRight="10dp"
+	            android:id="@+id/image_logo"
+	            android:layout_toRightOf="@id/back_image_view"
+	            android:src="@drawable/player_controller_loading_logol"
+	            />
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:textColor="#eeeeee"
+            android:textSize="20sp"
+            android:layout_toRightOf="@id/image_logo"
+            android:text="金山软件大厦3楼-云存储" />
+    </RelativeLayout>
+    <!-- Actions Area -->
+
+    <RelativeLayout
+        android:id="@+id/action_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout"
+         >
+
+        <!--Wait -->
+
+        <RelativeLayout
+            android:id="@+id/wait_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@drawable/player_controller_action_play" >
+        </RelativeLayout>
+
+        <!--Complete -->
+
+        <RelativeLayout
+            android:id="@+id/complete_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" >
+
+            <!-- Complete Normal -->
+
+            <LinearLayout
+                android:id="@+id/complete_replay_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/player_controller_action_bg"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:visibility="visible" >
+
+                <ImageView
+                    android:id="@+id/complete_replay_image_view"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/player_controller_action_replay" />
+
+                <TextView
+                    android:id="@+id/complete_replay_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="重新播放"
+                    android:textColor="#ffffffff"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </RelativeLayout>
+        
+        
+        <!--Error -->
+
+        <LinearLayout
+            android:id="@+id/error_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/error_info_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="哎呀，播放错误啦 !"
+                android:textColor="#ffffffff"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/error_replay_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/player_controller_action_bg"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp" >
+
+                <ImageView
+                    android:id="@+id/error_replay_image_view"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/player_controller_action_replay" />
+
+                <TextView
+                    android:id="@+id/error_replay_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="连接失败,重新连接!"
+                    android:textColor="#ffffffff"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

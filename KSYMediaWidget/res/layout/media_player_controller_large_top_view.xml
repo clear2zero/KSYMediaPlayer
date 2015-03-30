@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_alignParentTop="true"
+    android:background="#CCCCCC" >
+
+   <RelativeLayout
+        android:id="@+id/controller_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="#CCCCCC"
+         >
+
+        <RelativeLayout 
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:clickable="true"
+            >
+            
+	        <ImageView
+	            android:layout_width="20dp"
+	            android:layout_height="30dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="10dp"
+	            android:layout_marginRight="10dp"
+	            android:id="@+id/back_image_view"
+	            android:src="@drawable/player_controller_back_selector"
+	            />
+            <ImageView
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="2dp"
+	            android:layout_marginRight="10dp"
+	            android:id="@+id/image_logo"
+	            android:layout_toRightOf="@id/back_image_view"
+	            android:src="@drawable/player_controller_loading_logol"
+	            />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="left|center_vertical"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="22sp"
+            android:textColor="#2E2E2E"
+            android:layout_toRightOf="@id/back_layout" />
+        
+        <ImageView
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginRight="20dp"
+	            android:id="@+id/follow_image_view"
+	            android:layout_alignTop="@id/title_text_view"
+	            android:layout_alignBottom="@id/title_text_view"
+	            android:layout_alignParentRight="true"
+	            android:src="@drawable/player_controller_follow_selector"
+	            />
+        
+        <ImageView
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginRight="20dp"
+	            android:id="@+id/like_image_view"
+	            android:layout_toLeftOf="@id/follow_image_view"
+	            android:layout_alignTop="@id/follow_image_view"
+	            android:layout_alignBottom="@id/follow_image_view"
+	            android:src="@drawable/player_controller_like_selector"
+	            />
+         <ImageView
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginRight="20dp"
+	            android:id="@+id/share_rise_view"
+	            android:layout_toLeftOf="@id/like_image_view"
+	            android:layout_alignTop="@id/like_image_view"
+	            android:layout_alignBottom="@id/follow_image_view"
+	            android:src="@drawable/player_controller_rise_selector"
+	            />
+    </RelativeLayout>
+
+
+</RelativeLayout>

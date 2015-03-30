@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false" >
+
+    <com.ksy.media.widget.MediaPlayerVideoView
+        android:id="@+id/ks_camera_video_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    
+    <com.ksy.media.widget.MediaPlayerBufferingView
+        android:id="@+id/ks_camera_buffering_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <include 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/media_player_buffering_view"
+            />
+    </com.ksy.media.widget.MediaPlayerBufferingView>
+    
+    <com.ksy.media.widget.MediaPlayerLoadingView
+        android:id="@+id/ks_camera_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <include 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/media_player_loading_view"
+            />
+    </com.ksy.media.widget.MediaPlayerLoadingView>
+    
+    
+    <com.ksy.media.widget.MediaPlayerEventActionView
+        android:id="@+id/ks_camera_covering_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <include 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/media_player_event_action_view"
+            />
+    </com.ksy.media.widget.MediaPlayerEventActionView>
+    
+    <com.ksy.media.widget.MediaPlayerLargeControllerView
+        android:id="@+id/media_player_controller_view_large"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <include 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/media_player_controller_large"
+            />
+    </com.ksy.media.widget.MediaPlayerLargeControllerView>
+    
+    <com.ksy.media.widget.MediaPlayerSmallControllerView
+        android:id="@+id/media_player_controller_view_small"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <include 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"	
+            layout="@layout/media_player_controller_small"
+            />
+    </com.ksy.media.widget.MediaPlayerSmallControllerView>
+    
+   
+</RelativeLayout>

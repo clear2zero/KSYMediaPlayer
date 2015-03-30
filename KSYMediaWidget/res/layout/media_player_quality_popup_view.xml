@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BBCCCCCC">
+    
+    <ListView 
+        android:id="@+id/quality_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:cacheColorHint="@android:color/transparent"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="0dp"
+        android:fastScrollEnabled="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2dp"
+        android:background="#BBCCCCCC"
+         >
+        
+    </ListView>
+
+</RelativeLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CCCCCC"
+    tools:ignore="Overdraw" >
+
+    <LinearLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/loading_logo_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/player_controller_loading_logol" />
+
+        <TextView
+            android:id="@+id/loading_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:textColor="#eeeeee"
+            android:textSize="20sp"
+            android:text="金山云视频测试摄像头-金山软件大厦3楼"
+             />
+
+        <ImageView
+            android:id="@+id/loading_line_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@drawable/player_controller_loading_line_normal" />
+
+        <TextView
+            android:id="@+id/loading_tip_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:textColor="#eeeeee"
+            android:textSize="20sp"
+            android:text="加载中,请稍后..." />
+    </LinearLayout>
+
+</RelativeLayout>

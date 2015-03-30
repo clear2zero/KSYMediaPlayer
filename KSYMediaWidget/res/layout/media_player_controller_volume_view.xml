@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="26dp"
+    android:layout_height="195dp" >
+
+    <ImageView
+        android:id="@+id/controller_volume_iv"
+        android:layout_width="26dp"
+        android:layout_height="23dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp"
+        android:src="@drawable/player_controller_volume_iv_bg" />
+
+    <com.ksy.media.widget.MediaPlayerVolumeSeekBar
+        android:id="@+id/seekbar_volume_progress"
+        android:layout_width="26dp"
+        android:layout_height="match_parent"
+        android:maxHeight="5dp"
+        android:minHeight="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/controller_volume_iv"
+        android:progressDrawable="@drawable/player_controller_video_progress_seekbar_style_small_selector"
+        android:thumb="@drawable/player_controller_volume_progress_thumb_normal" />
+
+</RelativeLayout>

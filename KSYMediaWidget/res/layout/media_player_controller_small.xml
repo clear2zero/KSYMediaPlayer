@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+
+    <RelativeLayout
+        android:id="@+id/controller_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:background="#CCCCCC"
+         >
+
+        <RelativeLayout 
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:clickable="true"
+            >
+            
+	        <ImageView
+	            android:layout_width="20dp"
+	            android:layout_height="30dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="10dp"
+	            android:layout_marginRight="10dp"
+	            android:id="@+id/image_back"
+	            android:src="@drawable/player_controller_back_selector"
+	            />
+            <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="30dp"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="2dp"
+	            android:layout_marginRight="10dp"
+	            android:id="@+id/image_logo"
+	            android:layout_toRightOf="@id/image_back"
+	            android:layout_alignTop="@id/image_back"
+	            android:layout_alignBottom="@id/image_back"
+	            android:src="@drawable/player_controller_loading_logol"
+	            />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="left|center_vertical"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:textColor="#FFFAF0"
+            android:layout_toRightOf="@id/back_layout" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/controller_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="#CCCCCC" >
+
+
+        <ImageView
+            android:id="@+id/video_playback_image_view"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/player_controller_pause"
+            />
+
+
+        <ImageView
+            android:id="@+id/video_fullscreen_image_view"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+           android:layout_centerVertical="true"
+           android:layout_marginLeft="10dp"
+           android:layout_marginRight="10dp"
+            android:background="@drawable/player_full_mode" />
+
+
+        <com.ksy.media.widget.MediaPlayerVideoSeekBar
+            android:id="@+id/seekbar_video_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:maxHeight="5dp"
+            android:minHeight="5dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_toLeftOf="@id/video_fullscreen_image_view"
+            android:layout_toRightOf="@id/video_playback_image_view"
+            android:progressDrawable="@drawable/player_controller_video_progress_seekbar_style_small_selector"
+            android:thumb="@drawable/player_controller_video_progress_seekbar_thumb_selector"  />
+    </RelativeLayout>
+
+</RelativeLayout>

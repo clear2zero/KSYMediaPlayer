@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="77dp"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="8dp"
+    android:background="#997F7F7F" >
+
+    <LinearLayout
+        android:id="@+id/layout_video_playback_next"
+        android:layout_width="213dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/video_size_layout"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/video_size_image_view"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/player_controller_video_size"
+                android:gravity="center"
+                android:scaleType="center" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:background="@drawable/player_controller_vertical_line" />
+
+        <LinearLayout
+            android:id="@+id/video_start_pause_layout"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/video_start_pause_image_view"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="center"
+                android:src="@drawable/player_start_pause_selector" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="-1dp"
+            android:background="@drawable/player_controller_vertical_line" />
+
+        <LinearLayout
+            android:id="@+id/video_quality_layout"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/video_quality_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="高清 "
+                android:textColor="@color/player_quality_text_selector"
+                android:textSize="25sp" 
+                tools:ignore="HardcodedText"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

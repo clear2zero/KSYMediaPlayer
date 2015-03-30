@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:duplicateParentState="true"
+    android:background="#BBCCCCCC"
+    >
+    
+    <TextView
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:id="@+id/quality_text_view"
+        android:gravity="center"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+    <ImageView 
+        android:id="@+id/quality_image_view"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/quality_text_view"
+        android:src="@drawable/controller_player_quality_item_select_radius_bg"
+        android:layout_marginRight="5dp"/>
+
+</RelativeLayout>
