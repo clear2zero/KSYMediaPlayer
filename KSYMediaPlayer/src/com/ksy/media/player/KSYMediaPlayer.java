@@ -891,7 +891,7 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 
 	@Override
 	public void setVideoRate(float rate) {
-		_setAudioAmplify(rate);
+		_setVideoRate(rate);
 	}
 
 	@Override

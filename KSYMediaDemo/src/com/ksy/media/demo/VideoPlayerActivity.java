@@ -1,10 +1,7 @@
 package com.ksy.media.demo;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
