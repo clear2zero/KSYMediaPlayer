@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package tv.danmaku.ijk.media.lib;
+package com.ksy.mediaPlayer.core;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

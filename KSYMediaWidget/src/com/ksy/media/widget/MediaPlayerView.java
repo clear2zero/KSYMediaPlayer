@@ -34,11 +34,14 @@ import android.widget.Toast;
 import com.ksy.media.data.MediaPlayMode;
 import com.ksy.media.data.MediaPlayerUtils;
 import com.ksy.media.data.MediaPlayerVideoQuality;
+import com.ksy.media.data.NetReceiver;
+import com.ksy.media.data.NetReceiver.NetState;
+import com.ksy.media.data.NetReceiver.NetStateChangedListener;
 import com.ksy.media.data.WakeLocker;
 import com.ksy.media.player.IMediaPlayer;
 import com.ksy.mediaPlayer.widget.R;
 
-public class MediaPlayerView extends RelativeLayout {
+public class MediaPlayerView extends RelativeLayout{
 	private static final int QUALITY_BEST = 100;
 	private static final String CAPUTRE_SCREEN_PATH = "KSY_SDK_SCREENSHOT";
 	private Activity mActivity;
@@ -96,6 +99,9 @@ public class MediaPlayerView extends RelativeLayout {
 	private Context mContext;
 	private GlobleScreenShoot screenshot;
 
+	private NetReceiver mNetReceiver;
+	private NetStateChangedListener mNetChangedListener;
+	
 	public MediaPlayerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context, attrs, defStyle);
@@ -327,6 +333,46 @@ public class MediaPlayerView extends RelativeLayout {
 		});
 
 		initOrientationEventListener(context);
+		
+		
+		mNetReceiver = NetReceiver.getInstance();
+		mNetChangedListener = new NetStateChangedListener() {
+
+			@Override
+			public void onNetStateChanged(NetState netCode) {
+				switch (netCode) {
+
+				case NET_NO:
+					Log.i("guoli","网络断了");
+					Toast.makeText(getContext(), "网络变化了:没有网络连接", Toast.LENGTH_LONG).show();
+					break;
+				case NET_2G:
+					Log.i("guoli","2g网络");
+					Toast.makeText(getContext(), "网络变化了:2g网络", Toast.LENGTH_LONG).show();
+					break;
+				case NET_3G:
+					Log.i("guoli","3g网络");
+					Toast.makeText(getContext(), "网络变化了:3g网络", Toast.LENGTH_LONG).show();
+					break;
+				case NET_4G:
+					Log.i("guoli","4g网络");
+					Toast.makeText(getContext(), "网络变化了:4g网络", Toast.LENGTH_LONG).show();
+					break;
+				case NET_WIFI:
+					Log.i("guoli","WIFI网络");
+					Toast.makeText(getContext(), "网络变化了:WIFI网络", Toast.LENGTH_LONG).show();
+					break;
+
+				case NET_UNKNOWN:
+					Log.i("guoli","未知网络");
+					Toast.makeText(getContext(), "网络变化了:未知网络", Toast.LENGTH_LONG).show();
+					break;
+				default:
+					Log.i("guoli","不知道什么情况~>_<~");
+					Toast.makeText(getContext(), "网络变化了:不知道什么情况~>_<~", Toast.LENGTH_LONG).show();
+				}
+			}
+		};
 	}
 
 	private String url = null;
@@ -468,9 +514,10 @@ public class MediaPlayerView extends RelativeLayout {
 
 	public void onResume() {
 		mWindowActived = true;
-
+		
 		enableOrientationEventListener();
-
+		mNetReceiver.registNetBroadCast(getContext());
+		mNetReceiver.addNetStateChangeListener(mNetChangedListener);
 		if (mStartAfterPause) {
 			mMediaPlayerController.start();
 			mStartAfterPause = false;
@@ -478,6 +525,8 @@ public class MediaPlayerView extends RelativeLayout {
 	}
 
 	public void onPause() {
+		mNetReceiver.remoteNetStateChangeListener(mNetChangedListener);
+		mNetReceiver.unRegistNetBroadCast(getContext());
 		mWindowActived = false;
 		mPausePosition = mMediaPlayerController.getCurrentPosition();
 

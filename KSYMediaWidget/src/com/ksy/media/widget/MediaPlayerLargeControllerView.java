@@ -42,6 +42,7 @@ public class MediaPlayerLargeControllerView extends
 	private MediaPlayerVideoSeekBar mSeekBar;
 	private TextView mCurrentTimeTextView;
 	private TextView mTotalTimeTextView;
+	private ImageView mScreenModeImageView;
 
 	private MediaPlayerQualityPopupView mQualityPopup;
 
@@ -95,6 +96,7 @@ public class MediaPlayerLargeControllerView extends
 		mSeekBar = (MediaPlayerVideoSeekBar) findViewById(R.id.video_seekbar);
 		mCurrentTimeTextView = (TextView) findViewById(R.id.video_current_time_text_view);
 		mTotalTimeTextView = (TextView) findViewById(R.id.video_total_time_text_view);
+		mScreenModeImageView = (ImageView) findViewById(R.id.video_window_screen_image_view);
 
 		mSeekBar.setMax(MediaPlayerBaseControllerView.MAX_VIDEO_PROGRESS);
 		mSeekBar.setProgress(0);
@@ -111,6 +113,7 @@ public class MediaPlayerLargeControllerView extends
 
 	@Override
 	protected void initListeners() {
+		mScreenModeImageView.setOnClickListener(this);
 		mVideoVolumeUpView.setOnClickListener(this);
 		mVideoVolumeDownView.setOnClickListener(this);
 		mVideoCropView.setOnClickListener(this);
@@ -386,19 +389,27 @@ public class MediaPlayerLargeControllerView extends
 		} else if (id == mVideoSizeImageView.getId()) {
 			mMediaPlayerController.onMovieRatioChange();
 			mWidgetMovieRatioView.show();
+			show();
 		}
 
 		else if (id == mVideoRatioForwardView.getId()) {
 			mMediaPlayerController.onMoviePlayRatioUp();
+			show();
 		} else if (id == mVideoRatioBackView.getId()) {
 			mMediaPlayerController.onMoviePlayRatioDown();
+			show();
 		}else if (id == mVideoCropView.getId()) {
 			mMediaPlayerController.onMovieCrop();
+			show();
 		}else if (id == mVideoVolumeDownView.getId()) {
 			mMediaPlayerController.onVolumeDown();
+			show();
 		}else if (id == mVideoVolumeUpView.getId()) {
 			mMediaPlayerController.onVolumeUp();
-		}
+			show();
+		} else if(id == mScreenModeImageView.getId()){
+            mMediaPlayerController.onRequestPlayMode(MediaPlayMode.PLAYMODE_FULLSCREEN);
+        }
 
 	}
 
