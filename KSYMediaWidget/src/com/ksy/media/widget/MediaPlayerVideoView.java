@@ -52,14 +52,14 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	private static final int STATE_IDLE = 0;
 	private static final int STATE_PREPARING = 1;
 	private static final int STATE_PREPARED = 2;
-	private static final int STATE_PLAYING = 3;
+	public static final int STATE_PLAYING = 3;
 	private static final int STATE_PAUSED = 4;
 	private static final int STATE_PLAYBACK_COMPLETED = 5;
 	private static final int STATE_SUSPEND = 6;
 	private static final int STATE_RESUME = 7;
 	private static final int STATE_SUSPEND_UNSUPPORTED = 8;
 
-	private int mCurrentState = STATE_IDLE;
+	public int mCurrentState = STATE_IDLE;
 	private int mTargetState = STATE_IDLE;
 
 	private int mVideoLayout = VIDEO_LAYOUT_SCALE;
@@ -114,6 +114,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	}
 
 	public void setVideoLayout(int layout) {
+		Log.d("guoli", "setVideoLayout ,mode = "+layout);
 		LayoutParams lp = getLayoutParams();
 		Pair<Integer, Integer> res = ScreenResolution.getResolution(mContext);
 		int windowWidth = res.first.intValue(), windowHeight = res.second
@@ -292,17 +293,20 @@ public class MediaPlayerVideoView extends SurfaceView implements
 		public void onVideoSizeChanged(IMediaPlayer mp, int width, int height,
 				int sarNum, int sarDen) {
 			DebugLog.dfmt(TAG, "onVideoSizeChanged: (%dx%d)", width, height);
+			Log.d("guoli", "OnSizeChanged");
 			mVideoWidth = mp.getVideoWidth();
 			mVideoHeight = mp.getVideoHeight();
 			mVideoSarNum = sarNum;
 			mVideoSarDen = sarDen;
 			if (mVideoWidth != 0 && mVideoHeight != 0)
-				setVideoLayout(mVideoLayout);
+				Log.d("change", "change");
+//				setVideoLayout(mVideoLayout);
 		}
 	};
 
 	OnPreparedListener mPreparedListener = new OnPreparedListener() {
 		public void onPrepared(IMediaPlayer mp) {
+			Log.d("guoli", "OnPrepared");
 			DebugLog.d(TAG, "onPrepared");
 			mHasPrepared = true;
 //			mCanPause = mCanSeekBack = mCanSeekForward = true;
@@ -320,7 +324,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 			if (seekToPosition != 0)
 				seekTo(seekToPosition);
 			if (mVideoWidth != 0 && mVideoHeight != 0) {
-				setVideoLayout(mVideoLayout);
+//				setVideoLayout(mVideoLayout);
 				if (mSurfaceWidth == mVideoWidth
 						&& mSurfaceHeight == mVideoHeight) {
 					if (mTargetState == STATE_PLAYING) {

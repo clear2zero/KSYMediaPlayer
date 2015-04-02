@@ -175,7 +175,7 @@ public class MediaPlayerView extends RelativeLayout {
 		this.mMediaPlayerVideoView
 				.setMediaPlayerController(mMediaPlayerController);
 		RelativeLayout.LayoutParams MediaPlayerVideoViewParams = new LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		MediaPlayerVideoViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
 		RelativeLayout.LayoutParams MediaPlayerBufferingViewParams = new LayoutParams(
@@ -432,7 +432,10 @@ public class MediaPlayerView extends RelativeLayout {
 				MediaPlayerUtils.hideSystemUI(mWindow, true);
 
 			mPlayMode = requestPlayMode;
-			needToResetMovieRatio = true;
+			if (mMediaPlayerVideoView.mCurrentState == MediaPlayerVideoView.STATE_PLAYING) {
+				Log.d("guoli", "set needToResetMovieRatio");
+				needToResetMovieRatio = true;
+			}
 			return true;
 
 		}
@@ -521,7 +524,7 @@ public class MediaPlayerView extends RelativeLayout {
 						if (!MediaPlayerUtils.checkSystemGravity(getContext()))
 							return;
 						if (MediaPlayerUtils.isWindowMode(mPlayMode)) {
-							Log.i("guoli", " current is window mode ");
+							Log.i("guoli", " Window to FullScreen ");
 							if (mScreenOrientation == ORIENTATION_LANDSCAPE_NORMAL
 									|| mScreenOrientation == ORIENTATION_LANDSCAPE_REVERSED) {
 								if (!mLockMode) {
@@ -532,7 +535,7 @@ public class MediaPlayerView extends RelativeLayout {
 								}
 							}
 						} else if (MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
-							Log.i("guoli", " current is Full Screen mode ");
+							Log.i("guoli", " Full Screen to Window mode ");
 							if (mScreenOrientation == ORIENTATION_PORTRAIT_NORMAL) {
 								if (!mLockMode) {
 									boolean requestResult = requestPlayMode(MediaPlayMode.PLAYMODE_WINDOW);
@@ -665,7 +668,7 @@ public class MediaPlayerView extends RelativeLayout {
 		if (mDisplaySizeMode > MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_ORIGIN) {
 			mDisplaySizeMode = MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_16_9;
 		}
-		Log.d("eflake", "change current mode = " + mDisplaySizeMode);
+		Log.d("guoli", "change current mode = " + mDisplaySizeMode);
 		mMediaPlayerVideoView.setVideoLayout(mDisplaySizeMode);
 		mDisplaySizeMode++;
 	}
@@ -792,11 +795,6 @@ public class MediaPlayerView extends RelativeLayout {
 		public void surfaceChanged(SurfaceHolder holder, int format, int w,
 				int h) {
 			Log.i("guoli", "========surfaceChanged =============");
-			if (needToResetMovieRatio) {
-				mDisplaySizeMode = MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_16_9;
-				mMediaPlayerVideoView.setVideoLayout(mDisplaySizeMode);
-				needToResetMovieRatio = false;
-			}
 		}
 	};
 
@@ -999,7 +997,8 @@ public class MediaPlayerView extends RelativeLayout {
 
 		@Override
 		public void onMoviePlayRatioUp() {
-			mMediaPlayerVideoView.setVideoRate(1.5f);
+			Log.d("guoli", "speed up");
+			mMediaPlayerVideoView.setVideoRate(5.0f);
 		}
 
 		@Override
@@ -1009,14 +1008,13 @@ public class MediaPlayerView extends RelativeLayout {
 
 		@Override
 		public void onMovieCrop() {
-			 screenshot.takeScreenshot(mMediaPlayerVideoView,
-			 new Runnable() {
-			 @Override
-			 public void run() {
-				 
-			 }
-			 }, false, false);
-			
+			screenshot.takeScreenshot(mMediaPlayerVideoView, new Runnable() {
+				@Override
+				public void run() {
+
+				}
+			}, false, false);
+
 			bitmap = Bitmap.createBitmap(mMediaPlayerVideoView.getVideoWidth(),
 					mMediaPlayerVideoView.getVideoHeight(), Config.ARGB_8888);
 			if (bitmap != null) {
@@ -1055,7 +1053,7 @@ public class MediaPlayerView extends RelativeLayout {
 				+ File.separator + MediaPlayerView.CAPUTRE_SCREEN_PATH);
 		if (!directory.exists()) {
 			directory.mkdir();
-		} 
+		}
 		File saveFile = new File(directory, fileName);
 		if (!saveFile.exists()) {
 			try {
