@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -674,4 +675,10 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	public void setVideoRate(float rate) {
 		mMediaPlayer.setVideoRate(rate);
 	}
+	
+	public void getPicture(Bitmap bitmap) {
+		 mMediaPlayer.getPicture(bitmap);
+	}
+	
+	
 }

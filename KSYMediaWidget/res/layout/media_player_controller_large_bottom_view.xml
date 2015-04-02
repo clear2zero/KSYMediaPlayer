@@ -6,16 +6,31 @@
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="8dp"
-    android:background="#997F7F7F" >
+    android:background="#99CCCCCC" >
 
     <LinearLayout
         android:id="@+id/layout_video_playback_next"
-        android:layout_width="213dp"
+        android:layout_width="353dp"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:orientation="horizontal" >
+        
+          <LinearLayout
+            android:id="@+id/video_fast_back_layout"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center" >
 
+            <ImageView
+                android:id="@+id/video_fast_back_view"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/ic_fast_rewind_black_48dp"
+                android:gravity="center"
+                android:scaleType="center" />
+        </LinearLayout>
+        
         <LinearLayout
             android:id="@+id/video_size_layout"
             android:layout_width="70dp"
@@ -77,6 +92,21 @@
                 android:textSize="25sp" 
                 tools:ignore="HardcodedText"
                 />
+        </LinearLayout>
+        
+          <LinearLayout
+            android:id="@+id/video_fast_forward_layout"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/video_fast_forward_view"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/ic_fast_forward_black_48dp"
+                android:gravity="center"
+                android:scaleType="center" />
         </LinearLayout>
     </LinearLayout>
 

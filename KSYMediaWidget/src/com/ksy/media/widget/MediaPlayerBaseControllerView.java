@@ -405,6 +405,16 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout{
 		void onVideoPreparing();
 
 		void onMovieRatioChange();
+
+		void onMoviePlayRatioUp();
+
+		void onMoviePlayRatioDown();
+
+		void onMovieCrop();
+
+		void onVolumeDown();
+
+		void onVolumeUp();
 	}
 
     public interface OnGuestureChangeListener {

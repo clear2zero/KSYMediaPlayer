@@ -6,18 +6,17 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import com.ksy.media.player.annotations.AccessedByNative;
-import com.ksy.media.player.annotations.CalledByNative;
-import com.ksy.media.player.option.AvFormatOption;
-import com.ksy.media.player.pragma.DebugLog;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -26,6 +25,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+
+import com.ksy.media.player.annotations.AccessedByNative;
+import com.ksy.media.player.annotations.CalledByNative;
+import com.ksy.media.player.option.AvFormatOption;
+import com.ksy.media.player.pragma.DebugLog;
 
 /**
  * 
@@ -86,10 +90,19 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 	public static void loadLibrariesOnce(KSYLibLoader libLoader) {
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsLibLoaded) {
+				Log.d("guoli", "loadLibrariesOnce");
 				libLoader.loadLibrary("ksyffmpeg");
+				Log.d("guoli", "ksyffmpeg");
+
 				libLoader.loadLibrary("ksyutil");
+				Log.d("guoli", "ksyutil");
+
 				libLoader.loadLibrary("ksysdl");
+				Log.d("guoli", "ksysdl");
+
 				libLoader.loadLibrary("ksyplayer");
+				Log.d("guoli", "ksyplayer");
+				Log.d("guoli", "loadLibrariesOnce End");
 				mIsLibLoaded = true;
 			}
 		}
@@ -100,7 +113,9 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 	private static void initNativeOnce() {
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsNativeInitialized) {
+				Log.d("guoli", "init begin");
 				native_init();
+				Log.d("guoli", "init over");
 				mIsNativeInitialized = true;
 			}
 		}
@@ -879,7 +894,19 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 		_setAudioAmplify(rate);
 	}
 
+	@Override
+	public void getPicture(Bitmap bitmap) {
+		_getPicture(bitmap);
+	}
+
 	private native void _setAudioAmplify(float ratio);
 
 	private native void _setVideoRate(float rate);
+
+	private native void _setAnalyseDuration(int duration);
+
+	private native void _setBufferSize(int Size);
+
+	private native void _getPicture(Bitmap bitmap);
+	
 }

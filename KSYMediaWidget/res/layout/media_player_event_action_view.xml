@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:background="#CCCCCC"
+        android:background="#33CCCCCC"
         android:visibility="visible" >
 
         <ImageView
@@ -42,7 +42,7 @@
             android:layout_marginRight="10dp"
             android:ellipsize="end"
             android:gravity="left|center_vertical"
-            android:textColor="#eeeeee"
+            android:textColor="#000000"
             android:textSize="20sp"
             android:layout_toRightOf="@id/image_logo"
             android:text="金山软件大厦3楼-云存储" />

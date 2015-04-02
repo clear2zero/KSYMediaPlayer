@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import com.ksy.media.player.pragma.DebugLog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -322,5 +323,11 @@ public class AndroidMediaPlayer extends SimpleMediaPlayer {
 	@Override
 	public void setVideoRate(float rate) {
 
+	}
+
+	@Override
+	public void getPicture(Bitmap bitmap) {
+		// TODO Auto-generated method stub
+		
 	}
 }

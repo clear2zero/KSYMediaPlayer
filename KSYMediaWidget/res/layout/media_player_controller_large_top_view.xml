@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_alignParentTop="true"
-    android:background="#CCCCCC" >
+    android:background="#33CCCCCC" >
 
    <RelativeLayout
         android:id="@+id/controller_top_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:background="#CCCCCC"
+        android:background="#99CCCCCC"
          >
 
         <RelativeLayout 
@@ -53,7 +53,7 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="22sp"
-            android:textColor="#2E2E2E"
+            android:textColor="#000000"
             android:layout_toRightOf="@id/back_layout" />
         
         <ImageView
@@ -61,11 +61,11 @@
 	            android:layout_height="60dp"
 	            android:layout_centerVertical="true"
 	            android:layout_marginRight="20dp"
-	            android:id="@+id/follow_image_view"
+	            android:id="@+id/volume_up_view"
 	            android:layout_alignTop="@id/title_text_view"
 	            android:layout_alignBottom="@id/title_text_view"
 	            android:layout_alignParentRight="true"
-	            android:src="@drawable/player_controller_follow_selector"
+	            android:src="@drawable/ic_volume_up_black_48dp"
 	            />
         
         <ImageView
@@ -73,22 +73,22 @@
 	            android:layout_height="60dp"
 	            android:layout_centerVertical="true"
 	            android:layout_marginRight="20dp"
-	            android:id="@+id/like_image_view"
-	            android:layout_toLeftOf="@id/follow_image_view"
-	            android:layout_alignTop="@id/follow_image_view"
-	            android:layout_alignBottom="@id/follow_image_view"
-	            android:src="@drawable/player_controller_like_selector"
+	            android:id="@+id/volume_down_view"
+	            android:layout_toLeftOf="@id/volume_up_view"
+	            android:layout_alignTop="@id/volume_up_view"
+	            android:layout_alignBottom="@id/volume_up_view"
+	            android:src="@drawable/ic_volume_down_black_48dp"
 	            />
          <ImageView
 	            android:layout_width="60dp"
 	            android:layout_height="60dp"
 	            android:layout_centerVertical="true"
 	            android:layout_marginRight="20dp"
-	            android:id="@+id/share_rise_view"
-	            android:layout_toLeftOf="@id/like_image_view"
-	            android:layout_alignTop="@id/like_image_view"
-	            android:layout_alignBottom="@id/follow_image_view"
-	            android:src="@drawable/player_controller_rise_selector"
+	            android:id="@+id/crop_view"
+	            android:layout_toLeftOf="@id/volume_down_view"
+	            android:layout_alignTop="@id/volume_down_view"
+	            android:layout_alignBottom="@id/volume_down_view"
+	            android:src="@drawable/ic_crop_free_black_48dp"
 	            />
     </RelativeLayout>
 

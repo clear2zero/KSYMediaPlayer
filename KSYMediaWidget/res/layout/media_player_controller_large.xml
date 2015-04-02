@@ -26,7 +26,6 @@
         android:layout_alignParentBottom="true"
         android:background="#BBCCCCCC" >
 
-
         <TextView
             android:id="@+id/video_current_time_text_view"
             android:layout_width="wrap_content"
@@ -41,10 +40,6 @@
             android:textSize="18sp"
             android:text="00:00:00" />
 
-
-        
-
-        
          <ImageView
             android:id="@+id/video_window_screen_image_view"
             android:layout_width="36dp"
@@ -139,13 +134,13 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="60dp"
         android:clickable="true" 
-        android:background="#404040"
+        android:background="#33CCCCCC"
         >
 
         <ImageView
             android:id="@+id/iv_lock"
-            android:layout_width="26dp"
-            android:layout_height="24dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@drawable/player_controller_lock_selector"
             android:duplicateParentState="true" />
     </com.ksy.media.widget.MediaPlayerLockView>
@@ -156,7 +151,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentRight="true"
 	    android:layout_centerVertical="true"
-	    android:background="#CCCCCC">
+	    android:background="#99CCCCCC">
 	    
 	</com.ksy.media.widget.MediaPlayerControllerVolumeView>
 </RelativeLayout>
