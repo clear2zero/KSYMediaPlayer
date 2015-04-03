@@ -8,9 +8,9 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-/KSYMediaDemo/bin
-/KSYMediaPlayer/bin
-/KSYMediaWidget/bin
+KSYMediaDemo/bin
+KSYMediaPlayer/bin
+KSYMediaWidget/bin
 
 # Windows Installer files
 *.cab
