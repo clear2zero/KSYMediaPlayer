@@ -326,12 +326,6 @@ public class AndroidMediaPlayer extends SimpleMediaPlayer {
 	}
 
 	@Override
-	public void getPicture(Bitmap bitmap) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void setBufferSize(int size) {
 		// TODO Auto-generated method stub
 		
@@ -340,6 +334,11 @@ public class AndroidMediaPlayer extends SimpleMediaPlayer {
 	@Override
 	public void setAnalyseDuration(int duration) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getCurrentFrame(Bitmap bitmap) {
 		
 	}
 }

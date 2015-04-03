@@ -46,11 +46,11 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 	
 	private void startPlayer(){
 		playerView.setPlayerViewCallback(this);
-		String path = "rtmp://192.168.135.185/myLive/guoli1234";
-		playerView.play(path);
+//		String path = "rtmp://192.168.135.185/myLive/guoli1234";
+//		playerView.play(path);
 //		String path = "http://www.modrails.com/videos/passenger_nginx.mov";
-//		File file = new File(Environment.getExternalStorageDirectory(),"a.mp4");
-//		playerView.play(file.getPath());
+		File file = new File(Environment.getExternalStorageDirectory(),"a.mp4");
+		playerView.play(file.getPath());
 	}
 	
 	@Override
