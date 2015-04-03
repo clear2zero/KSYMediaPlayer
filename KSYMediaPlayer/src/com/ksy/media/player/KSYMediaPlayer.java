@@ -867,6 +867,7 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 						bestCodec.mCodecInfo.getName()));
 				return null;
 			}
+			
 
 			Log.i(TAG, String.format(Locale.US, "selected codec: %s rank=%d",
 					bestCodec.mCodecInfo.getName(), bestCodec.mRank));
