@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebView;
 
 import com.ksy.media.player.util.Constants;
 import com.ksy.media.widget.MediaPlayerView;

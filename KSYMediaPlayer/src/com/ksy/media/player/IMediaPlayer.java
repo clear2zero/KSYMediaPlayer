@@ -30,7 +30,7 @@ public interface IMediaPlayer {
     public static final int MEDIA_ERROR_UNSUPPORTED = -1010;
     public static final int MEDIA_ERROR_TIMED_OUT = -110;
 
-    public static final int MEDIA_BUFFERSIZE_DEFAULT = 2 * 10 * 1024 *1024;
+    public static final int MEDIA_BUFFERSIZE_DEFAULT = 2 * 10 ; // M
     
     public static final int MEDIA_ANALYSE_DURATION_DEFAULT = 2 * 1000 ; 
     
