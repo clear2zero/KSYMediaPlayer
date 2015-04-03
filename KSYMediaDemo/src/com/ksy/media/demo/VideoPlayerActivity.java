@@ -26,6 +26,8 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 		playerView = (MediaPlayerView) findViewById(R.id.player_view);
 		startPlayer();
 		// elfkae
+		//nothing
+		// dsjadsa
 	}
 	
 	@Override

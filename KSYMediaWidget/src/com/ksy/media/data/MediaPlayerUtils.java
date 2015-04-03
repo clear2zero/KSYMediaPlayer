@@ -29,7 +29,7 @@ public class MediaPlayerUtils {
 
 	private static StringBuilder mFormatBuilder;
 	private static Formatter mFormatter;
-
+	// nothing
 	static {
 		mFormatBuilder = new StringBuilder();
 		mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());

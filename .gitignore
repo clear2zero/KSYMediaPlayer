@@ -45,6 +45,6 @@ KSYMediaDemo/bin/classes.dex
 *.class
 *.jar
 *.class
-./KSYMediaDemo/bin
-./KSYMediaPlayer/bin
-./KSYMediaWidget/bin
+/KSYMediaDemo/bin
+/KSYMediaPlayer/bin
+/KSYMediaWidget/bin
