@@ -33,7 +33,7 @@ import com.ksy.media.player.util.Constants;
  * 
  * Java wrapper of ffplay.
  */
-public final class KSYMediaPlayer extends SimpleMediaPlayer {
+public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private final static String TAG = KSYMediaPlayer.class.getName();
 
 	private static final int MEDIA_NOP = 0; // interface test message
@@ -604,7 +604,8 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 				return;
 
 			case MEDIA_ERROR:
-				DebugLog.e(TAG, "Error (" + msg.arg1 + "," + msg.arg2 + ")");
+				DebugLog.e(TAG, "post ==> Error (" + msg.arg1 + "," + msg.arg2 + ")");
+				
 				if (!player.notifyOnError(msg.arg1, msg.arg2)) {
 					player.notifyOnCompletion();
 				}
@@ -805,7 +806,7 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 			OnMediaCodecSelectListener {
 		public static DefaultMediaCodecSelector sInstance = new DefaultMediaCodecSelector();
 
-		@SuppressWarnings("deprecation")
+
 		@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 		public String onMediaCodecSelect(IMediaPlayer mp, String mimeType,
 				int profile, int level) {
@@ -919,5 +920,17 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 	private native void _setBufferSize(int Size);
 
 	private native void _getPicture(Bitmap bitmap);
+
+	@Override
+	public void setLogEnabled(boolean enable) {
+	}
+
+	@Override
+	public boolean isPlayable() {
+		return true;
+	}
+
+	@Override
+	public void setKeepInBackground(boolean keepInBackground) {}
 	
 }
