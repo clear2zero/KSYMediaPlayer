@@ -26,7 +26,6 @@ public class MediaPlayerUtils {
 	public static final int DEVICE_NAVIGATION_TYPE_UNKNOWN = 0;
 	public static final int DEVICE_NAVIGATION_TYPE_HANDSET = 1;
 	public static final int DEVICE_NAVIGATION_TYPE_TABLET = 2;
-	// Test
 	private static StringBuilder mFormatBuilder;
 	private static Formatter mFormatter;
 

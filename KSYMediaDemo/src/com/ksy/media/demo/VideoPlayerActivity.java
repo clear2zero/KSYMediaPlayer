@@ -20,8 +20,6 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//设置全屏
-		//dsa
-		//das 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_player);
@@ -51,7 +49,7 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 //		String path = "rtmp://192.168.135.185/myLive/guoli1234";
 //		playerView.play(path);
 //		String path = "http://www.modrails.com/videos/passenger_nginx.mov";
-		File file = new File(Environment.getExternalStorageDirectory(),"1.mp4");
+		File file = new File(Environment.getExternalStorageDirectory(),"a.mp4");
 		playerView.play(file.getPath());
 	}
 	
