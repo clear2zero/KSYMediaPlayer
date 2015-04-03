@@ -853,11 +853,12 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 				}
 			}
 
+			
 			Entry<Integer, KSYMediaCodecInfo> bestEntry = candidateCodecList
 					.lastEntry();
 			if (bestEntry == null)
 				return null;
-
+ 
 			KSYMediaCodecInfo bestCodec = bestEntry.getValue();
 			if (bestCodec == null || bestCodec.mCodecInfo == null)
 				return null;
