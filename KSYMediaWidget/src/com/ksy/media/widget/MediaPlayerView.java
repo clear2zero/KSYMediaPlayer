@@ -762,7 +762,7 @@ public class MediaPlayerView extends RelativeLayout {
 
 		@Override
 		public void onCompletion(IMediaPlayer mp) {
-			Log.i(Constants.LOG_TAG, "onCompletion==========");
+			Log.i(Constants.LOG_TAG, "================onCompletion============");
 			mMediaPlayerControllerViewLarge.hide();
 			mMediaPlayerControllerViewSmall.hide();
 			mMediaPlayerCoverView.updateCoverMode(
