@@ -242,21 +242,21 @@ public class MediaPlayerVideoView extends SurfaceView implements
 			mDuration = -1;
 			mCurrentBufferPercentage = 0;
 			mMediaInfo = null;
-			// mMediaPlayer = new AndroidMediaPlayer();
-			KSYMediaPlayer ijkMediaPlayer = null;
+			KSYMediaPlayer ksyMediaPlayer = null;
 			if (mUri != null) {
-				ijkMediaPlayer = new KSYMediaPlayer();
-				ijkMediaPlayer
-						.setAvOption(AvFormatOption_HttpDetectRangeSupport.Disable);
-				ijkMediaPlayer.setOverlayFormat(AvFourCC.SDL_FCC_RV32);
+				ksyMediaPlayer = new KSYMediaPlayer();
+				ksyMediaPlayer.setAvOption(AvFormatOption_HttpDetectRangeSupport.Disable);
+				ksyMediaPlayer.setOverlayFormat(AvFourCC.SDL_FCC_RV32);
 
-				ijkMediaPlayer.setAvCodecOption("skip_loop_filter", "48");
-				ijkMediaPlayer.setFrameDrop(12);
+				ksyMediaPlayer.setAvCodecOption("skip_loop_filter", "48");
+				ksyMediaPlayer.setFrameDrop(12);
+				ksyMediaPlayer.setBufferSize(IMediaPlayer.MEDIA_BUFFERSIZE_DEFAULT);
+				ksyMediaPlayer.setAnalyseDuration(IMediaPlayer.MEDIA_ANALYSE_DURATION_DEFAULT);
 				if (mUserAgent != null) {
-					ijkMediaPlayer.setAvFormatOption("user_agent", mUserAgent);
+					ksyMediaPlayer.setAvFormatOption("user_agent", mUserAgent);
 				}
 			}
-			mMediaPlayer = ijkMediaPlayer;
+			mMediaPlayer = ksyMediaPlayer;
 			mMediaPlayer.setOnPreparedListener(mPreparedListener);
 			mMediaPlayer.setOnVideoSizeChangedListener(mSizeChangedListener);
 			mMediaPlayer.setOnCompletionListener(mCompletionListener);

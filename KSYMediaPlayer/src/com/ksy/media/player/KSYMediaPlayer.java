@@ -890,6 +890,24 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 		_getPicture(bitmap);
 	}
 
+	@Override
+	public void setBufferSize(int size) {
+		if(size <= 0){
+			size = MEDIA_BUFFERSIZE_DEFAULT;
+			Log.w(Constants.LOG_TAG,"unsupported buffer size :" + size + ",replace the default size :" + MEDIA_BUFFERSIZE_DEFAULT);
+		}
+		_setBufferSize(size);
+	};
+	
+	@Override
+	public void setAnalyseDuration(int duration) {
+		if(duration <= 0){
+			duration = MEDIA_ANALYSE_DURATION_DEFAULT;
+			Log.w(Constants.LOG_TAG,"unsupported analyse duration :" + duration + ",replace the default size :" + MEDIA_ANALYSE_DURATION_DEFAULT);
+		}
+		_setAnalyseDuration(duration);
+	};
+	
 	private native void _setAudioAmplify(float ratio);
 
 	private native void _setVideoRate(float rate);
