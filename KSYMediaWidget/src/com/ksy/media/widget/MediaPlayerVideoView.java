@@ -671,8 +671,8 @@ public class MediaPlayerVideoView extends SurfaceView implements
 		mMediaPlayer.setVideoRate(rate);
 	}
 	
-	public void getPicture(Bitmap bitmap) {
-		 mMediaPlayer.getPicture(bitmap);
+	public void getCurrentFrame(Bitmap bitmap) {
+		 mMediaPlayer.getCurrentFrame(bitmap);
 	}
 	
 	
