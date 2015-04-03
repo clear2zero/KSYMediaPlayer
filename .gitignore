@@ -8,6 +8,10 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+/KSYMediaDemo/bin
+/KSYMediaPlayer/bin
+/KSYMediaWidget/bin
+
 # Windows Installer files
 *.cab
 *.msi
@@ -45,6 +49,4 @@ KSYMediaDemo/bin/classes.dex
 *.class
 *.jar
 *.class
-/KSYMediaDemo/bin
-/KSYMediaPlayer/bin
-/KSYMediaWidget/bin
+KSYMediaWidget/bin/ksymediawidget.jar
