@@ -20,6 +20,8 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//设置全屏
+		//dsa
+		//das 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_player);

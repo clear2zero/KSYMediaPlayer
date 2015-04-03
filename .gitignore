@@ -8,6 +8,10 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+KSYMediaDemo/bin
+KSYMediaPlayer/bin
+KSYMediaWidget/bin
+
 # Windows Installer files
 *.cab
 *.msi
@@ -41,9 +45,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Android
 KSYMediaDemo/bin/classes.dex
 *.class
 *.jar
 *.class
+KSYMediaWidget/bin/ksymediawidget.jar
 KSYMediaDemo/bin/classes/com/ksy/media/demo/VideoPlayerActivity.class
-KSYMediaDemo/bin/classes/com/ksy/mediaPlayer/widget/R$id.class
