@@ -27,6 +27,7 @@ import com.ksy.media.player.annotations.AccessedByNative;
 import com.ksy.media.player.annotations.CalledByNative;
 import com.ksy.media.player.option.AvFormatOption;
 import com.ksy.media.player.pragma.DebugLog;
+import com.ksy.media.player.util.Constants;
 
 /**
  * 
@@ -851,12 +852,12 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 					candidate.dumpProfileLevels(mimeType);
 				}
 			}
-			
+
 			Entry<Integer, KSYMediaCodecInfo> bestEntry = candidateCodecList
 					.lastEntry();
 			if (bestEntry == null)
 				return null;
- 
+
 			KSYMediaCodecInfo bestCodec = bestEntry.getValue();
 			if (bestCodec == null || bestCodec.mCodecInfo == null)
 				return null;
@@ -866,7 +867,7 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 						bestCodec.mCodecInfo.getName()));
 				return null;
 			}
-			
+
 			Log.i(TAG, String.format(Locale.US, "selected codec: %s rank=%d",
 					bestCodec.mCodecInfo.getName(), bestCodec.mRank));
 			return bestCodec.mCodecInfo.getName();
@@ -876,37 +877,56 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 	// P1 Added Interface
 	@Override
 	public void setAudioAmplify(float ratio) {
+		if (ratio <= 0) {
+			ratio = MEDIA_AUDIO_AMPLIFY_DEFAULT;
+			Log.w(Constants.LOG_TAG, "unsupported audio amplify ratio :"
+					+ ratio + ",replace the default size :"
+					+ MEDIA_AUDIO_AMPLIFY_DEFAULT);
+		}
 		_setAudioAmplify(ratio);
 	}
 
 	@Override
 	public void setVideoRate(float rate) {
+		if (rate <= 0) {
+			rate = MEDIA_VIDEO_RATE_DEFAULT;
+			Log.w(Constants.LOG_TAG, "unsupported video rate :" + rate
+					+ ",replace the default size :" + MEDIA_VIDEO_RATE_DEFAULT);
+		}
 		_setVideoRate(rate);
 	}
 
 	@Override
-	public void getPicture(Bitmap bitmap) {
-		_getPicture(bitmap);
+	public void getCurrentFrame(Bitmap bitmap) {
+		if (bitmap != null) {
+			_getCurrentFrame(bitmap);
+		} else {
+			Log.w(Constants.LOG_TAG,
+					"get current failed, bitmap can not be null ");
+		}
 	}
 
 	@Override
 	public void setBufferSize(int size) {
-		if(size <= 0){
+		if (size <= 0) {
 			size = MEDIA_BUFFERSIZE_DEFAULT;
-			Log.w(Constants.LOG_TAG,"unsupported buffer size :" + size + ",replace the default size :" + MEDIA_BUFFERSIZE_DEFAULT);
+			Log.w(Constants.LOG_TAG, "unsupported buffer size :" + size
+					+ ",replace the default size :" + MEDIA_BUFFERSIZE_DEFAULT);
 		}
 		_setBufferSize(size);
 	};
-	
+
 	@Override
 	public void setAnalyseDuration(int duration) {
-		if(duration <= 0){
+		if (duration <= 0) {
 			duration = MEDIA_ANALYSE_DURATION_DEFAULT;
-			Log.w(Constants.LOG_TAG,"unsupported analyse duration :" + duration + ",replace the default size :" + MEDIA_ANALYSE_DURATION_DEFAULT);
+			Log.w(Constants.LOG_TAG, "unsupported analyse duration :"
+					+ duration + ",replace the default size :"
+					+ MEDIA_ANALYSE_DURATION_DEFAULT);
 		}
 		_setAnalyseDuration(duration);
 	};
-	
+
 	private native void _setAudioAmplify(float ratio);
 
 	private native void _setVideoRate(float rate);
@@ -915,6 +935,6 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 
 	private native void _setBufferSize(int Size);
 
-	private native void _getPicture(Bitmap bitmap);
-	
+	private native void _getCurrentFrame(Bitmap bitmap);
+
 }

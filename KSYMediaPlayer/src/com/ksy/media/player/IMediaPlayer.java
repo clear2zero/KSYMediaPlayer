@@ -34,6 +34,10 @@ public interface IMediaPlayer {
     
     public static final int MEDIA_ANALYSE_DURATION_DEFAULT = 2 * 1000 ; 
     
+    public static final float MEDIA_VIDEO_RATE_DEFAULT= 1.0f; 
+    public static final float MEDIA_AUDIO_AMPLIFY_DEFAULT= 1.0f; 
+
+    
     public abstract void setDisplay(SurfaceHolder sh);
 
     public abstract void setDataSource(String path) throws IOException,
@@ -152,7 +156,7 @@ public interface IMediaPlayer {
     
     public abstract void setVideoRate(float rate);
     
-    public abstract void getPicture(Bitmap bitmap);
+    public abstract void getCurrentFrame(Bitmap bitmap);
     
     public abstract void setBufferSize(int size);
     
