@@ -1091,7 +1091,7 @@ public class MediaPlayerView extends RelativeLayout {
 			bitmap = Bitmap.createBitmap(mMediaPlayerVideoView.getVideoWidth(),
 					mMediaPlayerVideoView.getVideoHeight(), Config.ARGB_8888);
 			if (bitmap != null) {
-				mMediaPlayerVideoView.getPicture(bitmap);
+				mMediaPlayerVideoView.getCurrentFrame(bitmap);
 				compressAndSaveBitmapToSDCard(bitmap, getCurrentTime(),
 						MediaPlayerView.QUALITY_BEST);
 			} else {
