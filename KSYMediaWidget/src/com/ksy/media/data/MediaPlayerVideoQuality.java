@@ -31,7 +31,6 @@ public enum MediaPlayerVideoQuality {
 		case VIDEO_QUALITY_HD:
 			return HD;
 		}
-        
         return null;
         
     }

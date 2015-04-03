@@ -1,12 +1,16 @@
 package com.ksy.media.demo;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 
+import com.ksy.media.player.util.Constants;
 import com.ksy.media.widget.MediaPlayerView;
 
 public class VideoPlayerActivity extends Activity implements MediaPlayerView.PlayerViewCallback {
@@ -42,11 +46,11 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 	
 	private void startPlayer(){
 		playerView.setPlayerViewCallback(this);
-		String path = "rtmp://192.168.135.185/myLive/guoli1234";
-		playerView.play(path);
+//		String path = "rtmp://192.168.135.185/myLive/guoli1234";
+//		playerView.play(path);
 //		String path = "http://www.modrails.com/videos/passenger_nginx.mov";
-//		File file = new File(Environment.getExternalStorageDirectory(),"a.mp4");
-//		playerView.play(file.getPath());
+		File file = new File(Environment.getExternalStorageDirectory(),"a.mp4");
+		playerView.play(file.getPath());
 	}
 	
 	@Override
@@ -71,7 +75,7 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 	}
 	@Override
 	public void onFinish(int playMode) {
-		Log.i("guoli", "activity on finish ===========");
+		Log.i(Constants.LOG_TAG, "activity on finish ===========");
 //		this.onBackPressed();
 		this.finish();
 	}

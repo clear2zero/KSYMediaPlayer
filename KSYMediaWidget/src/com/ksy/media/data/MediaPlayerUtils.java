@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.Formatter;
 import java.util.Locale;
 
+import com.ksy.media.player.util.Constants;
+
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
@@ -213,8 +215,8 @@ public class MediaPlayerUtils {
 		int usedDisplayHeight = getUsedDisplayHeight(window);
 		int realDisplayWidth = getRealDisplayWidth(window);
 		int realDisplayHeight = getRealDisplayHeight(window);
-		Log.i("guoli", "usedDisplayWidth :" + usedDisplayWidth + ", usedDisplayHeight :" + usedDisplayHeight);
-		Log.i("guoli", "realDisplayWidth :" + realDisplayWidth + ", realDisplayHeight :" + realDisplayHeight);
+		Log.i(Constants.LOG_TAG, "usedDisplayWidth :" + usedDisplayWidth + ", usedDisplayHeight :" + usedDisplayHeight);
+		Log.i(Constants.LOG_TAG, "realDisplayWidth :" + realDisplayWidth + ", realDisplayHeight :" + realDisplayHeight);
 		
 		if (usedDisplayWidth < realDisplayWidth) {
 			deviceNavigationType = DEVICE_NAVIGATION_TYPE_HANDSET;
