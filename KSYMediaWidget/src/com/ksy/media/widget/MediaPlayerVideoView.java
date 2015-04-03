@@ -30,6 +30,7 @@ import com.ksy.media.player.IMediaPlayer.OnVideoSizeChangedListener;
 import com.ksy.media.player.KSYMediaPlayer;
 import com.ksy.media.player.option.AvFourCC;
 import com.ksy.media.player.option.format.AvFormatOption_HttpDetectRangeSupport;
+import com.ksy.media.player.util.Constants;
 import com.ksy.media.widget.MediaPlayerBaseControllerView.MediaPlayerController;
 
 /**
@@ -114,7 +115,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	}
 
 	public void setVideoLayout(int layout) {
-		Log.d("guoli", "setVideoLayout ,mode = "+layout);
+		Log.d(Constants.LOG_TAG, "SetVideoLayout ,Mode = "+layout);
 		LayoutParams lp = getLayoutParams();
 		Pair<Integer, Integer> res = ScreenResolution.getResolution(mContext);
 		int windowWidth = res.first.intValue(), windowHeight = res.second
@@ -201,7 +202,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	}
 
 	public void setVideoPath(String path) {
-		Log.i("guoli", "setVideoPath : path :" + path);
+		Log.i(Constants.LOG_TAG, "setVideoPath : path :" + path);
 		setVideoURI(Uri.parse(path));
 	}
 
@@ -228,7 +229,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	}
 
 	private void openVideo() {
-		Log.i("guoli", "on open video !!!!!!!!!!!!");
+		Log.i(Constants.LOG_TAG, "Open video action begin");
 		if (mUri == null || mSurfaceHolder == null)
 			return;
 
@@ -293,23 +294,18 @@ public class MediaPlayerVideoView extends SurfaceView implements
 		public void onVideoSizeChanged(IMediaPlayer mp, int width, int height,
 				int sarNum, int sarDen) {
 			DebugLog.dfmt(TAG, "onVideoSizeChanged: (%dx%d)", width, height);
-			Log.d("guoli", "OnSizeChanged");
+			Log.d(Constants.LOG_TAG, "OnSizeChanged");
 			mVideoWidth = mp.getVideoWidth();
 			mVideoHeight = mp.getVideoHeight();
 			mVideoSarNum = sarNum;
 			mVideoSarDen = sarDen;
-			if (mVideoWidth != 0 && mVideoHeight != 0)
-				Log.d("change", "change");
-//				setVideoLayout(mVideoLayout);
 		}
 	};
 
 	OnPreparedListener mPreparedListener = new OnPreparedListener() {
 		public void onPrepared(IMediaPlayer mp) {
-			Log.d("guoli", "OnPrepared");
-			DebugLog.d(TAG, "onPrepared");
+			Log.d(Constants.LOG_TAG, "OnPrepared");
 			mHasPrepared = true;
-//			mCanPause = mCanSeekBack = mCanSeekForward = true;
 			mCurrentState = STATE_PREPARED;
 			mTargetState = STATE_PLAYING;
 
@@ -324,26 +320,23 @@ public class MediaPlayerVideoView extends SurfaceView implements
 			if (seekToPosition != 0)
 				seekTo(seekToPosition);
 			if (mVideoWidth != 0 && mVideoHeight != 0) {
-//				setVideoLayout(mVideoLayout);
 				if (mSurfaceWidth == mVideoWidth
 						&& mSurfaceHeight == mVideoHeight) {
 					if (mTargetState == STATE_PLAYING) {
-//						start();
 
 					} else if (!isPlaying()
 							&& (seekToPosition != 0 || getCurrentPosition() > 0)) {
-
 					}
 				}
 			} else if (mTargetState == STATE_PLAYING) {
-//				start();
+
 			}
 		}
 	};
 
 	private OnCompletionListener mCompletionListener = new OnCompletionListener() {
 		public void onCompletion(IMediaPlayer mp) {
-			DebugLog.d(TAG, "onCompletion");
+			Log.d(Constants.LOG_TAG, "onCompletion");
 			mCurrentState = STATE_PLAYBACK_COMPLETED;
 			mTargetState = STATE_PLAYBACK_COMPLETED;
 
@@ -391,7 +384,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	private OnSeekCompleteListener mSeekCompleteListener = new OnSeekCompleteListener() {
 		@Override
 		public void onSeekComplete(IMediaPlayer mp) {
-			DebugLog.d(TAG, "onSeekComplete");
+			Log.d(Constants.LOG_TAG, "onSeekComplete");
 			if (mOnSeekCompleteListener != null)
 				mOnSeekCompleteListener.onSeekComplete(mp);
 		}
@@ -433,7 +426,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	SurfaceHolder.Callback mSHCallback = new SurfaceHolder.Callback() {
 		public void surfaceChanged(SurfaceHolder holder, int format, int w,
 				int h) {
-			Log.i("guoli", "surfaceChanged");
+			Log.i(Constants.LOG_TAG, "surfaceChanged in videoview");
 			mSurfaceHolder = holder;
 			if (mMediaPlayer != null) {
 				mMediaPlayer.setDisplay(mSurfaceHolder);
@@ -446,23 +439,21 @@ public class MediaPlayerVideoView extends SurfaceView implements
 			if (mMediaPlayer != null && isValidState && hasValidSize) {
 				if (mSeekWhenPrepared != 0)
 					seekTo(mSeekWhenPrepared);
-//				start();
-
 			}
 			if (mOnSurfaceListener != null)
 				mOnSurfaceListener.surfaceChanged(holder, format, w, h);
 		}
 
 		public void surfaceCreated(SurfaceHolder holder) {
-			Log.i("guoli", "surfaceCreated");
+			Log.i(Constants.LOG_TAG, "surfaceCreated in video view");
 			mSurfaceHolder = holder;
 			if (mMediaPlayer != null && mCurrentState == STATE_SUSPEND
 					&& mTargetState == STATE_RESUME) {
-				Log.i("guoli", "surfaceCreated  resume");
+				Log.i(Constants.LOG_TAG, "surfaceCreated  resume in video view");
 				mMediaPlayer.setDisplay(mSurfaceHolder);
 				resume();
 			} else {
-				Log.i("guoli", "surfaceCreated  openVideo");
+				Log.i(Constants.LOG_TAG, "surfaceCreated  openVideo in video view");
 				openVideo();
 			}
 			if (mOnSurfaceListener != null)
@@ -533,13 +524,13 @@ public class MediaPlayerVideoView extends SurfaceView implements
 
 	@Override
 	public void start() {
-		Log.i("guoli", "start , " + isInPlaybackState());
+		Log.i(Constants.LOG_TAG, "start , " + isInPlaybackState());
 		StackTraceElement[] elems = new Exception().getStackTrace();
 		StringBuffer sb = new StringBuffer();
 		for (StackTraceElement ele : elems) {
 			sb.append(ele.toString()).append("\n");
 		}
-		Log.i("guoli", "trace " + sb.toString());
+		Log.i(Constants.LOG_TAG, "trace " + sb.toString());
 		if (isInPlaybackState()) {
 			mMediaPlayer.start();
 			mCurrentState = STATE_PLAYING;

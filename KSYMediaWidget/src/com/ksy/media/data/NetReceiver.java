@@ -3,6 +3,8 @@ package com.ksy.media.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ksy.media.player.util.Constants;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,14 +40,14 @@ public class NetReceiver extends BroadcastReceiver {
 	}
 	
 	public void registNetBroadCast(Context context){
-		Log.i("guoli", "registNetBroadCast");
+		Log.i(Constants.LOG_TAG, "registNetBroadCast");
 		context.registerReceiver(this, intentFilter);
 	}
 	
 	public void unRegistNetBroadCast(Context context){
-		Log.i("guoli", "unRegistNetBroadCast");
+		Log.i(Constants.LOG_TAG, "unRegistNetBroadCast");
 		if(mListeners.size() > 0){
-			Log.i("guoli","there are other listeners , reject this request");
+			Log.i(Constants.LOG_TAG,"there are other listeners , reject this request");
 			return;
 		}
 		context.unregisterReceiver(this);

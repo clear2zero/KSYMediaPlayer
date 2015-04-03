@@ -6,7 +6,6 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,7 +15,6 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -25,11 +23,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-
 import com.ksy.media.player.annotations.AccessedByNative;
 import com.ksy.media.player.annotations.CalledByNative;
 import com.ksy.media.player.option.AvFormatOption;
 import com.ksy.media.player.pragma.DebugLog;
+import com.ksy.media.player.util.Constants;
 
 /**
  * 
@@ -90,19 +88,12 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 	public static void loadLibrariesOnce(KSYLibLoader libLoader) {
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsLibLoaded) {
-				Log.d("guoli", "loadLibrariesOnce");
+				Log.d(TAG, "loadLibrariesOnce");
 				libLoader.loadLibrary("ksyffmpeg");
-				Log.d("guoli", "ksyffmpeg");
-
 				libLoader.loadLibrary("ksyutil");
-				Log.d("guoli", "ksyutil");
-
 				libLoader.loadLibrary("ksysdl");
-				Log.d("guoli", "ksysdl");
-
 				libLoader.loadLibrary("ksyplayer");
-				Log.d("guoli", "ksyplayer");
-				Log.d("guoli", "loadLibrariesOnce End");
+				Log.d(TAG, "loadLibrariesOnce End");
 				mIsLibLoaded = true;
 			}
 		}
@@ -113,9 +104,9 @@ public final class KSYMediaPlayer extends SimpleMediaPlayer {
 	private static void initNativeOnce() {
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsNativeInitialized) {
-				Log.d("guoli", "init begin");
+				Log.d(TAG, "native init begin");
 				native_init();
-				Log.d("guoli", "init over");
+				Log.d(TAG, "native init end");
 				mIsNativeInitialized = true;
 			}
 		}

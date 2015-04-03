@@ -27,6 +27,7 @@ import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -39,9 +40,10 @@ import com.ksy.media.data.NetReceiver.NetState;
 import com.ksy.media.data.NetReceiver.NetStateChangedListener;
 import com.ksy.media.data.WakeLocker;
 import com.ksy.media.player.IMediaPlayer;
+import com.ksy.media.player.util.Constants;
 import com.ksy.mediaPlayer.widget.R;
 
-public class MediaPlayerView extends RelativeLayout{
+public class MediaPlayerView extends RelativeLayout {
 	private static final int QUALITY_BEST = 100;
 	private static final String CAPUTRE_SCREEN_PATH = "KSY_SDK_SCREENSHOT";
 	private Activity mActivity;
@@ -101,7 +103,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 	private NetReceiver mNetReceiver;
 	private NetStateChangedListener mNetChangedListener;
-	
+
 	public MediaPlayerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context, attrs, defStyle);
@@ -202,16 +204,15 @@ public class MediaPlayerView extends RelativeLayout{
 
 					@Override
 					public void onActionPlay() {
-						Log.i("guoli", "cover view action play");
+						Log.i(Constants.LOG_TAG, "cover view action play");
 						mMediaPlayerCoverView.hide();
 						mMediaPlayerLoadingView.show();
 						mMediaPlayerVideoView.setVideoPath(url);
-						// mMediaPlayerController.start();
 					}
 
 					@Override
 					public void onActionReplay() {
-						Log.i("guoli", "cover view action replay");
+						Log.i(Constants.LOG_TAG, "cover view action replay");
 						mMediaPlayerCoverView.hide();
 						if (mMediaPlayerController != null) {
 							mMediaPlayerController.start();
@@ -222,7 +223,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 					@Override
 					public void onActionError() {
-						Log.i("guoli", "cover view action error");
+						Log.i(Constants.LOG_TAG, "cover view action error");
 						mMediaPlayerCoverView.hide();
 						mMediaPlayerControllerViewLarge.hide();
 						mMediaPlayerControllerViewSmall.hide();
@@ -230,11 +231,9 @@ public class MediaPlayerView extends RelativeLayout{
 						mMediaPlayerVideoView.setVideoPath(url);
 					}
 
-					//
-
 					@Override
 					public void onActionBack() {
-						Log.i("guoli", "cover view action back");
+						Log.i(Constants.LOG_TAG, "cover view action back");
 						mMediaPlayerController.onBackPress(mPlayMode);
 					}
 				});
@@ -310,8 +309,10 @@ public class MediaPlayerView extends RelativeLayout{
 				}
 
 				try {
-					Class parentLayoutParamClazz = getLayoutParams().getClass();
-					Constructor constructor = parentLayoutParamClazz
+					@SuppressWarnings("unchecked")
+					Class<? extends LayoutParams> parentLayoutParamClazz = (Class<? extends LayoutParams>) getLayoutParams()
+							.getClass();
+					Constructor<? extends LayoutParams> constructor = parentLayoutParamClazz
 							.getDeclaredConstructor(int.class, int.class);
 					mLayoutParamFullScreenMode = (android.view.ViewGroup.LayoutParams) constructor
 							.newInstance(
@@ -333,8 +334,7 @@ public class MediaPlayerView extends RelativeLayout{
 		});
 
 		initOrientationEventListener(context);
-		
-		
+
 		mNetReceiver = NetReceiver.getInstance();
 		mNetChangedListener = new NetStateChangedListener() {
 
@@ -343,33 +343,40 @@ public class MediaPlayerView extends RelativeLayout{
 				switch (netCode) {
 
 				case NET_NO:
-					Log.i("guoli","网络断了");
-					Toast.makeText(getContext(), "网络变化了:没有网络连接", Toast.LENGTH_LONG).show();
+					Log.i(Constants.LOG_TAG, "网络断了");
+					Toast.makeText(getContext(), "网络变化了:没有网络连接",
+							Toast.LENGTH_LONG).show();
 					break;
 				case NET_2G:
-					Log.i("guoli","2g网络");
-					Toast.makeText(getContext(), "网络变化了:2g网络", Toast.LENGTH_LONG).show();
+					Log.i(Constants.LOG_TAG, "2g网络");
+					Toast.makeText(getContext(), "网络变化了:2g网络",
+							Toast.LENGTH_LONG).show();
 					break;
 				case NET_3G:
-					Log.i("guoli","3g网络");
-					Toast.makeText(getContext(), "网络变化了:3g网络", Toast.LENGTH_LONG).show();
+					Log.i(Constants.LOG_TAG, "3g网络");
+					Toast.makeText(getContext(), "网络变化了:3g网络",
+							Toast.LENGTH_LONG).show();
 					break;
 				case NET_4G:
-					Log.i("guoli","4g网络");
-					Toast.makeText(getContext(), "网络变化了:4g网络", Toast.LENGTH_LONG).show();
+					Log.i(Constants.LOG_TAG, "4g网络");
+					Toast.makeText(getContext(), "网络变化了:4g网络",
+							Toast.LENGTH_LONG).show();
 					break;
 				case NET_WIFI:
-					Log.i("guoli","WIFI网络");
-					Toast.makeText(getContext(), "网络变化了:WIFI网络", Toast.LENGTH_LONG).show();
+					Log.i(Constants.LOG_TAG, "WIFI网络");
+					Toast.makeText(getContext(), "网络变化了:WIFI网络",
+							Toast.LENGTH_LONG).show();
 					break;
 
 				case NET_UNKNOWN:
-					Log.i("guoli","未知网络");
-					Toast.makeText(getContext(), "网络变化了:未知网络", Toast.LENGTH_LONG).show();
+					Log.i(Constants.LOG_TAG, "未知网络");
+					Toast.makeText(getContext(), "网络变化了:未知网络",
+							Toast.LENGTH_LONG).show();
 					break;
 				default:
-					Log.i("guoli","不知道什么情况~>_<~");
-					Toast.makeText(getContext(), "网络变化了:不知道什么情况~>_<~", Toast.LENGTH_LONG).show();
+					Log.i(Constants.LOG_TAG, "不知道什么情况~>_<~");
+					Toast.makeText(getContext(), "网络变化了:不知道什么情况~>_<~",
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		};
@@ -478,10 +485,6 @@ public class MediaPlayerView extends RelativeLayout{
 				MediaPlayerUtils.hideSystemUI(mWindow, true);
 
 			mPlayMode = requestPlayMode;
-			if (mMediaPlayerVideoView.mCurrentState == MediaPlayerVideoView.STATE_PLAYING) {
-				Log.d("guoli", "set needToResetMovieRatio");
-				needToResetMovieRatio = true;
-			}
 			return true;
 
 		}
@@ -517,7 +520,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 	public void onResume() {
 		mWindowActived = true;
-		
+
 		enableOrientationEventListener();
 		mNetReceiver.registNetBroadCast(getContext());
 		mNetReceiver.addNetStateChangeListener(mNetChangedListener);
@@ -573,7 +576,7 @@ public class MediaPlayerView extends RelativeLayout{
 						if (!MediaPlayerUtils.checkSystemGravity(getContext()))
 							return;
 						if (MediaPlayerUtils.isWindowMode(mPlayMode)) {
-							Log.i("guoli", " Window to FullScreen ");
+							Log.i(Constants.LOG_TAG, " Window to FullScreen ");
 							if (mScreenOrientation == ORIENTATION_LANDSCAPE_NORMAL
 									|| mScreenOrientation == ORIENTATION_LANDSCAPE_REVERSED) {
 								if (!mLockMode) {
@@ -584,7 +587,7 @@ public class MediaPlayerView extends RelativeLayout{
 								}
 							}
 						} else if (MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
-							Log.i("guoli", " Full Screen to Window mode ");
+							Log.i(Constants.LOG_TAG, " Full Screen to Window");
 							if (mScreenOrientation == ORIENTATION_PORTRAIT_NORMAL) {
 								if (!mLockMode) {
 									boolean requestResult = requestPlayMode(MediaPlayMode.PLAYMODE_WINDOW);
@@ -717,7 +720,8 @@ public class MediaPlayerView extends RelativeLayout{
 		if (mDisplaySizeMode > MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_ORIGIN) {
 			mDisplaySizeMode = MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_16_9;
 		}
-		Log.d("guoli", "change current mode = " + mDisplaySizeMode);
+		Log.d(Constants.LOG_TAG, "Change Current Width/Heigh Ratio = "
+				+ mDisplaySizeMode);
 		mMediaPlayerVideoView.setVideoLayout(mDisplaySizeMode);
 		mDisplaySizeMode++;
 	}
@@ -759,7 +763,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 		@Override
 		public void onCompletion(IMediaPlayer mp) {
-			Log.i("guoli", "onCompletion==========");
+			Log.i(Constants.LOG_TAG, "onCompletion==========");
 			mMediaPlayerControllerViewLarge.hide();
 			mMediaPlayerControllerViewSmall.hide();
 			mMediaPlayerCoverView.updateCoverMode(
@@ -778,12 +782,12 @@ public class MediaPlayerView extends RelativeLayout{
 			switch (what) {
 			// 视频缓冲开始
 			case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
-				Log.i("guoli", "MEDIA_INFO_BUFFERING_START");
+				Log.i(Constants.LOG_TAG, "MEDIA_INFO_BUFFERING_START");
 				mMediaPlayerBufferingView.show();
 				break;
 			// 视频缓冲结束
 			case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
-				Log.i("guoli", "MEDIA_INFO_BUFFERING_END");
+				Log.i(Constants.LOG_TAG, "MEDIA_INFO_BUFFERING_END");
 				mMediaPlayerBufferingView.hide();
 				break;
 			default:
@@ -797,7 +801,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 		@Override
 		public void onBufferingUpdate(IMediaPlayer mp, int percent) {
-			// Log.i("guoli", "precent :" + percent);
+			// Log.i(Constants.LOG_TAG, "precent :" + percent);
 			if (percent > 0 && percent <= 100) {
 				mMediaPlayerBufferingView.setBufferingProgress(percent);
 			} else {
@@ -811,7 +815,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 		@Override
 		public boolean onError(IMediaPlayer mp, int what, int extra) {
-			Log.i("guoli", "what :" + what + " , extra :" + extra);
+			Log.i(Constants.LOG_TAG, "On Native Error,what :" + what + " , extra :" + extra);
 			mMediaPlayerControllerViewLarge.hide();
 			mMediaPlayerControllerViewSmall.hide();
 			mMediaPlayerCoverView.updateCoverMode(
@@ -826,7 +830,6 @@ public class MediaPlayerView extends RelativeLayout{
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
-			Log.i("guoli", "========surfaceDestroyed =============");
 			mVideoReady = false;
 			mMediaPlayerControllerViewLarge.hide();
 			mMediaPlayerControllerViewSmall.hide();
@@ -837,13 +840,11 @@ public class MediaPlayerView extends RelativeLayout{
 
 		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
-			Log.i("guoli", "========surfaceCreated =============");
 		}
 
 		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int w,
 				int h) {
-			Log.i("guoli", "========surfaceChanged =============");
 		}
 	};
 
@@ -980,7 +981,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 		@Override
 		public void onBackPress(int playMode) {
-			Log.i("guoli",
+			Log.i(Constants.LOG_TAG,
 					"========playerview back pressed ==============playMode :"
 							+ playMode + ", mPlayerViewCallback is null "
 							+ (mPlayerViewCallback == null));
@@ -1046,7 +1047,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 		@Override
 		public void onMoviePlayRatioUp() {
-			Log.d("guoli", "speed up");
+			Log.d(Constants.LOG_TAG, "speed up");
 			mMediaPlayerVideoView.setVideoRate(5.0f);
 		}
 
@@ -1071,7 +1072,7 @@ public class MediaPlayerView extends RelativeLayout{
 				compressAndSaveBitmapToSDCard(bitmap, getCurrentTime(),
 						MediaPlayerView.QUALITY_BEST);
 			} else {
-				Log.d("guoli", "bitmap is null");
+				Log.d(Constants.LOG_TAG, "bitmap is null");
 			}
 
 		}
@@ -1119,7 +1120,7 @@ public class MediaPlayerView extends RelativeLayout{
 
 			}
 		} else {
-			Log.d("guoli", "too frequently screen shot");
+			Log.d(Constants.LOG_TAG, "too frequently screen shot");
 		}
 	}
 

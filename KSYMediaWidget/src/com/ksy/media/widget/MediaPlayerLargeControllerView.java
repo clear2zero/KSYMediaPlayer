@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.ksy.media.data.MediaPlayMode;
 import com.ksy.media.data.MediaPlayerUtils;
 import com.ksy.media.data.MediaPlayerVideoQuality;
+import com.ksy.media.player.util.Constants;
 import com.ksy.mediaPlayer.widget.R;
 
 public class MediaPlayerLargeControllerView extends
@@ -330,25 +331,13 @@ public class MediaPlayerLargeControllerView extends
 
 	public void updateVideoPlaybackState(boolean isStart) {
 		// 播放中
-		Log.i("guoli", "updateVideoPlaybackState  ----> start ? " + isStart);
+		Log.i(Constants.LOG_TAG, "updateVideoPlaybackState  ----> start ? " + isStart);
 		if (isStart) {
-			// mIvVideoPlayback.setImageResource(R.drawable.player_controller_video_pause_selector);
 			mVideoPlayImageView.setSelected(true);
-			// if (mMediaPlayerController.canPause()) {
-			// mVideoPlayImageView.setEnabled(true);
-			// } else {
-			// mVideoPlayImageView.setEnabled(false);
-			// }
 		}
 		// 未播放
 		else {
-			// mIvVideoPlayback.setImageResource(R.drawable.player_controller_video_start_selector);
 			mVideoPlayImageView.setSelected(false);
-			// if (mMediaPlayerController.canStart()) {
-			// mVideoPlayImageView.setEnabled(true);
-			// } else {
-			// mVideoPlayImageView.setEnabled(false);
-			// }
 		}
 	}
 
@@ -369,7 +358,7 @@ public class MediaPlayerLargeControllerView extends
 					.onBackPress(MediaPlayMode.PLAYMODE_FULLSCREEN);
 
 		} else if (id == mVideoPlayImageView.getId()) {
-			Log.i("guoli", "playing  ? " + (mMediaPlayerController.isPlaying()));
+			Log.i(Constants.LOG_TAG, "playing  ? " + (mMediaPlayerController.isPlaying()));
 			if (mMediaPlayerController.isPlaying()) {
 				mMediaPlayerController.pause();
 				if (mScreenLock) {
