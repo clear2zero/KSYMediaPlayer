@@ -44,3 +44,6 @@ Temporary Items
 KSYMediaDemo/bin/classes.dex
 *.class
 *.jar
+*.class
+KSYMediaDemo/bin/classes/com/ksy/media/demo/VideoPlayerActivity.class
+KSYMediaDemo/bin/classes/com/ksy/mediaPlayer/widget/R$id.class
