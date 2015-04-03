@@ -45,6 +45,8 @@ KSYMediaWidget/bin
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Android
 KSYMediaDemo/bin/classes.dex
 *.class
 *.jar
