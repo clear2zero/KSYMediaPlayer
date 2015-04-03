@@ -26,7 +26,6 @@ import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -98,12 +97,13 @@ public class MediaPlayerView extends RelativeLayout {
 	private int mFullScreenNavigationBarHeight;
 	private int mDeviceNavigationType = MediaPlayerUtils.DEVICE_NAVIGATION_TYPE_UNKNOWN;
 	private int mDisplaySizeMode = MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_16_9;
-	private Context mContext;
 	private GlobleScreenShoot screenshot;
 
 	private NetReceiver mNetReceiver;
 	private NetStateChangedListener mNetChangedListener;
 
+	private float mCurrentPlayingRatio = 1f;
+	public final static  float MAX_PLAYING_RATIO = 4f;
 	public MediaPlayerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context, attrs, defStyle);
@@ -383,7 +383,6 @@ public class MediaPlayerView extends RelativeLayout {
 	}
 
 	private String url = null;
-	private boolean needToResetMovieRatio;
 
 	public void play(String path) {
 		if (this.mMediaPlayerVideoView != null) {
@@ -1048,12 +1047,36 @@ public class MediaPlayerView extends RelativeLayout {
 		@Override
 		public void onMoviePlayRatioUp() {
 			Log.d(Constants.LOG_TAG, "speed up");
-			mMediaPlayerVideoView.setVideoRate(5.0f);
+			if(mMediaPlayerController != null && mMediaPlayerController.isPlaying()){
+				if(mCurrentPlayingRatio == MAX_PLAYING_RATIO){
+					Log.d(Constants.LOG_TAG, "current playing ratio is max");
+					return ;
+				}else{
+					mCurrentPlayingRatio = mCurrentPlayingRatio + 0.5f;
+					mMediaPlayerVideoView.setVideoRate(mCurrentPlayingRatio);
+					Log.d(Constants.LOG_TAG, "set playing ratio to --->" + mCurrentPlayingRatio);
+				}
+			}
+			
+			Log.d(Constants.LOG_TAG, "current video is not playing , set ratio unsupported");
+			
 		}
 
 		@Override
 		public void onMoviePlayRatioDown() {
-			mMediaPlayerVideoView.setVideoRate(0.5f);
+			if(mMediaPlayerController != null && mMediaPlayerController.isPlaying()){
+				if(mCurrentPlayingRatio == 0){
+					Log.d(Constants.LOG_TAG, "current playing ratio is 0");
+					return ;
+				}else{
+					mCurrentPlayingRatio = mCurrentPlayingRatio - 0.5f;
+					mMediaPlayerVideoView.setVideoRate(mCurrentPlayingRatio);
+					Log.d(Constants.LOG_TAG, "set playing ratio to --->" + mCurrentPlayingRatio);
+					return;
+				}
+			}
+			
+			Log.d(Constants.LOG_TAG, "current video is not playing , set ratio unsupported");
 		}
 
 		@Override

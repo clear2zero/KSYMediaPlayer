@@ -330,4 +330,16 @@ public class AndroidMediaPlayer extends SimpleMediaPlayer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setBufferSize(int size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setAnalyseDuration(int duration) {
+		// TODO Auto-generated method stub
+		
+	}
 }

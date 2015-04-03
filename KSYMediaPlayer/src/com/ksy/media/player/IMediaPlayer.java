@@ -30,6 +30,10 @@ public interface IMediaPlayer {
     public static final int MEDIA_ERROR_UNSUPPORTED = -1010;
     public static final int MEDIA_ERROR_TIMED_OUT = -110;
 
+    public static final int MEDIA_BUFFERSIZE_DEFAULT = 2 * 10 * 1024 *1024;
+    
+    public static final int MEDIA_ANALYSE_DURATION_DEFAULT = 2 * 1000 ; 
+    
     public abstract void setDisplay(SurfaceHolder sh);
 
     public abstract void setDataSource(String path) throws IOException,
@@ -149,4 +153,8 @@ public interface IMediaPlayer {
     public abstract void setVideoRate(float rate);
     
     public abstract void getPicture(Bitmap bitmap);
+    
+    public abstract void setBufferSize(int size);
+    
+    public abstract void setAnalyseDuration(int duration);
 }
