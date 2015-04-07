@@ -44,6 +44,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private static final int MEDIA_SET_VIDEO_SIZE = 5;
 	private static final int MEDIA_TIMED_TEXT = 99;
 	private static final int MEDIA_ERROR = 100;
+	private static final int MEDIA_GET_DRM_KEY = 101;
 	private static final int MEDIA_INFO = 200;
 
 	protected static final int MEDIA_SET_VIDEO_SAR = 10001;
@@ -633,6 +634,16 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 						player.mVideoSarDen);
 				break;
 
+			case MEDIA_GET_DRM_KEY:
+				DebugLog.e(TAG, "MEDIA_GET_DRM_KEY");
+				String version = (String) msg.obj;
+				if (!TextUtils.isEmpty(version)) {
+					player.notifyOnDRMRequired(msg.arg1, msg.arg2, version);
+				} else {
+					DebugLog.e(TAG, "version is null" + version);
+				}
+				break;
+
 			default:
 				DebugLog.e(TAG, "Unknown message type " + msg.what);
 				return;
@@ -805,7 +816,6 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 			OnMediaCodecSelectListener {
 		public static DefaultMediaCodecSelector sInstance = new DefaultMediaCodecSelector();
 
-		@SuppressWarnings("deprecation")
 		@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 		public String onMediaCodecSelect(IMediaPlayer mp, String mimeType,
 				int profile, int level) {
@@ -927,6 +937,26 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 		_setAnalyseDuration(duration);
 	};
 
+	@Override
+	public void setDRMKey(String version, String key) {
+		if (checkDRMKey(version, key)) {
+			_setDRMKey(version, key);
+		} else {
+			Log.w(Constants.LOG_TAG, "DRM failed with error");
+		}
+	}
+
+	// need to implements
+	private boolean checkDRMKey(String version, String key) {
+		if (TextUtils.isEmpty(version) || TextUtils.isEmpty(key)) {
+			Log.w(Constants.LOG_TAG,
+					"DRM version & key can not be null or empty");
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	private native void _setAudioAmplify(float ratio);
 
 	private native void _setVideoRate(float rate);
@@ -937,9 +967,11 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	private native void _getCurrentFrame(Bitmap bitmap);
 
+	private native void _setDRMKey(String version, String key);
+
 	@Override
 	public void setLogEnabled(boolean enable) {
-		
+
 	}
 
 	@Override
@@ -949,7 +981,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void setKeepInBackground(boolean keepInBackground) {
-		
+
 	}
 
 }

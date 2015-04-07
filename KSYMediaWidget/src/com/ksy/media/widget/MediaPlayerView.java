@@ -103,7 +103,8 @@ public class MediaPlayerView extends RelativeLayout {
 	private NetStateChangedListener mNetChangedListener;
 
 	private float mCurrentPlayingRatio = 1f;
-	public final static  float MAX_PLAYING_RATIO = 4f;
+	public final static float MAX_PLAYING_RATIO = 4f;
+
 	public MediaPlayerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context, attrs, defStyle);
@@ -178,6 +179,8 @@ public class MediaPlayerView extends RelativeLayout {
 		this.mMediaPlayerVideoView
 				.setOnCompletionListener(mOnCompletionListener);
 		this.mMediaPlayerVideoView.setOnInfoListener(mOnInfoListener);
+		this.mMediaPlayerVideoView
+				.setOnDRMRequiredListener(mOnDRMRequiredListener);
 		this.mMediaPlayerVideoView.setOnErrorListener(mOnErrorListener);
 		this.mMediaPlayerVideoView.setOnSurfaceListener(mOnSurfaceListener);
 		this.mMediaPlayerVideoView
@@ -796,6 +799,21 @@ public class MediaPlayerView extends RelativeLayout {
 		}
 	};
 
+	IMediaPlayer.OnDRMRequiredListener mOnDRMRequiredListener = new IMediaPlayer.OnDRMRequiredListener() {
+
+		@Override
+		public void OnDRMRequired(IMediaPlayer mp, int what, int extra,
+				String version) {
+			// if complete
+			requestDRMKey(version);
+		}
+	};
+
+	private void requestDRMKey(String version) {
+		// Request Key Here
+		mMediaPlayerVideoView.setDRMKey(version, "key");
+	}
+
 	IMediaPlayer.OnBufferingUpdateListener mOnPlaybackBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
 
 		@Override
@@ -814,7 +832,8 @@ public class MediaPlayerView extends RelativeLayout {
 
 		@Override
 		public boolean onError(IMediaPlayer mp, int what, int extra) {
-			Log.i(Constants.LOG_TAG, "On Native Error,what :" + what + " , extra :" + extra);
+			Log.i(Constants.LOG_TAG, "On Native Error,what :" + what
+					+ " , extra :" + extra);
 			mMediaPlayerControllerViewLarge.hide();
 			mMediaPlayerControllerViewSmall.hide();
 			mMediaPlayerCoverView.updateCoverMode(
@@ -1047,36 +1066,42 @@ public class MediaPlayerView extends RelativeLayout {
 		@Override
 		public void onMoviePlayRatioUp() {
 			Log.d(Constants.LOG_TAG, "speed up");
-			if(mMediaPlayerController != null && mMediaPlayerController.isPlaying()){
-				if(mCurrentPlayingRatio == MAX_PLAYING_RATIO){
+			if (mMediaPlayerController != null
+					&& mMediaPlayerController.isPlaying()) {
+				if (mCurrentPlayingRatio == MAX_PLAYING_RATIO) {
 					Log.d(Constants.LOG_TAG, "current playing ratio is max");
-					return ;
-				}else{
+					return;
+				} else {
 					mCurrentPlayingRatio = mCurrentPlayingRatio + 0.5f;
 					mMediaPlayerVideoView.setVideoRate(mCurrentPlayingRatio);
-					Log.d(Constants.LOG_TAG, "set playing ratio to --->" + mCurrentPlayingRatio);
+					Log.d(Constants.LOG_TAG, "set playing ratio to --->"
+							+ mCurrentPlayingRatio);
 				}
 			}
-			
-			Log.d(Constants.LOG_TAG, "current video is not playing , set ratio unsupported");
-			
+
+			Log.d(Constants.LOG_TAG,
+					"current video is not playing , set ratio unsupported");
+
 		}
 
 		@Override
 		public void onMoviePlayRatioDown() {
-			if(mMediaPlayerController != null && mMediaPlayerController.isPlaying()){
-				if(mCurrentPlayingRatio == 0){
+			if (mMediaPlayerController != null
+					&& mMediaPlayerController.isPlaying()) {
+				if (mCurrentPlayingRatio == 0) {
 					Log.d(Constants.LOG_TAG, "current playing ratio is 0");
-					return ;
-				}else{
+					return;
+				} else {
 					mCurrentPlayingRatio = mCurrentPlayingRatio - 0.5f;
 					mMediaPlayerVideoView.setVideoRate(mCurrentPlayingRatio);
-					Log.d(Constants.LOG_TAG, "set playing ratio to --->" + mCurrentPlayingRatio);
+					Log.d(Constants.LOG_TAG, "set playing ratio to --->"
+							+ mCurrentPlayingRatio);
 					return;
 				}
 			}
-			
-			Log.d(Constants.LOG_TAG, "current video is not playing , set ratio unsupported");
+
+			Log.d(Constants.LOG_TAG,
+					"current video is not playing , set ratio unsupported");
 		}
 
 		@Override

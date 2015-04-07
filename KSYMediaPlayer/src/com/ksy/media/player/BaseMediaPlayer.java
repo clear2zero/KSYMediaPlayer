@@ -12,7 +12,7 @@ public abstract class BaseMediaPlayer implements IMediaPlayer {
     private OnVideoSizeChangedListener mOnVideoSizeChangedListener;
     private OnErrorListener mOnErrorListener;
     private OnInfoListener mOnInfoListener;
-
+    private OnDRMRequiredListener mOnDRMRequiredListener;
     public final void setOnPreparedListener(OnPreparedListener listener) {
         mOnPreparedListener = listener;
     }
@@ -42,7 +42,12 @@ public abstract class BaseMediaPlayer implements IMediaPlayer {
     public final void setOnInfoListener(OnInfoListener listener) {
         mOnInfoListener = listener;
     }
+    
+    public final void setOnDRMRequiredListener(OnDRMRequiredListener listener){
+    	mOnDRMRequiredListener = listener;
+    }
 
+    
     public void resetListeners() {
         mOnPreparedListener = null;
         mOnBufferingUpdateListener = null;
@@ -51,6 +56,7 @@ public abstract class BaseMediaPlayer implements IMediaPlayer {
         mOnVideoSizeChangedListener = null;
         mOnErrorListener = null;
         mOnInfoListener = null;
+        mOnDRMRequiredListener = null;
     }
 
     public void attachListeners(IMediaPlayer mp) {
@@ -61,6 +67,7 @@ public abstract class BaseMediaPlayer implements IMediaPlayer {
         mp.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
         mp.setOnErrorListener(mOnErrorListener);
         mp.setOnInfoListener(mOnInfoListener);
+        mp.setOnDRMRequiredListener(mOnDRMRequiredListener);
     }
 
     protected final void notifyOnPrepared() {
@@ -100,5 +107,10 @@ public abstract class BaseMediaPlayer implements IMediaPlayer {
         if (mOnInfoListener != null)
             return mOnInfoListener.onInfo(this, what, extra);
         return false;
+    }
+    
+    protected final void notifyOnDRMRequired(int what, int extra,String version) {
+        if (mOnDRMRequiredListener != null)
+           mOnDRMRequiredListener.OnDRMRequired(this, what, extra,version);
     }
 }

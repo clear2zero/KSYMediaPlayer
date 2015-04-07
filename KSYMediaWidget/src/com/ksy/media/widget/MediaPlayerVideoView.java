@@ -20,6 +20,7 @@ import android.view.ViewGroup.LayoutParams;
 import com.ksy.media.player.IMediaPlayer;
 import com.ksy.media.player.IMediaPlayer.OnBufferingUpdateListener;
 import com.ksy.media.player.IMediaPlayer.OnCompletionListener;
+import com.ksy.media.player.IMediaPlayer.OnDRMRequiredListener;
 import com.ksy.media.player.IMediaPlayer.OnErrorListener;
 import com.ksy.media.player.IMediaPlayer.OnInfoListener;
 import com.ksy.media.player.IMediaPlayer.OnPreparedListener;
@@ -82,6 +83,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	private OnErrorListener mOnErrorListener;
 	private OnSeekCompleteListener mOnSeekCompleteListener;
 	private OnInfoListener mOnInfoListener;
+	private OnDRMRequiredListener mOnDRMRequiredListener;
 	private OnBufferingUpdateListener mOnBufferingUpdateListener;
 	private OnSurfaceListener mOnSurfaceListener;
 	private MediaPlayerController mMediaPlayerController;
@@ -115,7 +117,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	}
 
 	public void setVideoLayout(int layout) {
-		Log.d(Constants.LOG_TAG, "SetVideoLayout ,Mode = "+layout);
+		Log.d(Constants.LOG_TAG, "SetVideoLayout ,Mode = " + layout);
 		LayoutParams lp = getLayoutParams();
 		Pair<Integer, Integer> res = ScreenResolution.getResolution(mContext);
 		int windowWidth = res.first.intValue(), windowHeight = res.second
@@ -245,13 +247,16 @@ public class MediaPlayerVideoView extends SurfaceView implements
 			KSYMediaPlayer ksyMediaPlayer = null;
 			if (mUri != null) {
 				ksyMediaPlayer = new KSYMediaPlayer();
-				ksyMediaPlayer.setAvOption(AvFormatOption_HttpDetectRangeSupport.Disable);
+				ksyMediaPlayer
+						.setAvOption(AvFormatOption_HttpDetectRangeSupport.Disable);
 				ksyMediaPlayer.setOverlayFormat(AvFourCC.SDL_FCC_RV32);
 
 				ksyMediaPlayer.setAvCodecOption("skip_loop_filter", "48");
 				ksyMediaPlayer.setFrameDrop(12);
-				ksyMediaPlayer.setBufferSize(IMediaPlayer.MEDIA_BUFFERSIZE_DEFAULT);
-				ksyMediaPlayer.setAnalyseDuration(IMediaPlayer.MEDIA_ANALYSE_DURATION_DEFAULT);
+				ksyMediaPlayer
+						.setBufferSize(IMediaPlayer.MEDIA_BUFFERSIZE_DEFAULT);
+				ksyMediaPlayer
+						.setAnalyseDuration(IMediaPlayer.MEDIA_ANALYSE_DURATION_DEFAULT);
 				if (mUserAgent != null) {
 					ksyMediaPlayer.setAvFormatOption("user_agent", mUserAgent);
 				}
@@ -263,6 +268,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 			mMediaPlayer.setOnErrorListener(mErrorListener);
 			mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
 			mMediaPlayer.setOnInfoListener(mInfoListener);
+			mMediaPlayer.setOnDRMRequiredListener(mDRMRequiredListener);
 			mMediaPlayer.setOnSeekCompleteListener(mSeekCompleteListener);
 			if (mUri != null)
 				mMediaPlayer.setDataSource(mUri.toString());
@@ -381,6 +387,18 @@ public class MediaPlayerVideoView extends SurfaceView implements
 		}
 	};
 
+	private OnDRMRequiredListener mDRMRequiredListener = new OnDRMRequiredListener() {
+
+		@Override
+		public void OnDRMRequired(IMediaPlayer mp, int what, int extra,
+				String version) {
+			if (mOnDRMRequiredListener != null) {
+				mOnDRMRequiredListener.OnDRMRequired(mp, what, extra, version);
+			}
+		}
+
+	};
+
 	private OnSeekCompleteListener mSeekCompleteListener = new OnSeekCompleteListener() {
 		@Override
 		public void onSeekComplete(IMediaPlayer mp) {
@@ -419,6 +437,10 @@ public class MediaPlayerVideoView extends SurfaceView implements
 		mOnInfoListener = l;
 	}
 
+	public void setOnDRMRequiredListener(OnDRMRequiredListener l) {
+		mOnDRMRequiredListener = l;
+	}
+
 	public void setOnSurfaceListener(OnSurfaceListener l) {
 		mOnSurfaceListener = l;
 	}
@@ -453,7 +475,8 @@ public class MediaPlayerVideoView extends SurfaceView implements
 				mMediaPlayer.setDisplay(mSurfaceHolder);
 				resume();
 			} else {
-				Log.i(Constants.LOG_TAG, "surfaceCreated  openVideo in video view");
+				Log.i(Constants.LOG_TAG,
+						"surfaceCreated  openVideo in video view");
 				openVideo();
 			}
 			if (mOnSurfaceListener != null)
@@ -573,18 +596,18 @@ public class MediaPlayerVideoView extends SurfaceView implements
 		return (int) mDuration;
 	}
 
-	public MediaInfo getMediaInfo(){
-		if(isInPlaybackState()){
-			if(mMediaInfo == null){
+	public MediaInfo getMediaInfo() {
+		if (isInPlaybackState()) {
+			if (mMediaInfo == null) {
 				mMediaInfo = mMediaPlayer.getMediaInfo();
 			}
 			return mMediaInfo;
 		}
-		
+
 		mMediaInfo = null;
 		return mMediaInfo;
 	}
-	
+
 	@Override
 	public int getCurrentPosition() {
 		if (isInPlaybackState()) {
@@ -630,7 +653,7 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	}
 
 	public boolean canPause() {
-		if(isPlaying())
+		if (isPlaying())
 			return true;
 		return false;
 	}
@@ -661,19 +684,31 @@ public class MediaPlayerVideoView extends SurfaceView implements
 	public void onPause() {
 
 	}
-	
+
 	// P1 Added Interface
 	public void setAudioAmplify(float ratio) {
 		mMediaPlayer.setAudioAmplify(ratio);
 	}
-	
+
 	public void setVideoRate(float rate) {
 		mMediaPlayer.setVideoRate(rate);
 	}
-	
+
 	public void getCurrentFrame(Bitmap bitmap) {
-		 mMediaPlayer.getCurrentFrame(bitmap);
+		mMediaPlayer.getCurrentFrame(bitmap);
 	}
-	
-	
+
+	public void setBufferSize(int size) {
+		mMediaPlayer.setBufferSize(size);
+	}
+
+	public void setAnalyseDuration(int duration) {
+		mMediaPlayer.setAnalyseDuration(duration);
+	}
+
+	// P2 Added Interface
+	public void setDRMKey(String version, String key) {
+		mMediaPlayer.setDRMKey(version, key);
+	}
+
 }
