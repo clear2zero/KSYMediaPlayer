@@ -114,7 +114,6 @@ public class MediaPlayerBrightView extends RelativeLayout {
 
     }
 
-    // 记录一次有效手势滑动的总距离,改值是由于多次的delta累加而成,要大于一个基础阀值,才能真正实现效果
     private float mTotalDeltaBrintnessDistance = 0;
 
     public void onGestureLightChange(float deltaBrightnessDistance, float totalBrightnessDistance, Window window) {

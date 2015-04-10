@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,8 +17,7 @@ import android.widget.FrameLayout;
 import com.ksy.media.data.MediaPlayerUtils;
 import com.ksy.media.data.MediaPlayerVideoQuality;
 
-public abstract class MediaPlayerBaseControllerView extends FrameLayout{
-
+public abstract class MediaPlayerBaseControllerView extends FrameLayout {
 
 	private volatile boolean mNeedGesture = false;
 	private volatile boolean mNeedGestureLight = false;
@@ -35,17 +35,15 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout{
 	protected static final int MSG_HIDE = 0x11;
 	protected static final int MSG_TICKE = 0x12;
 
-
 	private static final double RADIUS_SLOP = Math.PI * 1 / 4;
 	private static final int GESTURE_NONE = 0x00;
 	private static final int GESTURE_LIGHT = 0x01;
 	private static final int GESTURE_VOLUME = 0x02;
 	private static final int GESTURE_SEEK = 0x03;
 	private volatile int mCurrentGesture = GESTURE_NONE;
-	
+
 	protected MediaPlayerVideoQuality mCurrentQuality = MediaPlayerVideoQuality.SD;
-	
-	
+
 	protected LayoutInflater mLayoutInflater;
 	protected Window mHostWindow;
 	protected WindowManager.LayoutParams mHostWindowLayoutParams;
@@ -59,30 +57,30 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout{
 
 	protected volatile boolean mScreenLock = false;
 
-    protected MediaPlayerBrightView mWidgetLightView;
-    protected MediaPlayerVolumeView mWidgetVolumeView;
-    protected MediaPlayerSeekView mWidgetSeekView;
-	
-	
+	protected MediaPlayerBrightView mWidgetLightView;
+	protected MediaPlayerVolumeView mWidgetVolumeView;
+	protected MediaPlayerSeekView mWidgetSeekView;
 
-	public MediaPlayerBaseControllerView(Context context, AttributeSet attrs,int defStyle) {
+	public MediaPlayerBaseControllerView(Context context, AttributeSet attrs, int defStyle) {
+
 		super(context, attrs, defStyle);
 		init();
 	}
 
 	public MediaPlayerBaseControllerView(Context context, AttributeSet attrs) {
+
 		super(context, attrs);
 		init();
 	}
 
 	public MediaPlayerBaseControllerView(Context context) {
+
 		super(context);
 		init();
 	}
 
-	
-
 	private void startTimerTicker() {
+
 		if (mIsTickerStarted)
 			return;
 		mIsTickerStarted = true;
@@ -91,261 +89,319 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout{
 	}
 
 	private void stopTimerTicker() {
+
 		if (!mIsTickerStarted)
 			return;
 		mIsTickerStarted = false;
 		mHandler.removeMessages(MSG_TICKE);
 	}
-    
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        initViews();
-        initListeners();
-    }
-    private void hideGestureView(){
-        if(mNeedGesture){
-            if(mWidgetLightView != null && mWidgetLightView.isShowing()) mWidgetLightView.hide(true);
-            if(mWidgetVolumeView != null && mWidgetVolumeView.isShowing()) mWidgetVolumeView.hide(true);
-            if(mWidgetSeekView != null && mWidgetSeekView.isShowing()) mWidgetSeekView.hide(true);
-        }
-    }
-    
-    public void show(){
-        show(HIDE_TIMEOUT_DEFAULT);
-    }
-    
-    public void show(int timeout){      
-        mHandler.sendEmptyMessage(MSG_SHOW);
-        mHandler.removeMessages(MSG_HIDE);
-        if(timeout > 0){
-            Message msgHide = mHandler.obtainMessage(MSG_HIDE);
-            mHandler.sendMessageDelayed(msgHide, timeout);
-        }
-    }
-    
-    public void hide(){
-        mHandler.sendEmptyMessage(MSG_HIDE);
-    }
-    
-    public void toggle(){
-        if(isShowing()){
-            hide();
-        }
-        else{
-            if(!mMediaPlayerController.isPlaying()){
-                show(0);
-            }else{
-                show();
-            }
-        }
-        
-    }
-    
-    public boolean isShowing(){
-        if(getVisibility() == View.VISIBLE)
-            return true;
-        return false;
-    }
-    
-    public void setNeedGestureDetector(boolean need){
-        this.mNeedGesture = need;
-    }
-    
-    public void setNeedGestureAction(boolean needLightGesture, boolean needVolumeGesture, boolean needSeekGesture){
-        this.mNeedGestureLight = needLightGesture;
-        this.mNeedGestureVolume = needVolumeGesture;
-        this.mNeedGestureSeek = needSeekGesture;
-    }
-    
-    public void setNeedTicker(boolean need){
-        this.mEnnableTicker = need;
-    }
-    
-    public void setMediaPlayerController(MediaPlayerController mediaPlayerController){
-        mMediaPlayerController = mediaPlayerController;
-    }
-    
-    public void setHostWindow(Window window){
-        if(window != null){
-            mHostWindow = window;
-            mHostWindowLayoutParams = window.getAttributes();
-        }
-    }
-    
-    public void setDeviceNavigationBarExist(boolean deviceNavigationBarExist){
-        mDeviceNavigationBarExist = deviceNavigationBarExist;
-    }
-    
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        
-        final int action = event.getAction();
-        
-        switch (action) {
-        case MotionEvent.ACTION_DOWN:
-            if(mNeedGesture && !mScreenLock){
-                if(mNeedGestureSeek){
-                    if(mWidgetSeekView != null) mWidgetSeekView.onGestureSeekBegin(mMediaPlayerController.getCurrentPosition(), mMediaPlayerController.getDuration());
-                }
-            }
-            break;
-        case MotionEvent.ACTION_MOVE:
-            if(isShowing() && !mScreenLock){
-                show();
-            }
-            break;
-        case MotionEvent.ACTION_UP:
-        case MotionEvent.ACTION_CANCEL:
-            if(mNeedGesture && !mScreenLock){
-                if(mCurrentGesture == GESTURE_LIGHT){
-                    if(mNeedGestureLight){
-                        if(mWidgetLightView != null) mWidgetLightView.onGestureLightFinish();
-                    }
-                }
-                else if(mCurrentGesture == GESTURE_VOLUME){
-                    if(mNeedGestureVolume){
-                        if(mWidgetVolumeView != null) mWidgetVolumeView.onGestureVolumeFinish();
-                    }
-                }
-                else if(mCurrentGesture == GESTURE_SEEK){
-                    if(mNeedGestureSeek){
-                        if(mWidgetSeekView != null){
-                            long seekPosition = mWidgetSeekView.onGestureSeekFinish();
-                            if(seekPosition >= 0 && seekPosition <= mMediaPlayerController.getDuration()){
-                                mMediaPlayerController.seekTo(seekPosition);
-                                mMediaPlayerController.start();
-                            }
-                        }
-                    }
-                }
-                mCurrentGesture = GESTURE_NONE;
-            }
-            break;
-        default:
-            break;
-        }
-        
-        // 是否需要执行手势操作
-        if(mNeedGesture){
-            if(mGestureDetector != null)
-                mGestureDetector.onTouchEvent(event);
-        }
-        
-        return true;
-    }
-    
-	private void init() {
-		mLayoutInflater = LayoutInflater.from(getContext());
-		mGestureDetector = new GestureDetector(getContext(),new GestureDetector.OnGestureListener() {
 
-					@Override
-					public boolean onSingleTapUp(MotionEvent e) {
-						if (mCurrentGesture == GESTURE_NONE) {
-							toggle();
-						}
-						return false;
-					}
+	@Override
+	protected void onFinishInflate() {
 
-					@Override
-					public void onShowPress(MotionEvent e) {
-					}
-
-					@Override
-					public boolean onScroll(MotionEvent e1, MotionEvent e2,float distanceX, float distanceY) {
-
-						if (e1 == null || e2 == null || mScreenLock) {
-							return false;
-						}
-
-						float oldX = e1.getX();
-						final double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
-						int selfWidth = getMeasuredWidth();
-						final double radius = distanceY / distance;
-
-						// 当角度值大于设置值时,当做垂直方向处理,反之当做水平方向处理
-						if (Math.abs(radius) > RADIUS_SLOP) {
-							// 处理声音
-							if (oldX > selfWidth / 2) {
-								if (!mNeedGestureVolume)
-									return false;
-								if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_VOLUME) {
-									mCurrentGesture = GESTURE_VOLUME;
-									if (!isShowing())
-										show();
-									if (mWidgetLightView != null)
-										mWidgetLightView.hide(true);
-									if (mWidgetSeekView != null)
-										mWidgetSeekView.hide(true);
-									AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-									float totalVolumeDistance = getMeasuredHeight();
-									if (totalVolumeDistance <= 0)
-										totalVolumeDistance = MediaPlayerUtils
-												.getRealDisplayHeight(mHostWindow);
-									if (mWidgetVolumeView != null)
-										mWidgetVolumeView.onGestureVolumeChange(distanceY,totalVolumeDistance / 4,audioManager);
-								}
-							}
-							// 处理亮度
-							else {
-								if (!mNeedGestureLight)
-									return false;
-								if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_LIGHT) {
-									mCurrentGesture = GESTURE_LIGHT;
-									if (!isShowing())
-										show();
-									if (mWidgetVolumeView != null)
-										mWidgetVolumeView.hide(true);
-									if (mWidgetSeekView != null)
-										mWidgetSeekView.hide(true);
-									float totalLightDistance = getMeasuredHeight();
-									if (totalLightDistance <= 0)
-										totalLightDistance = MediaPlayerUtils.getRealDisplayHeight(mHostWindow);
-									if (mWidgetLightView != null)
-										mWidgetLightView.onGestureLightChange(distanceY,totalLightDistance / 4,mHostWindow);
-								}
-							}
-						}
-						// 处理视频进度
-						else {
-							if (!mNeedGestureSeek)
-								return false;
-							if (mCurrentGesture == GESTURE_NONE|| mCurrentGesture == GESTURE_SEEK) {
-								mCurrentGesture = GESTURE_SEEK;
-								if (!isShowing())
-									show();
-								if (mWidgetVolumeView != null)
-									mWidgetVolumeView.hide(true);
-								if (mWidgetLightView != null)
-									mWidgetLightView.hide(true);
-								float totalSeekDistance = getMeasuredWidth();
-								if (totalSeekDistance <= 0)
-									totalSeekDistance = MediaPlayerUtils.getRealDisplayWidth(mHostWindow);
-								if (mWidgetSeekView != null)
-									mWidgetSeekView.onGestureSeekChange(-distanceX, totalSeekDistance);
-							}
-						}
-						return false;
-					}
-
-					@Override
-					public void onLongPress(MotionEvent e) {
-					}
-
-					@Override
-					public boolean onFling(MotionEvent e1, MotionEvent e2,float velocityX, float velocityY) {
-						return false;
-					}
-
-					@Override
-					public boolean onDown(MotionEvent e) {
-						return false;
-					}
-				});
+		super.onFinishInflate();
+		initViews();
+		initListeners();
 	}
-	
+
+	private void hideGestureView() {
+
+		if (mNeedGesture) {
+			if (mWidgetLightView != null && mWidgetLightView.isShowing())
+				mWidgetLightView.hide(true);
+			if (mWidgetVolumeView != null && mWidgetVolumeView.isShowing())
+				mWidgetVolumeView.hide(true);
+			if (mWidgetSeekView != null && mWidgetSeekView.isShowing())
+				mWidgetSeekView.hide(true);
+		}
+	}
+
+	public void show() {
+
+		show(HIDE_TIMEOUT_DEFAULT);
+	}
+
+	public void show(int timeout) {
+
+		mHandler.sendEmptyMessage(MSG_SHOW);
+		mHandler.removeMessages(MSG_HIDE);
+		if (timeout > 0) {
+			Message msgHide = mHandler.obtainMessage(MSG_HIDE);
+			mHandler.sendMessageDelayed(msgHide, timeout);
+		}
+	}
+
+	public void hide() {
+
+		mHandler.sendEmptyMessage(MSG_HIDE);
+	}
+
+	public void toggle() {
+
+		if (isShowing()) {
+			hide();
+		}
+		else {
+			if (!mMediaPlayerController.isPlaying()) {
+				show(0);
+			} else {
+				show();
+			}
+		}
+
+	}
+
+	public boolean isShowing() {
+
+		if (getVisibility() == View.VISIBLE)
+			return true;
+		return false;
+	}
+
+	public void setNeedGestureDetector(boolean need) {
+
+		this.mNeedGesture = need;
+	}
+
+	public void setNeedGestureAction(boolean needLightGesture, boolean needVolumeGesture, boolean needSeekGesture) {
+
+		this.mNeedGestureLight = needLightGesture;
+		this.mNeedGestureVolume = needVolumeGesture;
+		this.mNeedGestureSeek = needSeekGesture;
+	}
+
+	public void setNeedTicker(boolean need) {
+
+		this.mEnnableTicker = need;
+	}
+
+	public void setMediaPlayerController(MediaPlayerController mediaPlayerController) {
+
+		mMediaPlayerController = mediaPlayerController;
+	}
+
+	public void setHostWindow(Window window) {
+
+		if (window != null) {
+			mHostWindow = window;
+			mHostWindowLayoutParams = window.getAttributes();
+		}
+	}
+
+	public void setDeviceNavigationBarExist(boolean deviceNavigationBarExist) {
+
+		mDeviceNavigationBarExist = deviceNavigationBarExist;
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+
+		final int action = event.getAction();
+
+		switch (action) {
+		case MotionEvent.ACTION_DOWN:
+			if (mNeedGesture && !mScreenLock) {
+				if (mNeedGestureSeek) {
+					if (mWidgetSeekView != null)
+						mWidgetSeekView.onGestureSeekBegin(mMediaPlayerController.getCurrentPosition(), mMediaPlayerController.getDuration());
+				}
+			}
+			break;
+		case MotionEvent.ACTION_MOVE:
+			if (isShowing() && !mScreenLock) {
+				show();
+			}
+			break;
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_CANCEL:
+			if (mNeedGesture && !mScreenLock) {
+				if (mCurrentGesture == GESTURE_LIGHT) {
+					if (mNeedGestureLight) {
+						if (mWidgetLightView != null)
+							mWidgetLightView.onGestureLightFinish();
+					}
+				}
+				else if (mCurrentGesture == GESTURE_VOLUME) {
+					if (mNeedGestureVolume) {
+						if (mWidgetVolumeView != null)
+							mWidgetVolumeView.onGestureVolumeFinish();
+					}
+				}
+				else if (mCurrentGesture == GESTURE_SEEK) {
+					if (mNeedGestureSeek) {
+						if (mWidgetSeekView != null) {
+							long seekPosition = mWidgetSeekView.onGestureSeekFinish();
+							if (seekPosition >= 0 && seekPosition <= mMediaPlayerController.getDuration()) {
+								mMediaPlayerController.seekTo(seekPosition);
+								mMediaPlayerController.start();
+							}
+						}
+					}
+				}
+				mCurrentGesture = GESTURE_NONE;
+			}
+			break;
+		default:
+			break;
+		}
+
+		// 是否需要执行手势操作
+		if (mNeedGesture) {
+			if (mGestureDetector != null)
+				mGestureDetector.onTouchEvent(event);
+		}
+
+		return true;
+	}
+
+	private void init() {
+
+		mLayoutInflater = LayoutInflater.from(getContext());
+		mGestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
+
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+
+				if (mCurrentGesture == GESTURE_NONE) {
+					toggle();
+				}
+				return false;
+			}
+
+			@Override
+			public void onShowPress(MotionEvent e) {
+
+			}
+
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
+				if (e1 == null || e2 == null || mScreenLock) {
+					return false;
+				}
+
+				float oldX = e1.getX();
+				final double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+				int selfWidth = getMeasuredWidth();
+				final double radius = distanceY / distance;
+
+				// 当角度值大于设置值时,当做垂直方向处理,反之当做水平方向处理
+				if (Math.abs(radius) > RADIUS_SLOP) {
+					// 处理声音
+					if (oldX > selfWidth / 2) {
+						if (!mNeedGestureVolume)
+							return false;
+						if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_VOLUME) {
+							mCurrentGesture = GESTURE_VOLUME;
+							if (!isShowing())
+								show();
+							if (mWidgetLightView != null)
+								mWidgetLightView.hide(true);
+							if (mWidgetSeekView != null)
+								mWidgetSeekView.hide(true);
+							AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+							float totalVolumeDistance = getMeasuredHeight();
+							if (totalVolumeDistance <= 0)
+								totalVolumeDistance = MediaPlayerUtils
+										.getRealDisplayHeight(mHostWindow);
+							if (mWidgetVolumeView != null)
+								mWidgetVolumeView.onGestureVolumeChange(distanceY, totalVolumeDistance / 4, audioManager);
+						}
+					}
+					// 处理亮度
+					else {
+						if (!mNeedGestureLight)
+							return false;
+						if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_LIGHT) {
+							mCurrentGesture = GESTURE_LIGHT;
+							if (!isShowing())
+								show();
+							if (mWidgetVolumeView != null)
+								mWidgetVolumeView.hide(true);
+							if (mWidgetSeekView != null)
+								mWidgetSeekView.hide(true);
+							float totalLightDistance = getMeasuredHeight();
+							if (totalLightDistance <= 0)
+								totalLightDistance = MediaPlayerUtils.getRealDisplayHeight(mHostWindow);
+							if (mWidgetLightView != null)
+								mWidgetLightView.onGestureLightChange(distanceY, totalLightDistance / 4, mHostWindow);
+						}
+					}
+				}
+				// 处理视频进度
+				else {
+					if (!mNeedGestureSeek)
+						return false;
+					if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_SEEK) {
+						mCurrentGesture = GESTURE_SEEK;
+						if (!isShowing())
+							show();
+						if (mWidgetVolumeView != null)
+							mWidgetVolumeView.hide(true);
+						if (mWidgetLightView != null)
+							mWidgetLightView.hide(true);
+						float totalSeekDistance = getMeasuredWidth();
+						if (totalSeekDistance <= 0)
+							totalSeekDistance = MediaPlayerUtils.getRealDisplayWidth(mHostWindow);
+						if (mWidgetSeekView != null)
+							mWidgetSeekView.onGestureSeekChange(-distanceX, totalSeekDistance);
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public void onLongPress(MotionEvent e) {
+
+			}
+
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+				return false;
+			}
+
+			@Override
+			public boolean onDown(MotionEvent e) {
+
+				return false;
+			}
+		});
+
+		mGestureDetector.setOnDoubleTapListener(new OnDoubleTapListener() {
+
+			@Override
+			public boolean onSingleTapConfirmed(MotionEvent e) {
+
+				return false;
+			}
+
+			@Override
+			public boolean onDoubleTapEvent(MotionEvent e) {
+
+				return false;
+			}
+
+			@Override
+			public boolean onDoubleTap(MotionEvent e) {
+
+				if (mScreenLock)
+					return false;
+				if (mMediaPlayerController.isPlaying()) {
+					mMediaPlayerController.pause();
+				} else {
+					mMediaPlayerController.start();
+				}
+				return true;
+			}
+		});
+	}
+
 	protected Handler mHandler = new Handler() {
+
+		@Override
 		public void handleMessage(android.os.Message msg) {
+
 			switch (msg.what) {
 			case MSG_SHOW:
 				startTimerTicker();
@@ -370,20 +426,29 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout{
 
 		};
 	};
-	
-	public void setMediaQuality(MediaPlayerVideoQuality quality){
+
+	public void setMediaQuality(MediaPlayerVideoQuality quality) {
+
 		this.mCurrentQuality = quality;
 	}
-	public MediaPlayerVideoQuality getQuality(){
+
+	public MediaPlayerVideoQuality getQuality() {
+
 		return this.mCurrentQuality;
 	}
-	abstract void initViews(); 
-    abstract void initListeners();   
-    abstract void onShow();   
-    abstract void onHide();   
-    abstract void onTimerTicker();
-    
+
+	abstract void initViews();
+
+	abstract void initListeners();
+
+	abstract void onShow();
+
+	abstract void onHide();
+
+	abstract void onTimerTicker();
+
 	public interface MediaPlayerController extends IMediaPlayerControl {
+
 		boolean supportQuality();
 
 		boolean supportVolume();
@@ -417,9 +482,12 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout{
 		void onVolumeUp();
 	}
 
-    public interface OnGuestureChangeListener {
-        void onLightChanged();
-        void onVolumeChanged();
-        void onPlayProgressChanged();
-    }
+	public interface OnGuestureChangeListener {
+
+		void onLightChanged();
+
+		void onVolumeChanged();
+
+		void onPlayProgressChanged();
+	}
 }

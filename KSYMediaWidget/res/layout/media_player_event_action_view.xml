@@ -3,7 +3,7 @@
     android:id="@+id/event_action_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/player_controller_action_view_bg" >
+    android:background="@android:color/transparent" >
 
     <RelativeLayout
         android:id="@+id/title_layout"

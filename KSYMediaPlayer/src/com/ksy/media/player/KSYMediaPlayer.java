@@ -6,6 +6,7 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+
 import com.ksy.media.player.annotations.AccessedByNative;
 import com.ksy.media.player.annotations.CalledByNative;
 import com.ksy.media.player.option.AvFormatOption;
@@ -34,6 +36,7 @@ import com.ksy.media.player.util.Constants;
  * Java wrapper of ffplay.
  */
 public final class KSYMediaPlayer extends BaseMediaPlayer {
+
 	private final static String TAG = KSYMediaPlayer.class.getName();
 
 	private static final int MEDIA_NOP = 0; // interface test message
@@ -77,9 +80,11 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 * installed at default place.
 	 */
 	private static KSYLibLoader sLocalLibLoader = new KSYLibLoader() {
+
 		@Override
 		public void loadLibrary(String libName) throws UnsatisfiedLinkError,
 				SecurityException {
+
 			System.loadLibrary(libName);
 		}
 	};
@@ -87,6 +92,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private static volatile boolean mIsLibLoaded = false;
 
 	public static void loadLibrariesOnce(KSYLibLoader libLoader) {
+
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsLibLoaded) {
 				Log.d(TAG, "loadLibrariesOnce");
@@ -103,6 +109,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private static volatile boolean mIsNativeInitialized = false;
 
 	private static void initNativeOnce() {
+
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsNativeInitialized) {
 				Log.d(TAG, "native init begin");
@@ -123,6 +130,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 * </p>
 	 */
 	public KSYMediaPlayer() {
+
 		this(sLocalLibLoader);
 	}
 
@@ -132,10 +140,12 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 * @param reserved
 	 */
 	public KSYMediaPlayer(KSYLibLoader libLoader) {
+
 		initPlayer(libLoader);
 	}
 
 	private void initPlayer(KSYLibLoader libLoader) {
+
 		loadLibrariesOnce(libLoader);
 		initNativeOnce();
 
@@ -176,6 +186,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 */
 	@Override
 	public void setDisplay(SurfaceHolder sh) {
+
 		mSurfaceHolder = sh;
 		Surface surface;
 		if (sh != null) {
@@ -208,6 +219,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 */
 	@Override
 	public void setSurface(Surface surface) {
+
 		if (mScreenOnWhilePlaying && surface != null) {
 			DebugLog.w(TAG,
 					"setScreenOnWhilePlaying(true) is ineffective for Surface");
@@ -240,6 +252,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@Override
 	public void setDataSource(String path) throws IOException,
 			IllegalArgumentException, SecurityException, IllegalStateException {
+
 		mDataSource = path;
 		_setDataSource(path, null, null);
 	}
@@ -250,15 +263,18 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public String getDataSource() {
+
 		return mDataSource;
 	}
 
 	public void setDataSourceAsFFConcatContent(String ffConcatContent) {
+
 		mFFConcatContent = ffConcatContent;
 	}
 
 	@Override
 	public void prepareAsync() throws IllegalStateException {
+
 		if (TextUtils.isEmpty(mFFConcatContent)) {
 			_prepareAsync();
 		} else {
@@ -270,6 +286,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void start() throws IllegalStateException {
+
 		stayAwake(true);
 		_start();
 	}
@@ -278,6 +295,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void stop() throws IllegalStateException {
+
 		stayAwake(false);
 		_stop();
 	}
@@ -286,6 +304,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void pause() throws IllegalStateException {
+
 		stayAwake(false);
 		_pause();
 	}
@@ -295,6 +314,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@SuppressLint("Wakelock")
 	@Override
 	public void setWakeMode(Context context, int mode) {
+
 		boolean washeld = false;
 		if (mWakeLock != null) {
 			if (mWakeLock.isHeld()) {
@@ -316,6 +336,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void setScreenOnWhilePlaying(boolean screenOn) {
+
 		if (mScreenOnWhilePlaying != screenOn) {
 			if (screenOn && mSurfaceHolder == null) {
 				DebugLog.w(TAG,
@@ -328,6 +349,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@SuppressLint("Wakelock")
 	private void stayAwake(boolean awake) {
+
 		if (mWakeLock != null) {
 			if (awake && !mWakeLock.isHeld()) {
 				mWakeLock.acquire();
@@ -340,6 +362,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	}
 
 	private void updateSurfaceScreenOn() {
+
 		if (mSurfaceHolder != null) {
 			mSurfaceHolder.setKeepScreenOn(mScreenOnWhilePlaying && mStayAwake);
 		}
@@ -347,21 +370,25 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public int getVideoWidth() {
+
 		return mVideoWidth;
 	}
 
 	@Override
 	public int getVideoHeight() {
+
 		return mVideoHeight;
 	}
 
 	@Override
 	public int getVideoSarNum() {
+
 		return mVideoSarNum;
 	}
 
 	@Override
 	public int getVideoSarDen() {
+
 		return mVideoSarDen;
 	}
 
@@ -395,6 +422,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 */
 	@Override
 	public void release() {
+
 		stayAwake(false);
 		updateSurfaceScreenOn();
 		resetListeners();
@@ -405,6 +433,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void reset() {
+
 		stayAwake(false);
 		_reset();
 		// make sure none of the listeners get called anymore
@@ -416,10 +445,12 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	private native void _reset();
 
+	@Override
 	public native void setVolume(float leftVolume, float rightVolume);
 
 	@Override
 	public MediaInfo getMediaInfo() {
+
 		MediaInfo mediaInfo = new MediaInfo();
 		mediaInfo.mMediaPlayerName = "ijkplayer";
 
@@ -460,18 +491,22 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private native String _getAudioCodecInfo();
 
 	public void setAvOption(AvFormatOption option) {
+
 		setAvFormatOption(option.getName(), option.getValue());
 	}
 
 	public void setAvFormatOption(String name, String value) {
+
 		_setAvFormatOption(name, value);
 	}
 
 	public void setAvCodecOption(String name, String value) {
+
 		_setAvCodecOption(name, value);
 	}
 
 	public void setSwScaleOption(String name, String value) {
+
 		_setSwScaleOption(name, value);
 	}
 
@@ -481,6 +516,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 *            AvFourCC.SDL_FCC_YV12
 	 */
 	public void setOverlayFormat(int chromaFourCC) {
+
 		_setOverlayFormat(chromaFourCC);
 	}
 
@@ -490,14 +526,17 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	 *            display 1 frame per `frameDrop` continuous dropped frames,
 	 */
 	public void setFrameDrop(int frameDrop) {
+
 		_setFrameDrop(frameDrop);
 	}
 
 	public void setMediaCodecEnabled(boolean enabled) {
+
 		_setMediaCodecEnabled(enabled);
 	}
 
 	public void setOpenSLESEnabled(boolean enabled) {
+
 		_setOpenSLESEnabled(enabled);
 	}
 
@@ -516,12 +555,14 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private native void _setOpenSLESEnabled(boolean enabled);
 
 	public Bundle getMediaMeta() {
+
 		return _getMediaMeta();
 	}
 
 	private native Bundle _getMediaMeta();
 
 	public static String getColorFormatName(int mediaCodecColorFormat) {
+
 		return _getColorFormatName(mediaCodecColorFormat);
 	}
 
@@ -530,6 +571,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void setAudioStreamType(int streamtype) {
+
 		// do nothing
 	}
 
@@ -541,20 +583,25 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	private native final void native_message_loop(Object IjkMediaPlayer_this);
 
+	@Override
 	protected void finalize() {
+
 		native_finalize();
 	}
 
 	private static class EventHandler extends Handler {
-		private WeakReference<KSYMediaPlayer> mWeakPlayer;
+
+		private final WeakReference<KSYMediaPlayer> mWeakPlayer;
 
 		public EventHandler(KSYMediaPlayer mp, Looper looper) {
+
 			super(looper);
 			mWeakPlayer = new WeakReference<KSYMediaPlayer>(mp);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
+
 			KSYMediaPlayer player = mWeakPlayer.get();
 			if (player == null || player.mNativeMediaPlayer == 0) {
 				DebugLog.w(TAG,
@@ -614,7 +661,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 			case MEDIA_INFO:
 				if (msg.arg1 != MEDIA_INFO_VIDEO_TRACK_LAGGING) {
-					DebugLog.i(TAG, "Info (" + msg.arg1 + "," + msg.arg2 + ")");
+					Log.e(Constants.LOG_TAG, "===============Info (" + msg.arg1 + "," + msg.arg2 + ")");
 				}
 				player.notifyOnInfo(msg.arg1, msg.arg2);
 				// No real default action so far.
@@ -635,7 +682,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 				break;
 
 			case MEDIA_GET_DRM_KEY:
-				DebugLog.e(TAG, "MEDIA_GET_DRM_KEY");
+				Log.e(TAG, "MEDIA_GET_DRM_KEY");
 				String version = (String) msg.obj;
 				if (!TextUtils.isEmpty(version)) {
 					player.notifyOnDRMRequired(msg.arg1, msg.arg2, version);
@@ -661,6 +708,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@CalledByNative
 	private static void postEventFromNative(Object weakThiz, int what,
 			int arg1, int arg2, Object obj) {
+
 		if (weakThiz == null)
 			return;
 
@@ -684,10 +732,12 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private OnControlMessageListener mOnControlMessageListener;
 
 	public void setOnControlMessageListener(OnControlMessageListener listener) {
+
 		mOnControlMessageListener = listener;
 	}
 
 	public static interface OnControlMessageListener {
+
 		public int onControlResolveSegmentCount();
 
 		public String onControlResolveSegmentUrl(int segment);
@@ -699,6 +749,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@CalledByNative
 	private static int onControlResolveSegmentCount(Object weakThiz) {
+
 		DebugLog.ifmt(TAG, "onControlResolveSegmentCount");
 		if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
 			return -1;
@@ -719,6 +770,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@CalledByNative
 	private static String onControlResolveSegmentUrl(Object weakThiz,
 			int segment) {
+
 		DebugLog.ifmt(TAG, "onControlResolveSegmentUrl %d", segment);
 		if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
 			return null;
@@ -739,6 +791,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@CalledByNative
 	private static String onControlResolveSegmentOfflineMrl(Object weakThiz,
 			int segment) {
+
 		DebugLog.ifmt(TAG, "onControlResolveSegmentOfflineMrl %d", segment);
 		if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
 			return null;
@@ -759,6 +812,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@CalledByNative
 	private static int onControlResolveSegmentDuration(Object weakThiz,
 			int segment) {
+
 		DebugLog.ifmt(TAG, "onControlResolveSegmentDuration %d", segment);
 		if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
 			return -1;
@@ -777,6 +831,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	}
 
 	public static interface OnMediaCodecSelectListener {
+
 		public String onMediaCodecSelect(IMediaPlayer mp, String mimeType,
 				int profile, int level);
 	}
@@ -785,10 +840,13 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	public void setOnMediaCodecSelectListener(
 			OnMediaCodecSelectListener listener) {
+
 		mOnMediaCodecSelectListener = listener;
 	}
 
+	@Override
 	public void resetListeners() {
+
 		super.resetListeners();
 		mOnMediaCodecSelectListener = null;
 	}
@@ -796,6 +854,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@CalledByNative
 	private static String onSelectCodec(Object weakThiz, String mimeType,
 			int profile, int level) {
+
 		if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
 			return null;
 
@@ -814,11 +873,14 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	public static class DefaultMediaCodecSelector implements
 			OnMediaCodecSelectListener {
+
 		public static DefaultMediaCodecSelector sInstance = new DefaultMediaCodecSelector();
 
+		@Override
 		@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 		public String onMediaCodecSelect(IMediaPlayer mp, String mimeType,
 				int profile, int level) {
+
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
 				return null;
 
@@ -887,6 +949,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	// P1 Added Interface
 	@Override
 	public void setAudioAmplify(float ratio) {
+
 		if (ratio <= 0) {
 			ratio = MEDIA_AUDIO_AMPLIFY_DEFAULT;
 			Log.w(Constants.LOG_TAG, "unsupported audio amplify ratio :"
@@ -898,6 +961,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void setVideoRate(float rate) {
+
 		if (rate <= 0) {
 			rate = MEDIA_VIDEO_RATE_DEFAULT;
 			Log.w(Constants.LOG_TAG, "unsupported video rate :" + rate
@@ -908,6 +972,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void getCurrentFrame(Bitmap bitmap) {
+
 		if (bitmap != null) {
 			_getCurrentFrame(bitmap);
 		} else {
@@ -918,6 +983,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void setBufferSize(int size) {
+
 		if (size <= 0) {
 			size = MEDIA_BUFFERSIZE_DEFAULT;
 			Log.w(Constants.LOG_TAG, "unsupported buffer size :" + size
@@ -928,6 +994,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void setAnalyseDuration(int duration) {
+
 		if (duration <= 0) {
 			duration = MEDIA_ANALYSE_DURATION_DEFAULT;
 			Log.w(Constants.LOG_TAG, "unsupported analyse duration :"
@@ -939,6 +1006,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public void setDRMKey(String version, String key) {
+
 		if (checkDRMKey(version, key)) {
 			_setDRMKey(version, key);
 		} else {
@@ -948,6 +1016,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	// need to implements
 	private boolean checkDRMKey(String version, String key) {
+
 		if (TextUtils.isEmpty(version) || TextUtils.isEmpty(key)) {
 			Log.w(Constants.LOG_TAG,
 					"DRM version & key can not be null or empty");
@@ -976,6 +1045,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 	@Override
 	public boolean isPlayable() {
+
 		return true;
 	}
 

@@ -58,14 +58,17 @@ public class MediaPlayerLargeControllerView extends
 
 	public MediaPlayerLargeControllerView(Context context, AttributeSet attrs,
 			int defStyle) {
+
 		super(context, attrs, defStyle);
 	}
 
 	public MediaPlayerLargeControllerView(Context context, AttributeSet attrs) {
+
 		super(context, attrs);
 	}
 
 	public MediaPlayerLargeControllerView(Context context) {
+
 		super(context);
 		mLayoutInflater.inflate(R.layout.media_player_controller_large, this);
 		initViews();
@@ -74,6 +77,7 @@ public class MediaPlayerLargeControllerView extends
 
 	@Override
 	protected void initViews() {
+
 		mControllerTopView = (RelativeLayout) findViewById(R.id.controller_top_layout);
 		mBackLayout = (RelativeLayout) findViewById(R.id.back_layout);
 		mTitleTextView = (TextView) findViewById(R.id.title_text_view);
@@ -87,7 +91,6 @@ public class MediaPlayerLargeControllerView extends
 		mVideoVolumeUpView = (ImageView) findViewById(R.id.volume_up_view);
 		mVideoVolumeDownView = (ImageView) findViewById(R.id.volume_down_view);
 
-		
 		mQualityLayout = (LinearLayout) findViewById(R.id.video_quality_layout);
 		mQualityTextView = (TextView) findViewById(R.id.video_quality_text_view);
 
@@ -114,6 +117,7 @@ public class MediaPlayerLargeControllerView extends
 
 	@Override
 	protected void initListeners() {
+
 		mScreenModeImageView.setOnClickListener(this);
 		mVideoVolumeUpView.setOnClickListener(this);
 		mVideoVolumeDownView.setOnClickListener(this);
@@ -139,12 +143,12 @@ public class MediaPlayerLargeControllerView extends
 					float percentage = ((float) curProgress) / maxProgress;
 					int position = (int) (mMediaPlayerController.getDuration() * percentage);
 					mMediaPlayerController.seekTo(position);
-					mMediaPlayerController.start();
 				}
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
+
 				mVideoProgressTrackingTouch = true;
 			}
 
@@ -166,6 +170,7 @@ public class MediaPlayerLargeControllerView extends
 
 			@Override
 			public void onQualitySelected(MediaPlayerVideoQuality quality) {
+
 				mQualityPopup.hide();
 				mQualityTextView.setText(quality.getName());
 				setMediaQuality(quality);
@@ -173,6 +178,7 @@ public class MediaPlayerLargeControllerView extends
 
 			@Override
 			public void onPopupViewDismiss() {
+
 				mQualityLayout.setSelected(false);
 				if (isShowing())
 					show();
@@ -183,6 +189,7 @@ public class MediaPlayerLargeControllerView extends
 
 			@Override
 			public void onActionLockMode(boolean lock) {
+
 				// 加锁
 				if (lock) {
 					mScreenLock = lock;
@@ -198,15 +205,15 @@ public class MediaPlayerLargeControllerView extends
 			}
 		});
 
-		mWidgetControllerVolumeView
-				.setCallback(new MediaPlayerControllerVolumeView.Callback() {
+		mWidgetControllerVolumeView.setCallback(new MediaPlayerControllerVolumeView.Callback() {
 
-					@Override
-					public void onVolumeProgressChanged(
-							AudioManager audioManager, float percentage) {
-						// TODO Auto-generated method stub
-					}
-				});
+			@Override
+			public void onVolumeProgressChanged(
+					AudioManager audioManager, float percentage) {
+
+				// TODO Auto-generated method stub
+			}
+		});
 
 	}
 
@@ -275,31 +282,37 @@ public class MediaPlayerLargeControllerView extends
 
 	@Override
 	protected void onAttachedToWindow() {
+
 		super.onAttachedToWindow();
 	}
 
 	@Override
 	protected void onDetachedFromWindow() {
+
 		super.onDetachedFromWindow();
 	}
 
 	@Override
 	protected void onFinishInflate() {
+
 		super.onFinishInflate();
 	}
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
+
 		return super.dispatchTouchEvent(ev);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+
 		return super.onTouchEvent(event);
 	}
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
+
 		return mWidgetControllerVolumeView.dispatchKeyEvent(event);
 	}
 
@@ -307,12 +320,14 @@ public class MediaPlayerLargeControllerView extends
 	 * Public Method
 	 ***************************/
 	public void updateVideoTitle(String title) {
+
 		if (!TextUtils.isEmpty(title)) {
 			mTitleTextView.setText(title);
 		}
 	}
 
 	public void updateVideoProgress(float percentage) {
+
 		if (percentage >= 0 && percentage <= 1) {
 			int progress = (int) (percentage * mSeekBar.getMax());
 			if (!mVideoProgressTrackingTouch)
@@ -330,6 +345,7 @@ public class MediaPlayerLargeControllerView extends
 	}
 
 	public void updateVideoPlaybackState(boolean isStart) {
+
 		// 播放中
 		Log.i(Constants.LOG_TAG, "updateVideoPlaybackState  ----> start ? " + isStart);
 		if (isStart) {
@@ -342,10 +358,12 @@ public class MediaPlayerLargeControllerView extends
 	}
 
 	public void updateVideoQualityState(MediaPlayerVideoQuality quality) {
+
 		mQualityTextView.setText(quality.getName());
 	}
 
 	public void updateVideoVolumeState() {
+
 	}
 
 	@Override
@@ -387,18 +405,18 @@ public class MediaPlayerLargeControllerView extends
 		} else if (id == mVideoRatioBackView.getId()) {
 			mMediaPlayerController.onMoviePlayRatioDown();
 			show();
-		}else if (id == mVideoCropView.getId()) {
+		} else if (id == mVideoCropView.getId()) {
 			mMediaPlayerController.onMovieCrop();
 			show();
-		}else if (id == mVideoVolumeDownView.getId()) {
+		} else if (id == mVideoVolumeDownView.getId()) {
 			mMediaPlayerController.onVolumeDown();
 			show();
-		}else if (id == mVideoVolumeUpView.getId()) {
+		} else if (id == mVideoVolumeUpView.getId()) {
 			mMediaPlayerController.onVolumeUp();
 			show();
-		} else if(id == mScreenModeImageView.getId()){
-            mMediaPlayerController.onRequestPlayMode(MediaPlayMode.PLAYMODE_FULLSCREEN);
-        }
+		} else if (id == mScreenModeImageView.getId()) {
+			mMediaPlayerController.onRequestPlayMode(MediaPlayMode.PLAYMODE_FULLSCREEN);
+		}
 
 	}
 
@@ -407,6 +425,7 @@ public class MediaPlayerLargeControllerView extends
 	 * 
 	 */
 	public interface OnGuestureChangeListener {
+
 		/**
 		 * 亮度有变化回调
 		 * 
@@ -427,6 +446,7 @@ public class MediaPlayerLargeControllerView extends
 	}
 
 	private void displayQualityPopupWindow() {
+
 		// 弹出清晰度框
 		List<MediaPlayerVideoQuality> qualityList = new ArrayList<MediaPlayerVideoQuality>();
 		qualityList.add(MediaPlayerVideoQuality.UNKNOWN);
