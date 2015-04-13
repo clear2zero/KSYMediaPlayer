@@ -1,10 +1,7 @@
 package com.ksy.media.demo;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -55,12 +52,12 @@ public class VideoPlayerActivity extends Activity implements MediaPlayerView.Pla
 		playerView.setPlayerViewCallback(this);
 		// String path = "rtmp://192.168.135.185/myLive/guoli1234";
 		// String path = "http://live.3gv.ifeng.com/zixun.m3u8"; // vod
-		// String path = "rtmp://192.168.135.185/myLive/guoyankai"; // with drm
-		// sec
-		// playerView.play(path);
+		String path = "rtmp://192.168.135.185/myLive/12"; // with drm sec
+		playerView.play(path);
 		// String path = "http://www.modrails.com/videos/passenger_nginx.mov";
-		File file = new File(Environment.getExternalStorageDirectory(), "a.mp4");
-		playerView.play(file.getPath());
+		// File file = new File(Environment.getExternalStorageDirectory(),
+		// "a.mp4");
+		// playerView.play(file.getPath());
 	}
 
 	@Override

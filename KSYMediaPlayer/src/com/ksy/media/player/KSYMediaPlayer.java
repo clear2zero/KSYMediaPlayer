@@ -287,6 +287,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	@Override
 	public void start() throws IllegalStateException {
 
+		Log.e(Constants.LOG_TAG, "KSYMediaPlayer start()");
 		stayAwake(true);
 		_start();
 	}

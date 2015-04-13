@@ -40,7 +40,7 @@ public class HttpsClient {
 	private static X509TrustManager[] xtmArray = new X509TrustManager[] { xtm };
 	private static HttpsURLConnection conn = null;
 
-	public static InputStream sendPOSTRequestForInputStream(String path, Map<String, String> params, String encoding) throws Exception {
+	public InputStream sendPOSTRequestForInputStream(String path, Map<String, String> params, String encoding) throws Exception {
 
 		StringBuilder entityBuilder = new StringBuilder("");
 		if (params != null && !params.isEmpty()) {
@@ -55,7 +55,6 @@ public class HttpsClient {
 		URL url = new URL(path);
 		conn = (HttpsURLConnection) url.openConnection();
 		if (conn instanceof HttpsURLConnection) {
-			// Trust all certificates
 			SSLContext context = SSLContext.getInstance("TLS");
 			context.init(new KeyManager[0], xtmArray, new SecureRandom());
 			SSLSocketFactory socketFactory = context.getSocketFactory();
@@ -64,7 +63,7 @@ public class HttpsClient {
 		}
 		conn.setConnectTimeout(5 * 1000);
 		conn.setRequestMethod("POST");
-		conn.setDoOutput(true);// 允许输出数据
+		conn.setDoOutput(true);
 		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		conn.setRequestProperty("Content-Length", String.valueOf(entity.length));
 		OutputStream outStream = conn.getOutputStream();

@@ -40,6 +40,8 @@ import com.ksy.media.data.NetReceiver.NetStateChangedListener;
 import com.ksy.media.data.WakeLocker;
 import com.ksy.media.player.IMediaPlayer;
 import com.ksy.media.player.util.Constants;
+import com.ksy.media.player.util.DRMRetrieverManager;
+import com.ksy.media.player.util.DRMRetrieverResponseHandler;
 import com.ksy.mediaPlayer.widget.R;
 
 public class MediaPlayerView extends RelativeLayout {
@@ -105,6 +107,9 @@ public class MediaPlayerView extends RelativeLayout {
 
 	private float mCurrentPlayingRatio = 1f;
 	public static float MAX_PLAYING_RATIO = 4f;
+
+	private DRMRetrieverManager mDrmManager;
+	private DRMRetrieverResponseHandler mDrmHandler;
 
 	public MediaPlayerView(Context context, AttributeSet attrs, int defStyle) {
 
@@ -760,17 +765,36 @@ public class MediaPlayerView extends RelativeLayout {
 	IMediaPlayer.OnDRMRequiredListener mOnDRMRequiredListener = new IMediaPlayer.OnDRMRequiredListener() {
 
 		@Override
-		public void OnDRMRequired(IMediaPlayer mp, int what, int extra,
-				String version) {
+		public void OnDRMRequired(IMediaPlayer mp, int what, int extra, String version) {
 
 			requestDRMKey(version);
 		}
 	};
 
-	private void requestDRMKey(String version) {
+	private void requestDRMKey(final String version) {
 
-		// Request Key Here
-		mMediaPlayerVideoView.setDRMKey(version, "c1cbf122374d55bba69595f0f58d5c80");
+		if (mDrmManager == null)
+			mDrmManager = DRMRetrieverManager.getInstance();
+		if (mDrmHandler == null) {
+			mDrmHandler = new DRMRetrieverResponseHandler() {
+
+				@Override
+				public void onSuccess(int paramInt, String cek) {
+
+					mMediaPlayerVideoView.setDRMKey(version, cek);
+					Toast.makeText(getContext(), "DRM KEY retrieve success", Toast.LENGTH_SHORT).show();
+				}
+
+				@Override
+				public void onFailure(int paramInt, String response, Throwable paramThrowable) {
+
+					Log.e(Constants.LOG_TAG, "drm retrieve failed !!!!!!!!!!!!!!");
+					Toast.makeText(getContext(), "DRM KEY retrieve failed", Toast.LENGTH_SHORT).show();
+				}
+			};
+		}
+		String url = "https://115.231.96.89:80/xiaoyi/GetCek?signature=16I/xKLT8S/aHJpApgYfye6CI6o=&accesskeyid=8oN7siZgTOSFHft0cXTg&expire=1710333224&nonce=4e1f2519c626cbfbab1520c255830c26&cekurl=rtmp://192.168.135.185/myLive/12";
+		mDrmManager.retrieveDRM(url, mDrmHandler);
 	}
 
 	IMediaPlayer.OnBufferingUpdateListener mOnPlaybackBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
@@ -793,6 +817,8 @@ public class MediaPlayerView extends RelativeLayout {
 			Log.e(Constants.LOG_TAG, "On Native Error,what :" + what + " , extra :" + extra);
 			mMediaPlayerLargeControllerView.hide();
 			mMediaPlayerSmallControllerView.hide();
+			mMediaPlayerBufferingView.hide();
+			mMediaPlayerLoadingView.hide();
 			mMediaPlayerEventActionView.updateEventMode(MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_ERROR, what + "," + extra);
 			mMediaPlayerEventActionView.show();
 			return true;

@@ -644,6 +644,7 @@ public class MediaPlayerVideoView extends SurfaceView implements IMediaPlayerCon
 	@Override
 	public void seekTo(long msec) {
 
+		Log.e(Constants.LOG_TAG, "seek called=========");
 		if (isInPlaybackState())
 			mMediaPlayer.seekTo(msec);
 	}
