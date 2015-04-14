@@ -793,7 +793,7 @@ public class MediaPlayerView extends RelativeLayout {
 				}
 			};
 		}
-		String url = "https://115.231.96.89:80/xiaoyi/GetCek?signature=16I/xKLT8S/aHJpApgYfye6CI6o=&accesskeyid=8oN7siZgTOSFHft0cXTg&expire=1710333224&nonce=4e1f2519c626cbfbab1520c255830c26&cekurl=rtmp://192.168.135.185/myLive/12";
+//		String url = "https://115.231.96.89:80/xiaoyi/GetCek?signature=16I/xKLT8S/aHJpApgYfye6CI6o=&accesskeyid=8oN7siZgTOSFHft0cXTg&expire=1710333224&nonce=4e1f2519c626cbfbab1520c255830c26&cekurl=rtmp://192.168.135.185/myLive/drm";
 		mDrmManager.retrieveDRM(url, mDrmHandler);
 	}
 
