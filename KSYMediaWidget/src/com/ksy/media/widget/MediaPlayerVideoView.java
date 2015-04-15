@@ -264,10 +264,9 @@ public class MediaPlayerVideoView extends SurfaceView implements IMediaPlayerCon
 
 				ksyMediaPlayer.setAvCodecOption("skip_loop_filter", "48");
 				ksyMediaPlayer.setFrameDrop(12);
-				ksyMediaPlayer
-						.setBufferSize(IMediaPlayer.MEDIA_BUFFERSIZE_DEFAULT);
-				ksyMediaPlayer
-						.setAnalyseDuration(IMediaPlayer.MEDIA_ANALYSE_DURATION_DEFAULT);
+				ksyMediaPlayer.setBufferSize(IMediaPlayer.MEDIA_BUFFERSIZE_DEFAULT);
+				ksyMediaPlayer.setAnalyseDuration(IMediaPlayer.MEDIA_ANALYSE_DURATION_DEFAULT);
+				// ksyMediaPlayer.setTimeout(IMediaPlayer.MEDIA_TIME_OUT_DEFAULT);
 				if (mUserAgent != null) {
 					ksyMediaPlayer.setAvFormatOption("user_agent", mUserAgent);
 				}

@@ -653,7 +653,8 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 				return;
 
 			case MEDIA_ERROR:
-				DebugLog.e(TAG, "Error (" + msg.arg1 + "," + msg.arg2 + ")");
+
+				Log.e(Constants.LOG_TAG, "Error (" + msg.arg1 + "," + msg.arg2 + ")");
 				if (!player.notifyOnError(msg.arg1, msg.arg2)) {
 					player.notifyOnCompletion();
 				}
@@ -997,10 +998,8 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	public void setAnalyseDuration(int duration) {
 
 		if (duration <= 0) {
+			Log.w(Constants.LOG_TAG, "unsupported analyse duration :" + duration + ",replace the default size :" + MEDIA_ANALYSE_DURATION_DEFAULT);
 			duration = MEDIA_ANALYSE_DURATION_DEFAULT;
-			Log.w(Constants.LOG_TAG, "unsupported analyse duration :"
-					+ duration + ",replace the default size :"
-					+ MEDIA_ANALYSE_DURATION_DEFAULT);
 		}
 		_setAnalyseDuration(duration);
 	};
@@ -1009,18 +1008,28 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	public void setDRMKey(String version, String key) {
 
 		if (checkDRMKey(version, key)) {
+			Log.i(Constants.LOG_TAG, " DRM  version :" + version + ",Cek:" + key);
 			_setDRMKey(version, key);
 		} else {
 			Log.w(Constants.LOG_TAG, "DRM failed with error");
 		}
 	}
 
+	@Override
+	public void setTimeout(int timeout) {
+
+		if (timeout <= 0) {
+			Log.w(Constants.LOG_TAG, "unsupported time out  :" + timeout + ",replace the default time out :" + IMediaPlayer.MEDIA_TIME_OUT_DEFAULT);
+			timeout = IMediaPlayer.MEDIA_TIME_OUT_DEFAULT;
+		}
+		_setTimeout(timeout);
+	}
+
 	// need to implements
 	private boolean checkDRMKey(String version, String key) {
 
 		if (TextUtils.isEmpty(version) || TextUtils.isEmpty(key)) {
-			Log.w(Constants.LOG_TAG,
-					"DRM version & key can not be null or empty");
+			Log.w(Constants.LOG_TAG, "DRM version & key can not be null or empty");
 			return false;
 		} else {
 			return true;
@@ -1038,6 +1047,8 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private native void _getCurrentFrame(Bitmap bitmap);
 
 	private native void _setDRMKey(String version, String key);
+
+	private native void _setTimeout(int timeout);
 
 	@Override
 	public void setLogEnabled(boolean enable) {

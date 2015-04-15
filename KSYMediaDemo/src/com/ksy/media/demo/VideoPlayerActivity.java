@@ -1,7 +1,6 @@
 package com.ksy.media.demo;
 
 import java.io.File;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -87,12 +86,12 @@ public class VideoPlayerActivity extends Activity implements
 	}
 
 	private void startPlayer(String url) {
-		Log.d("eflake", url);
+		Log.d(Constants.LOG_TAG, "input url = " + url);
 
 		playerView.setPlayerViewCallback(this);
-//		 String path = "rtmp://192.168.135.185/myLive/guoli1234";
+		// String path = "rtmp://192.168.135.185/myLive/guoli1234";
 		// String path = "http://live.3gv.ifeng.com/zixun.m3u8"; // vod
-//		 String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
+		// String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
 		playerView.play(url);
 		// String path = "http://www.modrails.com/videos/passenger_nginx.mov";
 		// File file = new File(Environment.getExternalStorageDirectory(),

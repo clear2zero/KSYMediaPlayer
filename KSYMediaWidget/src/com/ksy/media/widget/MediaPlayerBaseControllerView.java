@@ -233,7 +233,7 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout {
 							long seekPosition = mWidgetSeekView.onGestureSeekFinish();
 							if (seekPosition >= 0 && seekPosition <= mMediaPlayerController.getDuration()) {
 								mMediaPlayerController.seekTo(seekPosition);
-								mMediaPlayerController.start();
+								// mMediaPlayerController.start();
 							}
 						}
 					}

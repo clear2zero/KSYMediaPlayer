@@ -10,6 +10,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 public interface IMediaPlayer {
+
 	public static final int MEDIA_INFO_UNKNOWN = 1;
 	public static final int MEDIA_INFO_STARTED_AS_NEXT = 2;
 	public static final int MEDIA_INFO_VIDEO_RENDERING_START = 3;
@@ -35,6 +36,8 @@ public interface IMediaPlayer {
 
 	public static final float MEDIA_VIDEO_RATE_DEFAULT = 1.0f;
 	public static final float MEDIA_AUDIO_AMPLIFY_DEFAULT = 1.0f;
+
+	public static final int MEDIA_TIME_OUT_DEFAULT = 2000 * 1000;
 
 	public abstract void setDisplay(SurfaceHolder sh);
 
@@ -100,40 +103,49 @@ public interface IMediaPlayer {
 	 * Listeners
 	 */
 	public static interface OnPreparedListener {
+
 		public void onPrepared(IMediaPlayer mp);
 	}
 
 	public static interface OnCompletionListener {
+
 		public void onCompletion(IMediaPlayer mp);
 	}
 
 	public static interface OnBufferingUpdateListener {
+
 		public void onBufferingUpdate(IMediaPlayer mp, int percent);
 	}
 
 	public static interface OnSeekCompleteListener {
+
 		public void onSeekComplete(IMediaPlayer mp);
 	}
 
 	public static interface OnVideoSizeChangedListener {
+
 		public void onVideoSizeChanged(IMediaPlayer mp, int width, int height,
 				int sar_num, int sar_den);
 	}
 
 	public static interface OnErrorListener {
+
 		public boolean onError(IMediaPlayer mp, int what, int extra);
 	}
 
 	public static interface OnInfoListener {
+
 		public boolean onInfo(IMediaPlayer mp, int what, int extra);
 	}
 
 	public static interface OnDRMRequiredListener {
+
 		public void OnDRMRequired(IMediaPlayer mp, int what, int extra,
 				String version);
 	}
 
 	public static interface OnSurfaceListener {
+
 		public void surfaceChanged(SurfaceHolder holder, int format, int w,
 				int h);
 
@@ -170,5 +182,7 @@ public interface IMediaPlayer {
 	public abstract void setAnalyseDuration(int duration);
 
 	public abstract void setDRMKey(String version, String key);
+
+	public abstract void setTimeout(int timeout);
 
 }
