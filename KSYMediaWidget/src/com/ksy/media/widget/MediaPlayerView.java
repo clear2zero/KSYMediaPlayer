@@ -78,6 +78,7 @@ public class MediaPlayerView extends RelativeLayout {
 	private volatile int mPlayMode = MediaPlayMode.PLAYMODE_FULLSCREEN;
 	private volatile boolean mLockMode = false;
 	private volatile boolean mScreenLockMode = false;
+	private volatile boolean mScreenshotPreparing = false;
 
 	private boolean mVideoReady = false;
 	private boolean mStartAfterPause = false;
@@ -106,7 +107,9 @@ public class MediaPlayerView extends RelativeLayout {
 	private NetStateChangedListener mNetChangedListener;
 
 	private float mCurrentPlayingRatio = 1f;
+	private float mCurrentPlayingVolumeRatio = 1f;
 	public static float MAX_PLAYING_RATIO = 4f;
+	public static float MAX_PLAYING_VOLUME_RATIO = 3.0f;
 
 	private DRMRetrieverManager mDrmManager;
 	private DRMRetrieverResponseHandler mDrmHandler;
@@ -442,6 +445,7 @@ public class MediaPlayerView extends RelativeLayout {
 		if (mVideoReady && !mMediaPlayerEventActionView.isShowing()) {
 
 			if (MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
+				// return false;
 				return mMediaPlayerLargeControllerView.dispatchTouchEvent(ev);
 			}
 			if (MediaPlayerUtils.isWindowMode(mPlayMode)) {
@@ -1222,37 +1226,60 @@ public class MediaPlayerView extends RelativeLayout {
 
 		@Override
 		public void onMovieCrop() {
-
-			screenshot.takeScreenshot(mMediaPlayerVideoView, new Runnable() {
-
-				@Override
-				public void run() {
-
+			if (!mScreenshotPreparing) {
+				mScreenshotPreparing = true;
+				bitmap = Bitmap.createBitmap(
+						mMediaPlayerVideoView.getVideoWidth(),
+						mMediaPlayerVideoView.getVideoHeight(),
+						Config.ARGB_8888);
+				if (bitmap != null) {
+					mMediaPlayerVideoView.getCurrentFrame(bitmap);
+					compressAndSaveBitmapToSDCard(bitmap, getCurrentTime(),
+							MediaPlayerView.QUALITY_BEST);
+					Toast.makeText(getContext(), "screenshoot saved in path :/storage/emulated/0/KSY_SDK_SCREENSHOT", Toast.LENGTH_SHORT).show();
+					mScreenshotPreparing = false;
+				} else {
+					Log.d(Constants.LOG_TAG, "bitmap is null");
 				}
-			}, false, false);
-
-			bitmap = Bitmap.createBitmap(mMediaPlayerVideoView.getVideoWidth(),
-					mMediaPlayerVideoView.getVideoHeight(), Config.ARGB_8888);
-			if (bitmap != null) {
-				mMediaPlayerVideoView.getCurrentFrame(bitmap);
-				compressAndSaveBitmapToSDCard(bitmap, getCurrentTime(),
-						MediaPlayerView.QUALITY_BEST);
-			} else {
-				Log.d(Constants.LOG_TAG, "bitmap is null");
 			}
 
 		}
 
 		@Override
 		public void onVolumeDown() {
-
-			mMediaPlayerVideoView.setAudioAmplify(0.5f);
+			Log.d(Constants.LOG_TAG, "audio down");
+			if (mMediaPlayerController != null
+					&& mMediaPlayerController.isPlaying()) {
+				if (mCurrentPlayingVolumeRatio == 0) {
+					Log.d(Constants.LOG_TAG, "current playing volume is 0");
+					return;
+				} else {
+					mCurrentPlayingVolumeRatio = mCurrentPlayingVolumeRatio - 0.5f;
+					mMediaPlayerVideoView
+							.setAudioAmplify(mCurrentPlayingVolumeRatio);
+					Log.d(Constants.LOG_TAG, "set playing volume to --->"
+							+ mCurrentPlayingVolumeRatio);
+					return;
+				}
+			}
 		}
 
 		@Override
 		public void onVolumeUp() {
-
-			mMediaPlayerVideoView.setAudioAmplify(1.5f);
+			Log.d(Constants.LOG_TAG, "audio up");
+			if (mMediaPlayerController != null
+					&& mMediaPlayerController.isPlaying()) {
+				if (mCurrentPlayingVolumeRatio == MAX_PLAYING_VOLUME_RATIO) {
+					Log.d(Constants.LOG_TAG, "current playing ratio is max");
+					return;
+				} else {
+					mCurrentPlayingVolumeRatio = mCurrentPlayingVolumeRatio + 0.5f;
+					mMediaPlayerVideoView
+							.setAudioAmplify(mCurrentPlayingVolumeRatio);
+					Log.d(Constants.LOG_TAG, "set playing volume to --->"
+							+ mCurrentPlayingVolumeRatio);
+				}
+			}
 		}
 	};
 

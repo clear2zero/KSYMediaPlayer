@@ -286,67 +286,67 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout {
 				final double radius = distanceY / distance;
 
 				// 当角度值大于设置值时,当做垂直方向处理,反之当做水平方向处理
-				if (Math.abs(radius) > RADIUS_SLOP) {
-					// 处理声音
-					if (oldX > selfWidth / 2) {
-						if (!mNeedGestureVolume)
-							return false;
-						if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_VOLUME) {
-							mCurrentGesture = GESTURE_VOLUME;
-							if (!isShowing())
-								show();
-							if (mWidgetLightView != null)
-								mWidgetLightView.hide(true);
-							if (mWidgetSeekView != null)
-								mWidgetSeekView.hide(true);
-							AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-							float totalVolumeDistance = getMeasuredHeight();
-							if (totalVolumeDistance <= 0)
-								totalVolumeDistance = MediaPlayerUtils
-										.getRealDisplayHeight(mHostWindow);
-							if (mWidgetVolumeView != null)
-								mWidgetVolumeView.onGestureVolumeChange(distanceY, totalVolumeDistance / 4, audioManager);
-						}
-					}
-					// 处理亮度
-					else {
-						if (!mNeedGestureLight)
-							return false;
-						if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_LIGHT) {
-							mCurrentGesture = GESTURE_LIGHT;
-							if (!isShowing())
-								show();
-							if (mWidgetVolumeView != null)
-								mWidgetVolumeView.hide(true);
-							if (mWidgetSeekView != null)
-								mWidgetSeekView.hide(true);
-							float totalLightDistance = getMeasuredHeight();
-							if (totalLightDistance <= 0)
-								totalLightDistance = MediaPlayerUtils.getRealDisplayHeight(mHostWindow);
-							if (mWidgetLightView != null)
-								mWidgetLightView.onGestureLightChange(distanceY, totalLightDistance / 4, mHostWindow);
-						}
-					}
-				}
-				// 处理视频进度
-				else {
-					if (!mNeedGestureSeek)
-						return false;
-					if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_SEEK) {
-						mCurrentGesture = GESTURE_SEEK;
-						if (!isShowing())
-							show();
-						if (mWidgetVolumeView != null)
-							mWidgetVolumeView.hide(true);
-						if (mWidgetLightView != null)
-							mWidgetLightView.hide(true);
-						float totalSeekDistance = getMeasuredWidth();
-						if (totalSeekDistance <= 0)
-							totalSeekDistance = MediaPlayerUtils.getRealDisplayWidth(mHostWindow);
-						if (mWidgetSeekView != null)
-							mWidgetSeekView.onGestureSeekChange(-distanceX, totalSeekDistance);
-					}
-				}
+//				if (Math.abs(radius) > RADIUS_SLOP) {
+//					// 处理声音
+//					if (oldX > selfWidth / 2) {
+//						if (!mNeedGestureVolume)
+//							return false;
+//						if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_VOLUME) {
+//							mCurrentGesture = GESTURE_VOLUME;
+//							if (!isShowing())
+//								show();
+//							if (mWidgetLightView != null)
+//								mWidgetLightView.hide(true);
+//							if (mWidgetSeekView != null)
+//								mWidgetSeekView.hide(true);
+//							AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+//							float totalVolumeDistance = getMeasuredHeight();
+//							if (totalVolumeDistance <= 0)
+//								totalVolumeDistance = MediaPlayerUtils
+//										.getRealDisplayHeight(mHostWindow);
+//							if (mWidgetVolumeView != null)
+//								mWidgetVolumeView.onGestureVolumeChange(distanceY, totalVolumeDistance / 4, audioManager);
+//						}
+//					}
+//					// 处理亮度
+//					else {
+//						if (!mNeedGestureLight)
+//							return false;
+//						if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_LIGHT) {
+//							mCurrentGesture = GESTURE_LIGHT;
+//							if (!isShowing())
+//								show();
+//							if (mWidgetVolumeView != null)
+//								mWidgetVolumeView.hide(true);
+//							if (mWidgetSeekView != null)
+//								mWidgetSeekView.hide(true);
+//							float totalLightDistance = getMeasuredHeight();
+//							if (totalLightDistance <= 0)
+//								totalLightDistance = MediaPlayerUtils.getRealDisplayHeight(mHostWindow);
+//							if (mWidgetLightView != null)
+//								mWidgetLightView.onGestureLightChange(distanceY, totalLightDistance / 4, mHostWindow);
+//						}
+//					}
+//				}
+//				// 处理视频进度
+//				else {
+//					if (!mNeedGestureSeek)
+//						return false;
+//					if (mCurrentGesture == GESTURE_NONE || mCurrentGesture == GESTURE_SEEK) {
+//						mCurrentGesture = GESTURE_SEEK;
+//						if (!isShowing())
+//							show();
+//						if (mWidgetVolumeView != null)
+//							mWidgetVolumeView.hide(true);
+//						if (mWidgetLightView != null)
+//							mWidgetLightView.hide(true);
+//						float totalSeekDistance = getMeasuredWidth();
+//						if (totalSeekDistance <= 0)
+//							totalSeekDistance = MediaPlayerUtils.getRealDisplayWidth(mHostWindow);
+//						if (mWidgetSeekView != null)
+//							mWidgetSeekView.onGestureSeekChange(-distanceX, totalSeekDistance);
+//					}
+//				}
 				return false;
 			}
 
