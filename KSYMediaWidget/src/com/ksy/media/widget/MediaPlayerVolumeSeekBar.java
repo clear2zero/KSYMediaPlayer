@@ -1,13 +1,22 @@
 package com.ksy.media.widget;
 
+import com.ksy.media.player.util.Constants;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 
 public class MediaPlayerVolumeSeekBar extends SeekBar {
 
+	public interface onScreenShowListener{
+		public void onScreenShow();
+	}
+
+	private onScreenShowListener mOnShowListener;
+	
     public MediaPlayerVolumeSeekBar(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
@@ -47,6 +56,8 @@ public class MediaPlayerVolumeSeekBar extends SeekBar {
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
+		Log.d(Constants.LOG_TAG, "touch in Volume");
+
         if (!isEnabled())
         {
             return false;
@@ -58,6 +69,9 @@ public class MediaPlayerVolumeSeekBar extends SeekBar {
         case MotionEvent.ACTION_MOVE:
         case MotionEvent.ACTION_UP:
             setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+            if (mOnShowListener !=null) {
+                mOnShowListener.onScreenShow();
+			}
             break;
         case MotionEvent.ACTION_CANCEL:
             break;
@@ -70,6 +84,10 @@ public class MediaPlayerVolumeSeekBar extends SeekBar {
     public synchronized void setProgress(int progress) {
         super.setProgress(progress);
         onSizeChanged(getWidth(), getHeight(), 0, 0);
+    }
+    
+    public void setOnScreenShowListener(onScreenShowListener listener){
+    	this.mOnShowListener = listener;
     }
 
 }

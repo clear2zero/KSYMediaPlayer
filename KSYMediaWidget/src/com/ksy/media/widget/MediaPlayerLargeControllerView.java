@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnSystemUiVisibilityChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,10 +22,12 @@ import com.ksy.media.data.MediaPlayMode;
 import com.ksy.media.data.MediaPlayerUtils;
 import com.ksy.media.data.MediaPlayerVideoQuality;
 import com.ksy.media.player.util.Constants;
+import com.ksy.media.widget.MediaPlayerVolumeSeekBar.onScreenShowListener;
 import com.ksy.mediaPlayer.widget.R;
 
 public class MediaPlayerLargeControllerView extends
-		MediaPlayerBaseControllerView implements View.OnClickListener {
+		MediaPlayerBaseControllerView implements View.OnClickListener,
+		onScreenShowListener, OnSystemUiVisibilityChangeListener {
 
 	private RelativeLayout mControllerTopView;
 	private RelativeLayout mBackLayout;
@@ -113,6 +116,9 @@ public class MediaPlayerLargeControllerView extends
 		mWidgetSeekView = (MediaPlayerSeekView) findViewById(R.id.widget_seek_view);
 
 		mWidgetControllerVolumeView = (MediaPlayerControllerVolumeView) findViewById(R.id.widget_controller_volume);
+		Log.d(Constants.LOG_TAG, " listener set in L C");
+		mWidgetControllerVolumeView.setOnScreenShowListener(this);
+		setOnSystemUiVisibilityChangeListener(this);
 	}
 
 	@Override
@@ -205,15 +211,16 @@ public class MediaPlayerLargeControllerView extends
 			}
 		});
 
-		mWidgetControllerVolumeView.setCallback(new MediaPlayerControllerVolumeView.Callback() {
+		mWidgetControllerVolumeView
+				.setCallback(new MediaPlayerControllerVolumeView.Callback() {
 
-			@Override
-			public void onVolumeProgressChanged(
-					AudioManager audioManager, float percentage) {
+					@Override
+					public void onVolumeProgressChanged(
+							AudioManager audioManager, float percentage) {
 
-				// TODO Auto-generated method stub
-			}
-		});
+						// TODO Auto-generated method stub
+					}
+				});
 
 	}
 
@@ -253,7 +260,11 @@ public class MediaPlayerLargeControllerView extends
 			mVideoProgressLayout.setVisibility(View.VISIBLE);
 
 		}
-
+		if (MediaPlayerUtils.isFullScreenMode(mMediaPlayerController
+				.getPlayMode())) {
+			Log.d(Constants.LOG_TAG, "onShow");
+//			MediaPlayerUtils.showSystemUI(mHostWindow, false);
+		}
 	}
 
 	@Override
@@ -272,7 +283,8 @@ public class MediaPlayerLargeControllerView extends
 		if (mDeviceNavigationBarExist) {
 			if (MediaPlayerUtils.isFullScreenMode(mMediaPlayerController
 					.getPlayMode())) {
-				MediaPlayerUtils.hideSystemUI(mHostWindow, true);
+				Log.d(Constants.LOG_TAG, "onHide");
+				MediaPlayerUtils.hideSystemUI(mHostWindow, false);
 			}
 		}
 
@@ -306,7 +318,6 @@ public class MediaPlayerLargeControllerView extends
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-
 		return super.onTouchEvent(event);
 	}
 
@@ -347,7 +358,8 @@ public class MediaPlayerLargeControllerView extends
 	public void updateVideoPlaybackState(boolean isStart) {
 
 		// 播放中
-		Log.i(Constants.LOG_TAG, "updateVideoPlaybackState  ----> start ? " + isStart);
+		Log.i(Constants.LOG_TAG, "updateVideoPlaybackState  ----> start ? "
+				+ isStart);
 		if (isStart) {
 			mVideoPlayImageView.setSelected(true);
 		}
@@ -376,7 +388,8 @@ public class MediaPlayerLargeControllerView extends
 					.onBackPress(MediaPlayMode.PLAYMODE_FULLSCREEN);
 
 		} else if (id == mVideoPlayImageView.getId()) {
-			Log.i(Constants.LOG_TAG, "playing  ? " + (mMediaPlayerController.isPlaying()));
+			Log.i(Constants.LOG_TAG,
+					"playing  ? " + (mMediaPlayerController.isPlaying()));
 			if (mMediaPlayerController.isPlaying()) {
 				mMediaPlayerController.pause();
 				if (mScreenLock) {
@@ -415,7 +428,8 @@ public class MediaPlayerLargeControllerView extends
 			mMediaPlayerController.onVolumeUp();
 			show();
 		} else if (id == mScreenModeImageView.getId()) {
-			mMediaPlayerController.onRequestPlayMode(MediaPlayMode.PLAYMODE_FULLSCREEN);
+			mMediaPlayerController
+					.onRequestPlayMode(MediaPlayMode.PLAYMODE_FULLSCREEN);
 		}
 
 	}
@@ -463,6 +477,23 @@ public class MediaPlayerLargeControllerView extends
 				x, y, width, height);
 		mQualityLayout.setSelected(true);
 		show(0);
+	}
+
+	@Override
+	public void onScreenShow() {
+		show();
+	}
+
+	@Override
+	public void onSystemUiVisibilityChange(int visibility) {
+		Log.d(Constants.LOG_TAG,
+				"onSystemUiVisibilityChange :"+visibility);
+	}
+	
+	@Override
+	public void onWindowSystemUiVisibilityChanged(int visible) {
+		Log.d(Constants.LOG_TAG,
+				"onWindowSystemUiVisibilityChanged :"+visible);
 	}
 
 }

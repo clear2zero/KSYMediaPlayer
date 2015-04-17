@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -70,9 +71,9 @@ public class MediaPlayerView extends RelativeLayout {
 	private final int ORIENTATION_LANDSCAPE_NORMAL = 270;
 
 	private volatile boolean mNeedGesture = true;
-	private volatile boolean mNeedLightGesture = true;
-	private volatile boolean mNeedVolumeGesture = true;
-	private volatile boolean mNeedSeekGesture = true;
+	private volatile boolean mNeedLightGesture = false;
+	private volatile boolean mNeedVolumeGesture = false;
+	private volatile boolean mNeedSeekGesture = false;
 
 	private volatile int mScreenOrientation = ORIENTATION_UNKNOWN;
 	private volatile int mPlayMode = MediaPlayMode.PLAYMODE_FULLSCREEN;
@@ -138,7 +139,7 @@ public class MediaPlayerView extends RelativeLayout {
 		if (null == context)
 			throw new NullPointerException("Context can not be null !");
 
-		screenshot = new GlobleScreenShoot(context);
+		
 		TypedArray typedArray = context.obtainStyledAttributes(attrs,
 				R.styleable.PlayerView);
 		int playmode = typedArray.getInt(R.styleable.PlayerView_playmode,
