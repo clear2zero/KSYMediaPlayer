@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,8 +40,10 @@ import com.ksy.media.data.NetReceiver.NetStateChangedListener;
 import com.ksy.media.data.WakeLocker;
 import com.ksy.media.player.IMediaPlayer;
 import com.ksy.media.player.util.Constants;
+import com.ksy.media.player.util.DRMKey;
 import com.ksy.media.player.util.DRMRetrieverManager;
 import com.ksy.media.player.util.DRMRetrieverResponseHandler;
+import com.ksy.media.player.util.IDRMRetriverRequest;
 import com.ksy.mediaPlayer.widget.R;
 
 public class MediaPlayerView extends RelativeLayout {
@@ -133,8 +134,7 @@ public class MediaPlayerView extends RelativeLayout {
 		init(context, null, -1);
 	}
 
-	private void init(Context context, AttributeSet attrs, int defStyle)
-			throws IllegalArgumentException, NullPointerException {
+	private void init(Context context, AttributeSet attrs, int defStyle) throws IllegalArgumentException, NullPointerException {
 
 		if (null == context)
 			throw new NullPointerException("Context can not be null !");
@@ -149,8 +149,7 @@ public class MediaPlayerView extends RelativeLayout {
 		} else if (playmode == 1) {
 			this.mPlayMode = MediaPlayMode.PLAYMODE_WINDOW;
 		}
-		this.mLockMode = typedArray.getBoolean(R.styleable.PlayerView_lockmode,
-				false);
+		this.mLockMode = typedArray.getBoolean(R.styleable.PlayerView_lockmode, false);
 		typedArray.recycle();
 
 		this.mLayoutInflater = LayoutInflater.from(context);
@@ -158,139 +157,104 @@ public class MediaPlayerView extends RelativeLayout {
 		this.mWindow = mActivity.getWindow();
 
 		this.setBackgroundColor(Color.BLACK);
-		this.mDeviceNavigationBarExist = MediaPlayerUtils
-				.hasNavigationBar(mWindow);
-		this.mDeviceNaturalOrientationLandscape = (MediaPlayerUtils
-				.getDeviceNaturalOrientation(mWindow) == MediaPlayerUtils.DEVICE_NATURAL_ORIENTATION_LANDSCAPE ? true
-				: false);
+		this.mDeviceNavigationBarExist = MediaPlayerUtils.hasNavigationBar(mWindow);
+		this.mDeviceNaturalOrientationLandscape = (MediaPlayerUtils.getDeviceNaturalOrientation(mWindow) == MediaPlayerUtils.DEVICE_NATURAL_ORIENTATION_LANDSCAPE ? true : false);
 		this.mCanLayoutSystemUI = Build.VERSION.SDK_INT >= 16 ? true : false;
-		if (mDeviceNavigationBarExist
-				&& MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
-			this.mFullScreenNavigationBarHeight = MediaPlayerUtils
-					.getNavigationBarHeight(mWindow);
-			this.mDeviceNavigationType = MediaPlayerUtils
-					.getDeviceNavigationType(mWindow);
+		if (mDeviceNavigationBarExist && MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
+			this.mFullScreenNavigationBarHeight = MediaPlayerUtils.getNavigationBarHeight(mWindow);
+			this.mDeviceNavigationType = MediaPlayerUtils.getDeviceNavigationType(mWindow);
 		}
 
 		/* 初始化UI组件 */
-		this.mRootView = (ViewGroup) mLayoutInflater.inflate(
-				R.layout.media_player_view, null);
-		this.mMediaPlayerVideoView = (MediaPlayerVideoView) mRootView
-				.findViewById(R.id.ks_camera_video_view);
-		this.mMediaPlayerBufferingView = (MediaPlayerBufferingView) mRootView
-				.findViewById(R.id.ks_camera_buffering_view);
-		this.mMediaPlayerLoadingView = (MediaPlayerLoadingView) mRootView
-				.findViewById(R.id.ks_camera_loading_view);
-		this.mMediaPlayerEventActionView = (MediaPlayerEventActionView) mRootView
-				.findViewById(R.id.ks_camera_event_action_view);
-		this.mMediaPlayerLargeControllerView = (MediaPlayerLargeControllerView) mRootView
-				.findViewById(R.id.media_player_controller_view_large);
-		this.mMediaPlayerSmallControllerView = (MediaPlayerSmallControllerView) mRootView
-				.findViewById(R.id.media_player_controller_view_small);
+		this.mRootView = (ViewGroup) mLayoutInflater.inflate(R.layout.media_player_view, null);
+		this.mMediaPlayerVideoView = (MediaPlayerVideoView) mRootView.findViewById(R.id.ks_camera_video_view);
+		this.mMediaPlayerBufferingView = (MediaPlayerBufferingView) mRootView.findViewById(R.id.ks_camera_buffering_view);
+		this.mMediaPlayerLoadingView = (MediaPlayerLoadingView) mRootView.findViewById(R.id.ks_camera_loading_view);
+		this.mMediaPlayerEventActionView = (MediaPlayerEventActionView) mRootView.findViewById(R.id.ks_camera_event_action_view);
+		this.mMediaPlayerLargeControllerView = (MediaPlayerLargeControllerView) mRootView.findViewById(R.id.media_player_controller_view_large);
+		this.mMediaPlayerSmallControllerView = (MediaPlayerSmallControllerView) mRootView.findViewById(R.id.media_player_controller_view_small);
 
 		/* 设置播放器监听器 */
 		this.mMediaPlayerVideoView.setOnPreparedListener(mOnPreparedListener);
-		this.mMediaPlayerVideoView
-				.setOnBufferingUpdateListener(mOnPlaybackBufferingUpdateListener);
-		this.mMediaPlayerVideoView
-				.setOnCompletionListener(mOnCompletionListener);
+		this.mMediaPlayerVideoView.setOnBufferingUpdateListener(mOnPlaybackBufferingUpdateListener);
+		this.mMediaPlayerVideoView.setOnCompletionListener(mOnCompletionListener);
 		this.mMediaPlayerVideoView.setOnInfoListener(mOnInfoListener);
-		this.mMediaPlayerVideoView
-				.setOnDRMRequiredListener(mOnDRMRequiredListener);
+		this.mMediaPlayerVideoView.setOnDRMRequiredListener(mOnDRMRequiredListener);
 		this.mMediaPlayerVideoView.setOnErrorListener(mOnErrorListener);
 		this.mMediaPlayerVideoView.setOnSurfaceListener(mOnSurfaceListener);
-		this.mMediaPlayerVideoView
-				.setMediaPlayerController(mMediaPlayerController);
+		this.mMediaPlayerVideoView.setMediaPlayerController(mMediaPlayerController);
 
 		/* 设置playerVideoView UI 参数 */
-		RelativeLayout.LayoutParams mediaPlayerVideoViewParams = new LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		RelativeLayout.LayoutParams mediaPlayerVideoViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mediaPlayerVideoViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
 		/* 设置playerVideoView UI 参数 */
-		RelativeLayout.LayoutParams mediaPlayerBufferingViewParams = new LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams mediaPlayerBufferingViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		mediaPlayerBufferingViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		this.mMediaPlayerBufferingView.hide();
 
 		/* 设置loading UI 参数 */
-		RelativeLayout.LayoutParams mediaPlayerLoadingViewParams = new LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		RelativeLayout.LayoutParams mediaPlayerLoadingViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mediaPlayerLoadingViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		this.mMediaPlayerLoadingView.hide();
 
 		/* 设置eventActionView UI 参数 */
-		RelativeLayout.LayoutParams mediaPlayereventActionViewParams = new LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		mediaPlayereventActionViewParams
-				.addRule(RelativeLayout.CENTER_IN_PARENT);
+		RelativeLayout.LayoutParams mediaPlayereventActionViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		mediaPlayereventActionViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
 		/* 设置eventActionView callback */
-		this.mMediaPlayerEventActionView
-				.setCallback(new MediaPlayerEventActionView.EventActionViewCallback() {
+		this.mMediaPlayerEventActionView.setCallback(new MediaPlayerEventActionView.EventActionViewCallback() {
 
-					@Override
-					public void onActionPlay() {
+			@Override
+			public void onActionPlay() {
 
-						Log.i(Constants.LOG_TAG,
-								"event action  view action play");
-						mMediaPlayerEventActionView.hide();
-						mMediaPlayerLoadingView.hide();
-						mMediaPlayerVideoView.start();
-					}
+				Log.i(Constants.LOG_TAG, "event action  view action play");
+				mMediaPlayerEventActionView.hide();
+				mMediaPlayerLoadingView.hide();
+				mMediaPlayerVideoView.start();
+			}
 
-					@Override
-					public void onActionReplay() {
+			@Override
+			public void onActionReplay() {
 
-						Log.i(Constants.LOG_TAG,
-								"event action  view action replay");
-						mMediaPlayerEventActionView.hide();
-						if (mMediaPlayerController != null) {
-							mMediaPlayerController.start();
-						} else {
-							mMediaPlayerVideoView.start();
-						}
-					}
+				Log.i(Constants.LOG_TAG, "event action  view action replay");
+				mMediaPlayerEventActionView.hide();
+				if (mMediaPlayerController != null) {
+					mMediaPlayerController.start();
+				} else {
+					mMediaPlayerVideoView.start();
+				}
+			}
 
-					@Override
-					public void onActionError() {
+			@Override
+			public void onActionError() {
 
-						Log.i(Constants.LOG_TAG,
-								"event action  view action error");
-						mMediaPlayerEventActionView.hide();
-						mMediaPlayerLargeControllerView.hide();
-						mMediaPlayerSmallControllerView.hide();
-						mMediaPlayerLoadingView.show();
-						mMediaPlayerVideoView.setVideoPath(url);
-					}
+				Log.i(Constants.LOG_TAG, "event action  view action error");
+				mMediaPlayerEventActionView.hide();
+				mMediaPlayerLargeControllerView.hide();
+				mMediaPlayerSmallControllerView.hide();
+				mMediaPlayerLoadingView.show();
+				mMediaPlayerVideoView.setVideoPath(url);
+			}
 
-					@Override
-					public void onActionBack() {
+			@Override
+			public void onActionBack() {
 
-						Log.i(Constants.LOG_TAG,
-								"event action  view action back");
-						mMediaPlayerController.onBackPress(mPlayMode);
-					}
-				});
+				Log.i(Constants.LOG_TAG, "event action  view action back");
+				mMediaPlayerController.onBackPress(mPlayMode);
+			}
+		});
 
 		/* 初始化:ControllerViewLarge */
-		this.mMediaPlayerLargeControllerView
-				.setMediaPlayerController(mMediaPlayerController);
+		this.mMediaPlayerLargeControllerView.setMediaPlayerController(mMediaPlayerController);
 		this.mMediaPlayerLargeControllerView.setHostWindow(mWindow);
-		this.mMediaPlayerLargeControllerView
-				.setDeviceNavigationBarExist(mDeviceNavigationBarExist);
-		this.mMediaPlayerLargeControllerView
-				.setNeedGestureDetector(mNeedGesture);
-		this.mMediaPlayerLargeControllerView.setNeedGestureAction(
-				mNeedLightGesture, mNeedVolumeGesture, mNeedSeekGesture);
-		this.mMediaPlayerControllerViewLargeParams = new LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		this.mMediaPlayerControllerViewLargeParams
-				.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		this.mMediaPlayerControllerViewLargeParams
-				.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		if (mDeviceNavigationBarExist && mCanLayoutSystemUI
-				&& mFullScreenNavigationBarHeight > 0) {
+		this.mMediaPlayerLargeControllerView.setDeviceNavigationBarExist(mDeviceNavigationBarExist);
+		this.mMediaPlayerLargeControllerView.setNeedGestureDetector(mNeedGesture);
+		this.mMediaPlayerLargeControllerView.setNeedGestureAction(mNeedLightGesture, mNeedVolumeGesture, mNeedSeekGesture);
+		this.mMediaPlayerControllerViewLargeParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		this.mMediaPlayerControllerViewLargeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		this.mMediaPlayerControllerViewLargeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		if (mDeviceNavigationBarExist && mCanLayoutSystemUI && mFullScreenNavigationBarHeight > 0) {
 
 			if (mDeviceNavigationType == MediaPlayerUtils.DEVICE_NAVIGATION_TYPE_HANDSET) {
 				mMediaPlayerControllerViewLargeParams.rightMargin = mFullScreenNavigationBarHeight;
@@ -301,16 +265,12 @@ public class MediaPlayerView extends RelativeLayout {
 		}
 
 		/* 初始化:ControllerViewLarge */
-		this.mMediaPlayerSmallControllerView
-				.setMediaPlayerController(mMediaPlayerController);
+		this.mMediaPlayerSmallControllerView.setMediaPlayerController(mMediaPlayerController);
 		this.mMediaPlayerSmallControllerView.setHostWindow(mWindow);
-		this.mMediaPlayerSmallControllerView
-				.setDeviceNavigationBarExist(mDeviceNavigationBarExist);
+		this.mMediaPlayerSmallControllerView.setDeviceNavigationBarExist(mDeviceNavigationBarExist);
 		this.mMediaPlayerSmallControllerView.setNeedGestureDetector(true);
-		this.mMediaPlayerSmallControllerView.setNeedGestureAction(false, false,
-				false);
-		this.mMediaPlayerControllerViewSmallParams = new LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		this.mMediaPlayerSmallControllerView.setNeedGestureAction(false, false, false);
+		this.mMediaPlayerControllerViewSmallParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
 		/* 移除掉所有的view */
 		removeAllViews();
@@ -328,14 +288,11 @@ public class MediaPlayerView extends RelativeLayout {
 		addView(mMediaPlayerEventActionView, mediaPlayereventActionViewParams);
 
 		if (MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
-			addView(mMediaPlayerLargeControllerView,
-					mMediaPlayerControllerViewLargeParams);
+			addView(mMediaPlayerLargeControllerView, mMediaPlayerControllerViewLargeParams);
 			mMediaPlayerLargeControllerView.hide();
-			mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
-					| WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 		} else if (MediaPlayerUtils.isWindowMode(mPlayMode)) {
-			addView(mMediaPlayerSmallControllerView,
-					mMediaPlayerControllerViewSmallParams);
+			addView(mMediaPlayerSmallControllerView, mMediaPlayerControllerViewSmallParams);
 			mMediaPlayerSmallControllerView.hide();
 		}
 
@@ -354,10 +311,8 @@ public class MediaPlayerView extends RelativeLayout {
 
 				try {
 					@SuppressWarnings("unchecked")
-					Class<? extends LayoutParams> parentLayoutParamClazz = (Class<? extends LayoutParams>) getLayoutParams()
-							.getClass();
-					Constructor<? extends LayoutParams> constructor = parentLayoutParamClazz
-							.getDeclaredConstructor(int.class, int.class);
+					Class<? extends LayoutParams> parentLayoutParamClazz = (Class<? extends LayoutParams>) getLayoutParams().getClass();
+					Constructor<? extends LayoutParams> constructor = parentLayoutParamClazz.getDeclaredConstructor(int.class, int.class);
 					mLayoutParamFullScreenMode = constructor.newInstance(
 							android.view.ViewGroup.LayoutParams.MATCH_PARENT,
 							android.view.ViewGroup.LayoutParams.MATCH_PARENT);
@@ -388,39 +343,32 @@ public class MediaPlayerView extends RelativeLayout {
 
 				case NET_NO:
 					Log.i(Constants.LOG_TAG, "网络断了");
-					Toast.makeText(getContext(), "网络变化了:没有网络连接",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "网络变化了:没有网络连接", Toast.LENGTH_LONG).show();
 					break;
 				case NET_2G:
 					Log.i(Constants.LOG_TAG, "2g网络");
-					Toast.makeText(getContext(), "网络变化了:2g网络",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "网络变化了:2g网络", Toast.LENGTH_LONG).show();
 					break;
 				case NET_3G:
 					Log.i(Constants.LOG_TAG, "3g网络");
-					Toast.makeText(getContext(), "网络变化了:3g网络",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "网络变化了:3g网络", Toast.LENGTH_LONG).show();
 					break;
 				case NET_4G:
 					Log.i(Constants.LOG_TAG, "4g网络");
-					Toast.makeText(getContext(), "网络变化了:4g网络",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "网络变化了:4g网络", Toast.LENGTH_LONG).show();
 					break;
 				case NET_WIFI:
 					Log.i(Constants.LOG_TAG, "WIFI网络");
-					Toast.makeText(getContext(), "网络变化了:WIFI网络",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "网络变化了:WIFI网络", Toast.LENGTH_LONG).show();
 					break;
 
 				case NET_UNKNOWN:
 					Log.i(Constants.LOG_TAG, "未知网络");
-					Toast.makeText(getContext(), "网络变化了:未知网络",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "网络变化了:未知网络", Toast.LENGTH_LONG).show();
 					break;
 				default:
 					Log.i(Constants.LOG_TAG, "不知道什么情况~>_<~");
-					Toast.makeText(getContext(), "网络变化了:不知道什么情况~>_<~",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "网络变化了:不知道什么情况~>_<~", Toast.LENGTH_LONG).show();
 				}
 			}
 		};
@@ -446,7 +394,6 @@ public class MediaPlayerView extends RelativeLayout {
 		if (mVideoReady && !mMediaPlayerEventActionView.isShowing()) {
 
 			if (MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
-				// return false;
 				return mMediaPlayerLargeControllerView.dispatchTouchEvent(ev);
 			}
 			if (MediaPlayerUtils.isWindowMode(mPlayMode)) {
@@ -466,8 +413,7 @@ public class MediaPlayerView extends RelativeLayout {
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
-				&& event.getAction() == KeyEvent.ACTION_DOWN) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
 			if (mScreenLockMode) {
 				return true;
 			}
@@ -518,8 +464,7 @@ public class MediaPlayerView extends RelativeLayout {
 				return false;
 
 			removeView(mMediaPlayerSmallControllerView);
-			addView(mMediaPlayerLargeControllerView,
-					mMediaPlayerControllerViewLargeParams);
+			addView(mMediaPlayerLargeControllerView, mMediaPlayerControllerViewLargeParams);
 			this.setLayoutParams(mLayoutParamFullScreenMode);
 			mMediaPlayerLargeControllerView.hide();
 			mMediaPlayerSmallControllerView.hide();
@@ -527,8 +472,7 @@ public class MediaPlayerView extends RelativeLayout {
 			if (mPlayerViewCallback != null)
 				mPlayerViewCallback.hideViews();
 
-			mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
-					| WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			if (mDeviceNavigationBarExist)
 				MediaPlayerUtils.hideSystemUI(mWindow, true);
 
@@ -543,8 +487,7 @@ public class MediaPlayerView extends RelativeLayout {
 				return false;
 
 			removeView(mMediaPlayerLargeControllerView);
-			addView(mMediaPlayerSmallControllerView,
-					mMediaPlayerControllerViewSmallParams);
+			addView(mMediaPlayerSmallControllerView, mMediaPlayerControllerViewSmallParams);
 			this.setLayoutParams(mLayoutParamWindowMode);
 			mMediaPlayerLargeControllerView.hide();
 			mMediaPlayerSmallControllerView.hide();
@@ -552,8 +495,7 @@ public class MediaPlayerView extends RelativeLayout {
 			if (mPlayerViewCallback != null)
 				mPlayerViewCallback.restoreViews();
 
-			mWindow.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
-					| WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			mWindow.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			if (mDeviceNavigationBarExist)
 				MediaPlayerUtils.showSystemUI(mWindow, false);
 
@@ -601,8 +543,7 @@ public class MediaPlayerView extends RelativeLayout {
 			return;
 
 		if (null == mOrientationEventListener) {
-			mOrientationEventListener = new OrientationEventListener(context,
-					SensorManager.SENSOR_DELAY_NORMAL) {
+			mOrientationEventListener = new OrientationEventListener(context, SensorManager.SENSOR_DELAY_NORMAL) {
 
 				@Override
 				public void onOrientationChanged(int orientation) {
@@ -626,8 +567,7 @@ public class MediaPlayerView extends RelativeLayout {
 							return;
 						if (MediaPlayerUtils.isWindowMode(mPlayMode)) {
 							Log.i(Constants.LOG_TAG, " Window to FullScreen ");
-							if (mScreenOrientation == ORIENTATION_LANDSCAPE_NORMAL
-									|| mScreenOrientation == ORIENTATION_LANDSCAPE_REVERSED) {
+							if (mScreenOrientation == ORIENTATION_LANDSCAPE_NORMAL || mScreenOrientation == ORIENTATION_LANDSCAPE_REVERSED) {
 								if (!mLockMode) {
 									boolean requestResult = requestPlayMode(MediaPlayMode.PLAYMODE_FULLSCREEN);
 									if (requestResult) {
@@ -644,8 +584,7 @@ public class MediaPlayerView extends RelativeLayout {
 										doScreenOrientationRotate(mScreenOrientation);
 									}
 								}
-							} else if (mScreenOrientation == ORIENTATION_LANDSCAPE_NORMAL
-									|| mScreenOrientation == ORIENTATION_LANDSCAPE_REVERSED) {
+							} else if (mScreenOrientation == ORIENTATION_LANDSCAPE_NORMAL || mScreenOrientation == ORIENTATION_LANDSCAPE_REVERSED) {
 								doScreenOrientationRotate(mScreenOrientation);
 							}
 						}
@@ -691,19 +630,13 @@ public class MediaPlayerView extends RelativeLayout {
 
 		switch (screenOrientation) {
 		case ORIENTATION_PORTRAIT_NORMAL:
-			mActivity
-					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			break;
 		case ORIENTATION_LANDSCAPE_REVERSED:
-			mActivity
-					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-			if (mDeviceNavigationBarExist
-					&& mFullScreenNavigationBarHeight <= 0
-					&& MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
-				this.mFullScreenNavigationBarHeight = MediaPlayerUtils
-						.getNavigationBarHeight(mWindow);
-				this.mDeviceNavigationType = MediaPlayerUtils
-						.getDeviceNavigationType(mWindow);
+			mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+			if (mDeviceNavigationBarExist && mFullScreenNavigationBarHeight <= 0 && MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
+				this.mFullScreenNavigationBarHeight = MediaPlayerUtils.getNavigationBarHeight(mWindow);
+				this.mDeviceNavigationType = MediaPlayerUtils.getDeviceNavigationType(mWindow);
 				if (mCanLayoutSystemUI && mFullScreenNavigationBarHeight > 0) {
 					if (mDeviceNavigationType == MediaPlayerUtils.DEVICE_NAVIGATION_TYPE_HANDSET) {
 						mMediaPlayerControllerViewLargeParams.rightMargin = mFullScreenNavigationBarHeight;
@@ -714,19 +647,13 @@ public class MediaPlayerView extends RelativeLayout {
 			}
 			break;
 		case ORIENTATION_PORTRAIT_REVERSED:
-			mActivity
-					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+			mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
 			break;
 		case ORIENTATION_LANDSCAPE_NORMAL:
-			mActivity
-					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			if (mDeviceNavigationBarExist
-					&& mFullScreenNavigationBarHeight <= 0
-					&& MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
-				this.mFullScreenNavigationBarHeight = MediaPlayerUtils
-						.getNavigationBarHeight(mWindow);
-				this.mDeviceNavigationType = MediaPlayerUtils
-						.getDeviceNavigationType(mWindow);
+			mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			if (mDeviceNavigationBarExist && mFullScreenNavigationBarHeight <= 0 && MediaPlayerUtils.isFullScreenMode(mPlayMode)) {
+				this.mFullScreenNavigationBarHeight = MediaPlayerUtils.getNavigationBarHeight(mWindow);
+				this.mDeviceNavigationType = MediaPlayerUtils.getDeviceNavigationType(mWindow);
 				if (mCanLayoutSystemUI && mFullScreenNavigationBarHeight > 0) {
 					if (mDeviceNavigationType == MediaPlayerUtils.DEVICE_NAVIGATION_TYPE_HANDSET) {
 						mMediaPlayerControllerViewLargeParams.rightMargin = mFullScreenNavigationBarHeight;
@@ -742,8 +669,7 @@ public class MediaPlayerView extends RelativeLayout {
 
 	private void enableOrientationEventListener() {
 
-		if (mOrientationEventListener != null
-				&& mOrientationEventListener.canDetectOrientation()) {
+		if (mOrientationEventListener != null && mOrientationEventListener.canDetectOrientation()) {
 			mOrientationEventListener.enable();
 		}
 	}
@@ -758,14 +684,13 @@ public class MediaPlayerView extends RelativeLayout {
 
 	private void updateVideoInfo2Controller() {
 
-		mMediaPlayerSmallControllerView.updateVideoTitle("金山软件大厦-3楼云存储");
+		mMediaPlayerSmallControllerView.updateVideoTitle(url);
 
-		mMediaPlayerLargeControllerView.updateVideoTitle("金山软件大厦-3楼云存储");
-		mMediaPlayerLargeControllerView
-				.updateVideoQualityState(MediaPlayerVideoQuality.SD);
+		mMediaPlayerLargeControllerView.updateVideoTitle(url);
+		mMediaPlayerLargeControllerView.updateVideoQualityState(MediaPlayerVideoQuality.SD);
 		mMediaPlayerLargeControllerView.updateVideoVolumeState();
 
-		mMediaPlayerEventActionView.updateVideoTitle("金山软件大厦-3楼云存储");
+		mMediaPlayerEventActionView.updateVideoTitle(url);
 	}
 
 	private void changeMovieRatio() {
@@ -773,8 +698,7 @@ public class MediaPlayerView extends RelativeLayout {
 		if (mDisplaySizeMode > MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_ORIGIN) {
 			mDisplaySizeMode = MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_16_9;
 		}
-		Log.d(Constants.LOG_TAG, "Change Current Width/Heigh Ratio = "
-				+ mDisplaySizeMode);
+		Log.d(Constants.LOG_TAG, "Change Current Width/Heigh Ratio = " + mDisplaySizeMode);
 		mMediaPlayerVideoView.setVideoLayout(mDisplaySizeMode);
 		mDisplaySizeMode++;
 	}
@@ -795,15 +719,12 @@ public class MediaPlayerView extends RelativeLayout {
 				mPausePosition = 0;
 
 			}
-			if (!WakeLocker.isScreenOn(getContext())
-					&& mMediaPlayerController.canPause()) {
+			if (!WakeLocker.isScreenOn(getContext()) && mMediaPlayerController.canPause()) {
 				mMediaPlayerController.pause();
 			}
 			updateVideoInfo2Controller();
 			mMediaPlayerLoadingView.hide();
-			mMediaPlayerEventActionView.updateEventMode(
-					MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_WAIT,
-					null);
+			mMediaPlayerEventActionView.updateEventMode(MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_WAIT, null);
 			mVideoReady = true;
 			if (mPlayerViewCallback != null)
 				mPlayerViewCallback.onPrepared();
@@ -818,9 +739,7 @@ public class MediaPlayerView extends RelativeLayout {
 			Log.i(Constants.LOG_TAG, "================onCompletion============");
 			mMediaPlayerLargeControllerView.hide();
 			mMediaPlayerSmallControllerView.hide();
-			mMediaPlayerEventActionView.updateEventMode(
-					MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_COMPLETE,
-					null);
+			mMediaPlayerEventActionView.updateEventMode(MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_COMPLETE, null);
 			mMediaPlayerEventActionView.show();
 			WakeLocker.release();
 		}
@@ -853,9 +772,9 @@ public class MediaPlayerView extends RelativeLayout {
 	IMediaPlayer.OnDRMRequiredListener mOnDRMRequiredListener = new IMediaPlayer.OnDRMRequiredListener() {
 
 		@Override
-		public void OnDRMRequired(IMediaPlayer mp, int what, int extra,
-				String version) {
+		public void OnDRMRequired(IMediaPlayer mp, int what, int extra, String version) {
 
+			Toast.makeText(getContext(), "begin drm retriving..version :" + version, Toast.LENGTH_SHORT).show();
 			requestDRMKey(version);
 		}
 	};
@@ -867,28 +786,47 @@ public class MediaPlayerView extends RelativeLayout {
 		if (mDrmHandler == null) {
 			mDrmHandler = new DRMRetrieverResponseHandler() {
 
+				private static final long serialVersionUID = 1L;
+
 				@Override
-				public void onSuccess(int paramInt, String cek) {
+				public void onSuccess(String version, String cek) {
 
 					mMediaPlayerVideoView.setDRMKey(version, cek);
-					Toast.makeText(getContext(), "DRM KEY retrieve success",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), "DRM KEY retrieve success,ver :" + version + ", key :" + cek, Toast.LENGTH_SHORT).show();
 				}
 
 				@Override
-				public void onFailure(int paramInt, String response,
-						Throwable paramThrowable) {
+				public void onFailure(int arg0, String arg1, Throwable arg2) {
 
-					Log.e(Constants.LOG_TAG,
-							"drm retrieve failed !!!!!!!!!!!!!!");
-					Toast.makeText(getContext(), "DRM KEY retrieve failed",
-							Toast.LENGTH_SHORT).show();
+					Log.e(Constants.LOG_TAG, "drm retrieve failed !!!!!!!!!!!!!!");
+					Toast.makeText(getContext(), "DRM KEY retrieve failed", Toast.LENGTH_SHORT).show();
 				}
+
 			};
 		}
-		// String url =
-		// "https://115.231.96.89:80/xiaoyi/GetCek?signature=16I/xKLT8S/aHJpApgYfye6CI6o=&accesskeyid=8oN7siZgTOSFHft0cXTg&expire=1710333224&nonce=4e1f2519c626cbfbab1520c255830c26&cekurl=rtmp://192.168.135.185/myLive/drm";
-		mDrmManager.retrieveDRM(url, mDrmHandler);
+
+		IDRMRetriverRequest request = new IDRMRetriverRequest(version, url) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public DRMKey retriveDRMKeyFromAppServer(DRMFullURL fullURL) {
+
+				return null;
+			}
+
+			@Override
+			public DRMFullURL retriveDRMFullUrl(String cekVersion, String cekUrl) throws Exception {
+
+				DRMFullURL fullURL = new DRMFullURL("115.231.96.89:80", "test", DRMMethod.GetCek,
+						"16I/xKLT8S/aHJpApgYfye6CI6o=", "8oN7siZgTOSFHft0cXTg", "1710333224",
+						"4e1f2519c626cbfbab1520c255830c26", cekUrl, cekVersion, "UTF-8");
+
+				return fullURL;
+
+			}
+		};
+		mDrmManager.retrieveDRM(request, mDrmHandler);
 	}
 
 	IMediaPlayer.OnBufferingUpdateListener mOnPlaybackBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
@@ -908,15 +846,12 @@ public class MediaPlayerView extends RelativeLayout {
 		@Override
 		public boolean onError(IMediaPlayer mp, int what, int extra) {
 
-			Log.e(Constants.LOG_TAG, "On Native Error,what :" + what
-					+ " , extra :" + extra);
+			Log.e(Constants.LOG_TAG, "On Native Error,what :" + what + " , extra :" + extra);
 			mMediaPlayerLargeControllerView.hide();
 			mMediaPlayerSmallControllerView.hide();
 			mMediaPlayerBufferingView.hide();
 			mMediaPlayerLoadingView.hide();
-			mMediaPlayerEventActionView.updateEventMode(
-					MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_ERROR,
-					what + "," + extra);
+			mMediaPlayerEventActionView.updateEventMode(MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_ERROR, what + "," + extra);
 			mMediaPlayerEventActionView.show();
 			return true;
 		}
@@ -942,8 +877,7 @@ public class MediaPlayerView extends RelativeLayout {
 		}
 
 		@Override
-		public void surfaceChanged(SurfaceHolder holder, int format, int w,
-				int h) {
+		public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 
 		}
 	};
@@ -1004,9 +938,7 @@ public class MediaPlayerView extends RelativeLayout {
 			if (canSeekBackward() && canSeekForward()) {
 				mMediaPlayerVideoView.seekTo(pos);
 			} else {
-				Toast.makeText(getContext(),
-						"current is real stream, seek is unSupported !",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "current is real stream, seek is unSupported !", Toast.LENGTH_SHORT).show();
 			}
 		}
 
@@ -1025,24 +957,21 @@ public class MediaPlayerView extends RelativeLayout {
 		@Override
 		public boolean canPause() {
 
-			Log.i(Constants.LOG_TAG,
-					"can pause ? " + (mMediaPlayerVideoView.canPause()));
+			Log.i(Constants.LOG_TAG, "can pause ? " + (mMediaPlayerVideoView.canPause()));
 			return mMediaPlayerVideoView.canPause();
 		}
 
 		@Override
 		public boolean canSeekBackward() {
 
-			Log.i(Constants.LOG_TAG, " can Seek Backward ? "
-					+ (mMediaPlayerVideoView.canSeekBackward()));
+			Log.i(Constants.LOG_TAG, " can Seek Backward ? " + (mMediaPlayerVideoView.canSeekBackward()));
 			return mMediaPlayerVideoView.canSeekBackward();
 		}
 
 		@Override
 		public boolean canSeekForward() {
 
-			Log.i(Constants.LOG_TAG, " can Seek Forward ? "
-					+ (mMediaPlayerVideoView.canSeekForward()));
+			Log.i(Constants.LOG_TAG, " can Seek Forward ? " + (mMediaPlayerVideoView.canSeekForward()));
 			return mMediaPlayerVideoView.canSeekForward();
 		}
 
@@ -1097,17 +1026,13 @@ public class MediaPlayerView extends RelativeLayout {
 		@Override
 		public void onBackPress(int playMode) {
 
-			Log.i(Constants.LOG_TAG,
-					"========playerview back pressed ==============playMode :"
-							+ playMode + ", mPlayerViewCallback is null "
-							+ (mPlayerViewCallback == null));
+			Log.i(Constants.LOG_TAG, "========playerview back pressed ==============playMode :" + playMode + ", mPlayerViewCallback is null " + (mPlayerViewCallback == null));
 			if (MediaPlayerUtils.isFullScreenMode(playMode)) {
 				if (mLockMode) {
 					if (mPlayerViewCallback != null)
 						mPlayerViewCallback.onFinish(playMode);
 				} else {
-					mMediaPlayerController
-							.onRequestPlayMode(MediaPlayMode.PLAYMODE_WINDOW);
+					mMediaPlayerController.onRequestPlayMode(MediaPlayMode.PLAYMODE_WINDOW);
 				}
 			} else if (MediaPlayerUtils.isWindowMode(playMode)) {
 				if (mPlayerViewCallback != null)
@@ -1151,8 +1076,7 @@ public class MediaPlayerView extends RelativeLayout {
 		@Override
 		public boolean canStart() {
 
-			Log.i(Constants.LOG_TAG,
-					"can Start ? " + mMediaPlayerVideoView.canStart());
+			Log.i(Constants.LOG_TAG, "can Start ? " + mMediaPlayerVideoView.canStart());
 			return mMediaPlayerVideoView.canStart();
 		}
 
@@ -1186,16 +1110,14 @@ public class MediaPlayerView extends RelativeLayout {
 		public void onMoviePlayRatioUp() {
 
 			Log.d(Constants.LOG_TAG, "speed up");
-			if (mMediaPlayerController != null
-					&& mMediaPlayerController.isPlaying()) {
+			if (mMediaPlayerController != null && mMediaPlayerController.isPlaying()) {
 				if (mCurrentPlayingRatio == MAX_PLAYING_RATIO) {
 					Log.d(Constants.LOG_TAG, "current playing ratio is max");
 					return;
 				} else {
 					mCurrentPlayingRatio = mCurrentPlayingRatio + 0.5f;
 					mMediaPlayerVideoView.setVideoRate(mCurrentPlayingRatio);
-					Log.d(Constants.LOG_TAG, "set playing ratio to --->"
-							+ mCurrentPlayingRatio);
+					Log.d(Constants.LOG_TAG, "set playing ratio to --->" + mCurrentPlayingRatio);
 				}
 			}
 
@@ -1207,16 +1129,14 @@ public class MediaPlayerView extends RelativeLayout {
 		@Override
 		public void onMoviePlayRatioDown() {
 
-			if (mMediaPlayerController != null
-					&& mMediaPlayerController.isPlaying()) {
+			if (mMediaPlayerController != null && mMediaPlayerController.isPlaying()) {
 				if (mCurrentPlayingRatio == 0) {
 					Log.d(Constants.LOG_TAG, "current playing ratio is 0");
 					return;
 				} else {
 					mCurrentPlayingRatio = mCurrentPlayingRatio - 0.5f;
 					mMediaPlayerVideoView.setVideoRate(mCurrentPlayingRatio);
-					Log.d(Constants.LOG_TAG, "set playing ratio to --->"
-							+ mCurrentPlayingRatio);
+					Log.d(Constants.LOG_TAG, "set playing ratio to --->" + mCurrentPlayingRatio);
 					return;
 				}
 			}
@@ -1287,29 +1207,24 @@ public class MediaPlayerView extends RelativeLayout {
 	private String getCurrentTime() {
 
 		StringBuffer buffer = new StringBuffer();
-		SimpleDateFormat sDateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd_hh:mm:ss", Locale.US);
-		buffer.append(sDateFormat.format(new java.util.Date())).append(".")
-				.append("png");
+		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss", Locale.US);
+		buffer.append(sDateFormat.format(new java.util.Date())).append(".").append("png");
 		return buffer.toString();
 	}
 
 	private void compressAndSaveBitmapToSDCard(Bitmap rawBitmap,
 			String fileName, int quality) {
 
-		File directory = new File(Environment.getExternalStorageDirectory()
-				+ File.separator + MediaPlayerView.CAPUTRE_SCREEN_PATH);
+		File directory = new File(Environment.getExternalStorageDirectory() + File.separator + MediaPlayerView.CAPUTRE_SCREEN_PATH);
 		if (!directory.exists()) {
 			directory.mkdir();
 		}
 		File saveFile = new File(directory, fileName);
 		if (!saveFile.exists()) {
 			try {
-				FileOutputStream fileOutputStream = new FileOutputStream(
-						saveFile);
+				FileOutputStream fileOutputStream = new FileOutputStream(saveFile);
 				if (fileOutputStream != null) {
-					rawBitmap.compress(Bitmap.CompressFormat.PNG, quality,
-							fileOutputStream);
+					rawBitmap.compress(Bitmap.CompressFormat.PNG, quality, fileOutputStream);
 				}
 				fileOutputStream.flush();
 				fileOutputStream.close();

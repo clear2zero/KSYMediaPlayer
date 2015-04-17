@@ -16,29 +16,62 @@ import android.os.Message;
 public class DRMRetrieverManager {
 
 	private static final String DRM_CEK_STR = "Cek";
+	private static final String DRM_VERSION_STR = "Version";
+	private static final String DRM_RESPONSE_HANDLER = "handler";
+	private static final String DRM_ERROR_CODE = "code";
+	private static final String DRM_ERROR_MESSAGE = "response_content";
+	private static final String DRM_ERROR_EXCEPTION = "exception";
 
-	private static final int RESPONSE_SUCCESS = 0;
-	private static final int RESPONSE_FAIL = 1;
+	private static final int DRM_RESPONSE_SUCCESS = 0;
+	private static final int DRM_RESPONSE_FAILED = 1;
 
-	private final HttpsClient mHttpsClient;
 	private static DRMRetrieverManager mInstance;
 	private final ExecutorService mThreadPool;
 	private final DRMInnerHandler mhandler;
 
 	class DRMInnerHandler extends Handler {
 
+		public void sendSuccessMessage(DRMKey key, DRMRetrieverResponseHandler handler) {
+
+			Message msg = mhandler.obtainMessage();
+			msg.what = DRM_RESPONSE_SUCCESS;
+			Bundle datas = new Bundle();
+			datas.putString(DRM_CEK_STR, key.getKey());
+			datas.putString(DRM_VERSION_STR, key.getVersion());
+			datas.putSerializable(DRM_RESPONSE_HANDLER, handler);
+			msg.setData(datas);
+			mhandler.sendMessage(msg);
+		}
+
+		public void sendFailedMessage(int code, String responseMessage, Exception e, DRMRetrieverResponseHandler handler) {
+
+			Message msg = mhandler.obtainMessage();
+			msg.what = DRM_RESPONSE_FAILED;
+			Bundle datas = new Bundle();
+			datas.putInt(DRM_ERROR_CODE, code);
+			datas.putString(DRM_ERROR_MESSAGE, responseMessage);
+			datas.putSerializable(DRM_ERROR_EXCEPTION, e);
+			datas.putSerializable(DRM_RESPONSE_HANDLER, handler);
+			msg.setData(datas);
+			mhandler.sendMessage(msg);
+		}
+
 		@Override
 		public void handleMessage(Message msg) {
 
 			int what = msg.what;
-			DRMRetrieverResponseHandler handler = (DRMRetrieverResponseHandler) msg.getData().getSerializable("handler");
+			DRMRetrieverResponseHandler handler = (DRMRetrieverResponseHandler) msg.getData().getSerializable(DRM_RESPONSE_HANDLER);
 			switch (what) {
-			case RESPONSE_SUCCESS:
+			case DRM_RESPONSE_SUCCESS:
 				String cek = msg.getData().getString(DRM_CEK_STR);
-				handler.onSuccess(200, cek);
+				String ver = msg.getData().getString(DRM_VERSION_STR);
+				handler.onSuccess(ver, cek);
 				break;
-			case RESPONSE_FAIL:
-				handler.onFailure(404, "", null);
+			case DRM_RESPONSE_FAILED:
+				int code = msg.getData().getInt(DRM_ERROR_CODE);
+				String message = msg.getData().getString(DRM_ERROR_MESSAGE);
+				Exception e = (Exception) msg.getData().getSerializable(DRM_ERROR_EXCEPTION);
+				handler.onFailure(code, message, e);
 				break;
 			}
 		}
@@ -46,7 +79,6 @@ public class DRMRetrieverManager {
 
 	private DRMRetrieverManager() {
 
-		mHttpsClient = new HttpsClient();
 		mThreadPool = Executors.newCachedThreadPool();
 		mhandler = new DRMInnerHandler();
 	}
@@ -61,48 +93,18 @@ public class DRMRetrieverManager {
 		}
 	}
 
-	public void retrieveDRM(String url, DRMRetrieverResponseHandler handler) {
+	public void retrieveDRM(IDRMRetriverRequest request, DRMRetrieverResponseHandler handler) {
 
-		mThreadPool.submit(new DRMRetrieverTask(url, handler), handler);
+		request.setDRMInnerHandler(mhandler);
+		request.setDRMResponseHandler(handler);
+		mThreadPool.submit(request);
 	}
 
-	class DRMRetrieverTask implements Runnable {
-
-		private final String url;
-		private final DRMRetrieverResponseHandler handler;
-
-		public DRMRetrieverTask(String url, DRMRetrieverResponseHandler handler) {
-
-			this.url = url;
-			this.handler = handler;
-		}
-
-		@Override
-		public void run() {
-
-			try {
-				InputStream in = mHttpsClient.sendPOSTRequestForInputStream(url, null, "UTF-8");
-				String cek = parseDRMSecFromInputStream(in);
-				Message msg = mhandler.obtainMessage(RESPONSE_SUCCESS);
-				Bundle data = new Bundle();
-				data.putString(DRM_CEK_STR, cek);
-				data.putSerializable("handler", handler);
-				msg.setData(data);
-				mhandler.sendMessage(msg);
-			} catch (Exception e) {
-				Message msg = mhandler.obtainMessage(RESPONSE_FAIL);
-				Bundle data = new Bundle();
-				data.putString("response", "");
-				data.putSerializable("handler", handler);
-				mhandler.sendMessage(msg);
-			}
-		}
-	}
-
-	private String parseDRMSecFromInputStream(InputStream inputStream) throws IOException {
+	public static DRMKey parseDRMSecFromInputStream(InputStream inputStream) throws IOException {
 
 		XmlPullParserFactory factory = null;
 		String cek = "";
+		String ver = "";
 		try {
 			factory = XmlPullParserFactory.newInstance();
 			XmlPullParser parse = factory.newPullParser();
@@ -118,7 +120,11 @@ public class DRMRetrieverManager {
 					if (DRM_CEK_STR.equalsIgnoreCase(nodeName)) {
 						cek = parse.nextText();
 					}
+					if (DRM_VERSION_STR.equalsIgnoreCase(nodeName)) {
+						ver = parse.nextText();
+					}
 					break;
+
 				case XmlPullParser.END_TAG:
 					break;
 				case XmlPullParser.TEXT:
@@ -135,7 +141,7 @@ public class DRMRetrieverManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return cek;
+		return new DRMKey(cek, ver);
 
 	}
 }

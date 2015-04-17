@@ -22,27 +22,32 @@ public interface IMediaPlayer {
 	public static final int MEDIA_INFO_METADATA_UPDATE = 802;
 	public static final int MEDIA_INFO_TIMED_TEXT_ERROR = 900;
 
-	public static final int MEDIA_ERROR_UNKNOWN = 1;
 	public static final int MEDIA_ERROR_SERVER_DIED = 100;
 	public static final int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;
-	public static final int MEDIA_ERROR_IO = -1004;
-	public static final int MEDIA_ERROR_MALFORMED = -1007;
-	public static final int MEDIA_ERROR_UNSUPPORTED = -1010;
-	public static final int MEDIA_ERROR_TIMED_OUT = -110;
 
-	public static final int MEDIA_BUFFERSIZE_DEFAULT = 2 * 10; // M
+	public static final int MEDIA_ERROR_UNKNOWN = 10000;
+	public static final int MEDIA_ERROR_IO = 10001;
+	public static final int MEDIA_ERROR_TIMEOUT = 10002;
+	public static final int MEDIA_ERROR_UNSUPPORTED = 10003;
+	public static final int MEDIA_ERROR_NOFILE = 10004;
+	public static final int MEDIA_ERROR_SEEKUNSUPPORT = 10005;
+	public static final int MEDIA_ERROR_SEEKUNREACHABLE = 10006;
+	public static final int MEDIA_ERROR_DRM = 10007;
+	public static final int MEDIA_ERROR_MEMORY = 10008;
+	public static final int MEDIA_ERROR_WRONGPARAM = 10009;
+
+	public static final int MEDIA_BUFFERSIZE_DEFAULT = 2 * 10;
 
 	public static final int MEDIA_ANALYSE_DURATION_DEFAULT = 2 * 1000;
 
 	public static final float MEDIA_VIDEO_RATE_DEFAULT = 1.0f;
 	public static final float MEDIA_AUDIO_AMPLIFY_DEFAULT = 1.0f;
 
-	public static final int MEDIA_TIME_OUT_DEFAULT = 2000 * 1000;
+	public static final int MEDIA_TIME_OUT_DEFAULT = 20 * 1000;
 
 	public abstract void setDisplay(SurfaceHolder sh);
 
-	public abstract void setDataSource(String path) throws IOException,
-			IllegalArgumentException, SecurityException, IllegalStateException;
+	public abstract void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
 	public abstract String getDataSource();
 
@@ -84,14 +89,11 @@ public interface IMediaPlayer {
 
 	public abstract void setOnCompletionListener(OnCompletionListener listener);
 
-	public abstract void setOnBufferingUpdateListener(
-			OnBufferingUpdateListener listener);
+	public abstract void setOnBufferingUpdateListener(OnBufferingUpdateListener listener);
 
-	public abstract void setOnSeekCompleteListener(
-			OnSeekCompleteListener listener);
+	public abstract void setOnSeekCompleteListener(OnSeekCompleteListener listener);
 
-	public abstract void setOnVideoSizeChangedListener(
-			OnVideoSizeChangedListener listener);
+	public abstract void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener);
 
 	public abstract void setOnErrorListener(OnErrorListener listener);
 
@@ -124,8 +126,7 @@ public interface IMediaPlayer {
 
 	public static interface OnVideoSizeChangedListener {
 
-		public void onVideoSizeChanged(IMediaPlayer mp, int width, int height,
-				int sar_num, int sar_den);
+		public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den);
 	}
 
 	public static interface OnErrorListener {
@@ -140,14 +141,12 @@ public interface IMediaPlayer {
 
 	public static interface OnDRMRequiredListener {
 
-		public void OnDRMRequired(IMediaPlayer mp, int what, int extra,
-				String version);
+		public void OnDRMRequired(IMediaPlayer mp, int what, int extra, String version);
 	}
 
 	public static interface OnSurfaceListener {
 
-		public void surfaceChanged(SurfaceHolder holder, int format, int w,
-				int h);
+		public void surfaceChanged(SurfaceHolder holder, int format, int w, int h);
 
 		public void surfaceCreated(SurfaceHolder holder);
 

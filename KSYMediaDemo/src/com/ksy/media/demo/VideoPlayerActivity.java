@@ -1,20 +1,16 @@
 package com.ksy.media.demo;
 
 import java.io.File;
+
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ksy.media.player.util.Constants;
 import com.ksy.media.widget.MediaPlayerView;
@@ -39,29 +35,31 @@ public class VideoPlayerActivity extends Activity implements
 		final EditText editInput = (EditText) dialogView
 				.findViewById(R.id.input);
 
-		new AlertDialog.Builder(this).setTitle("User Input")
-				.setView(dialogView)
-				.setPositiveButton("Confirm", new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						String inputString = editInput.getText().toString();
-						if (!TextUtils.isEmpty(inputString)) {
-							startPlayer(inputString);
-						} else {
-							Toast.makeText(VideoPlayerActivity.this,
-									"Paht or URL can not be null",
-									Toast.LENGTH_LONG).show();
-						}
-
-					}
-				}).setNegativeButton("Cancel", new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				}).show();
+		startPlayer("");
+		
+//		new AlertDialog.Builder(this).setTitle("User Input")
+//				.setView(dialogView)
+//				.setPositiveButton("Confirm", new OnClickListener() {
+//
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						String inputString = editInput.getText().toString();
+//						if (!TextUtils.isEmpty(inputString)) {
+//							startPlayer(inputString);
+//						} else {
+//							Toast.makeText(VideoPlayerActivity.this,
+//									"Paht or URL can not be null",
+//									Toast.LENGTH_LONG).show();
+//						}
+//
+//					}
+//				}).setNegativeButton("Cancel", new OnClickListener() {
+//
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.dismiss();
+//					}
+//				}).show();
 	}
 
 	@Override
@@ -91,11 +89,12 @@ public class VideoPlayerActivity extends Activity implements
 		playerView.setPlayerViewCallback(this);
 		// String path = "rtmp://192.168.135.185/myLive/guoli1234";
 		// String path = "http://live.3gv.ifeng.com/zixun.m3u8"; // vod
-		// String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
-		playerView.play(url);
+//		 String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
+		
 		// String path = "http://www.modrails.com/videos/passenger_nginx.mov";
-		// File file = new File(Environment.getExternalStorageDirectory(),
-		// "a.mp4");
+		 File file = new File(Environment.getExternalStorageDirectory(),
+		 "a.mp4");
+		playerView.play(file.getPath());
 		// Log.d("eflake", file.getAbsolutePath())
 		// playerView.play(file.getPath());
 	}

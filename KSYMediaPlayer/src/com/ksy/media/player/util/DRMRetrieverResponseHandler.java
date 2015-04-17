@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface DRMRetrieverResponseHandler extends Serializable {
 
-	void onSuccess(int paramInt, String cek);
+	void onSuccess(String version, String cek);
 
-	void onFailure(int paramInt, String response, Throwable paramThrowable);
+	void onFailure(int code, String response, Throwable e);
 }

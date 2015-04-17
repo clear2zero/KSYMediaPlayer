@@ -139,110 +139,112 @@ containing a value of this type.
         public static final int player_window_mode=0x7f020054;
     }
     public static final class id {
-        public static final int action_layout=0x7f090033;
-        public static final int back_image_view=0x7f090025;
-        public static final int back_layout=0x7f090024;
-        public static final int complete_layout=0x7f090035;
-        public static final int complete_replay_image_view=0x7f090037;
-        public static final int complete_replay_layout=0x7f090036;
-        public static final int complete_replay_text_view=0x7f090038;
-        public static final int controller_bottom_layout=0x7f09000c;
-        public static final int controller_top_layout=0x7f09000b;
-        public static final int controller_volume_iv=0x7f09002f;
-        public static final int crop_view=0x7f09002a;
-        public static final int error_info_title_text_view=0x7f09003a;
-        public static final int error_layout=0x7f090039;
-        public static final int error_replay_image_view=0x7f09003c;
-        public static final int error_replay_layout=0x7f09003b;
-        public static final int error_replay_text_view=0x7f09003d;
-        public static final int event_action_layout=0x7f090031;
+        public static final int action_layout=0x7f090034;
+        public static final int back_image_view=0x7f090026;
+        public static final int back_layout=0x7f090025;
+        public static final int complete_layout=0x7f090036;
+        public static final int complete_replay_image_view=0x7f090038;
+        public static final int complete_replay_layout=0x7f090037;
+        public static final int complete_replay_text_view=0x7f090039;
+        public static final int controller_bottom_layout=0x7f09000d;
+        public static final int controller_top_layout=0x7f09000c;
+        public static final int controller_volume_iv=0x7f090030;
+        public static final int crop_view=0x7f09002b;
+        public static final int error_info_title_text_view=0x7f09003b;
+        public static final int error_layout=0x7f09003a;
+        public static final int error_replay_image_view=0x7f09003d;
+        public static final int error_replay_layout=0x7f09003c;
+        public static final int error_replay_text_view=0x7f09003e;
+        public static final int event_action_layout=0x7f090032;
         public static final int fullscreen=0x7f090000;
-        public static final int global_screenshot=0x7f090005;
-        public static final int global_screenshot_background=0x7f090004;
-        public static final int global_screenshot_flash=0x7f090006;
-        public static final int image_back=0x7f09002b;
-        public static final int image_logo=0x7f090026;
-        public static final int iv_light_status=0x7f090007;
-        public static final int iv_lock=0x7f090017;
-        public static final int iv_volume_status=0x7f090052;
-        public static final int ks_camera_buffering_view=0x7f09004d;
-        public static final int ks_camera_event_action_view=0x7f09004f;
-        public static final int ks_camera_loading_view=0x7f09004e;
-        public static final int ks_camera_video_view=0x7f09004c;
-        public static final int layout_seek_status=0x7f090046;
-        public static final int layout_video_playback_next=0x7f090019;
-        public static final int loading_layout=0x7f09003e;
-        public static final int loading_line_image_view=0x7f090041;
-        public static final int loading_logo_image_view=0x7f09003f;
-        public static final int loading_tip_text_view=0x7f090042;
-        public static final int loading_title_text_view=0x7f090040;
-        public static final int media_player_controller_view_large=0x7f090050;
-        public static final int media_player_controller_view_small=0x7f090051;
+        public static final int global_screenshot=0x7f090006;
+        public static final int global_screenshot_background=0x7f090005;
+        public static final int global_screenshot_flash=0x7f090007;
+        public static final int image_back=0x7f09002c;
+        public static final int image_logo=0x7f090027;
+        public static final int input=0x7f090004;
+        public static final int iv_light_status=0x7f090008;
+        public static final int iv_lock=0x7f090018;
+        public static final int iv_volume_status=0x7f090053;
+        public static final int ks_camera_buffering_view=0x7f09004e;
+        public static final int ks_camera_event_action_view=0x7f090050;
+        public static final int ks_camera_loading_view=0x7f09004f;
+        public static final int ks_camera_video_view=0x7f09004d;
+        public static final int layout_seek_status=0x7f090047;
+        public static final int layout_video_playback_next=0x7f09001a;
+        public static final int loading_layout=0x7f09003f;
+        public static final int loading_line_image_view=0x7f090042;
+        public static final int loading_logo_image_view=0x7f090040;
+        public static final int loading_tip_text_view=0x7f090043;
+        public static final int loading_title_text_view=0x7f090041;
+        public static final int media_player_controller_view_large=0x7f090051;
+        public static final int media_player_controller_view_small=0x7f090052;
         public static final int miniwindow=0x7f090001;
-        public static final int pb_buffering=0x7f090009;
+        public static final int pb_buffering=0x7f09000a;
         public static final int player_view=0x7f090003;
-        public static final int quality_image_view=0x7f090044;
-        public static final int quality_list_view=0x7f090045;
-        public static final int quality_text_view=0x7f090043;
-        public static final int seekbar_video_progress=0x7f09002e;
-        public static final int seekbar_volume_progress=0x7f090030;
-        public static final int title_layout=0x7f090032;
-        public static final int title_text_view=0x7f090027;
-        public static final int tv_buffering=0x7f09000a;
-        public static final int tv_light_progress=0x7f090008;
-        public static final int tv_ratio_mode=0x7f09004b;
-        public static final int tv_seek_current_position=0x7f090049;
-        public static final int tv_seek_status_fastforward=0x7f090047;
-        public static final int tv_seek_status_rewind=0x7f090048;
-        public static final int tv_seek_total_position=0x7f09004a;
-        public static final int tv_volume_progress=0x7f090053;
-        public static final int video_current_time_text_view=0x7f09000e;
-        public static final int video_fast_back_layout=0x7f09001a;
-        public static final int video_fast_back_view=0x7f09001b;
-        public static final int video_fast_forward_layout=0x7f090022;
-        public static final int video_fast_forward_view=0x7f090023;
-        public static final int video_fullscreen_image_view=0x7f09002d;
-        public static final int video_playback_image_view=0x7f09002c;
-        public static final int video_progress_layout=0x7f09000d;
-        public static final int video_quality_layout=0x7f090020;
-        public static final int video_quality_text_view=0x7f090021;
-        public static final int video_seekbar=0x7f090011;
-        public static final int video_size_image_view=0x7f09001d;
-        public static final int video_size_layout=0x7f09001c;
-        public static final int video_start_pause_image_view=0x7f09001f;
-        public static final int video_start_pause_layout=0x7f09001e;
-        public static final int video_total_time_text_view=0x7f090010;
-        public static final int video_window_screen_image_view=0x7f09000f;
-        public static final int volume_down_view=0x7f090029;
-        public static final int volume_up_view=0x7f090028;
-        public static final int wait_layout=0x7f090034;
-        public static final int widget_controller_volume=0x7f090018;
-        public static final int widget_light_view=0x7f090012;
-        public static final int widget_lock_view=0x7f090016;
-        public static final int widget_seek_view=0x7f090015;
-        public static final int widget_video_ratio_view=0x7f090013;
-        public static final int widget_volume_view=0x7f090014;
+        public static final int quality_image_view=0x7f090045;
+        public static final int quality_list_view=0x7f090046;
+        public static final int quality_text_view=0x7f090044;
+        public static final int seekbar_video_progress=0x7f09002f;
+        public static final int seekbar_volume_progress=0x7f090031;
+        public static final int title_layout=0x7f090033;
+        public static final int title_text_view=0x7f090028;
+        public static final int tv_buffering=0x7f09000b;
+        public static final int tv_light_progress=0x7f090009;
+        public static final int tv_ratio_mode=0x7f09004c;
+        public static final int tv_seek_current_position=0x7f09004a;
+        public static final int tv_seek_status_fastforward=0x7f090048;
+        public static final int tv_seek_status_rewind=0x7f090049;
+        public static final int tv_seek_total_position=0x7f09004b;
+        public static final int tv_volume_progress=0x7f090054;
+        public static final int video_current_time_text_view=0x7f09000f;
+        public static final int video_fast_back_layout=0x7f09001b;
+        public static final int video_fast_back_view=0x7f09001c;
+        public static final int video_fast_forward_layout=0x7f090023;
+        public static final int video_fast_forward_view=0x7f090024;
+        public static final int video_fullscreen_image_view=0x7f09002e;
+        public static final int video_playback_image_view=0x7f09002d;
+        public static final int video_progress_layout=0x7f09000e;
+        public static final int video_quality_layout=0x7f090021;
+        public static final int video_quality_text_view=0x7f090022;
+        public static final int video_seekbar=0x7f090012;
+        public static final int video_size_image_view=0x7f09001e;
+        public static final int video_size_layout=0x7f09001d;
+        public static final int video_start_pause_image_view=0x7f090020;
+        public static final int video_start_pause_layout=0x7f09001f;
+        public static final int video_total_time_text_view=0x7f090011;
+        public static final int video_window_screen_image_view=0x7f090010;
+        public static final int volume_down_view=0x7f09002a;
+        public static final int volume_up_view=0x7f090029;
+        public static final int wait_layout=0x7f090035;
+        public static final int widget_controller_volume=0x7f090019;
+        public static final int widget_light_view=0x7f090013;
+        public static final int widget_lock_view=0x7f090017;
+        public static final int widget_seek_view=0x7f090016;
+        public static final int widget_video_ratio_view=0x7f090014;
+        public static final int widget_volume_view=0x7f090015;
         public static final int window=0x7f090002;
     }
     public static final class layout {
         public static final int activity_player=0x7f030000;
-        public static final int globle_screenshot=0x7f030001;
-        public static final int media_player_bright_view=0x7f030002;
-        public static final int media_player_buffering_view=0x7f030003;
-        public static final int media_player_controller_large=0x7f030004;
-        public static final int media_player_controller_large_bottom_view=0x7f030005;
-        public static final int media_player_controller_large_top_view=0x7f030006;
-        public static final int media_player_controller_small=0x7f030007;
-        public static final int media_player_controller_volume_view=0x7f030008;
-        public static final int media_player_event_action_view=0x7f030009;
-        public static final int media_player_loading_view=0x7f03000a;
-        public static final int media_player_quality_item_view=0x7f03000b;
-        public static final int media_player_quality_popup_view=0x7f03000c;
-        public static final int media_player_seek_view=0x7f03000d;
-        public static final int media_player_video_ratio_view=0x7f03000e;
-        public static final int media_player_view=0x7f03000f;
-        public static final int media_player_volume_popup_view=0x7f030010;
-        public static final int media_player_volume_view=0x7f030011;
+        public static final int dialog_input=0x7f030001;
+        public static final int globle_screenshot=0x7f030002;
+        public static final int media_player_bright_view=0x7f030003;
+        public static final int media_player_buffering_view=0x7f030004;
+        public static final int media_player_controller_large=0x7f030005;
+        public static final int media_player_controller_large_bottom_view=0x7f030006;
+        public static final int media_player_controller_large_top_view=0x7f030007;
+        public static final int media_player_controller_small=0x7f030008;
+        public static final int media_player_controller_volume_view=0x7f030009;
+        public static final int media_player_event_action_view=0x7f03000a;
+        public static final int media_player_loading_view=0x7f03000b;
+        public static final int media_player_quality_item_view=0x7f03000c;
+        public static final int media_player_quality_popup_view=0x7f03000d;
+        public static final int media_player_seek_view=0x7f03000e;
+        public static final int media_player_video_ratio_view=0x7f03000f;
+        public static final int media_player_view=0x7f030010;
+        public static final int media_player_volume_popup_view=0x7f030011;
+        public static final int media_player_volume_view=0x7f030012;
     }
     public static final class string {
         public static final int app_name=0x7f060001;
@@ -255,11 +257,17 @@ containing a value of this type.
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
+
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
+
+
         
          */
         public static final int AppBaseTheme=0x7f080000;

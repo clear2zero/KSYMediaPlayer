@@ -170,10 +170,8 @@ public class MediaPlayerVideoView extends SurfaceView implements IMediaPlayerCon
 				lp.height = mSurfaceHeight;
 			} else if (layout == MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_FULLSCREEN) {
 				// fullscreen
-				lp.width = (windowRatio < videoRatio) ? windowWidth
-						: (int) (videoRatio * windowHeight);
-				lp.height = (windowRatio > videoRatio) ? windowHeight
-						: (int) (windowWidth / videoRatio);
+				lp.width = (windowRatio < videoRatio) ? windowWidth : (int) (videoRatio * windowHeight);
+				lp.height = (windowRatio > videoRatio) ? windowHeight : (int) (windowWidth / videoRatio);
 			}
 
 			setLayoutParams(lp);
@@ -288,7 +286,6 @@ public class MediaPlayerVideoView extends SurfaceView implements IMediaPlayerCon
 			if (mMediaPlayerController != null)
 				mMediaPlayerController.onVideoPreparing();
 			mCurrentState = STATE_PREPARING;
-			// attachMediaController();
 		} catch (IOException ex) {
 			DebugLog.e(TAG, "Unable to open content: " + mUri, ex);
 			mCurrentState = STATE_ERROR;
@@ -363,8 +360,7 @@ public class MediaPlayerVideoView extends SurfaceView implements IMediaPlayerCon
 
 			/* If an error handler has been supplied, use it and finish. */
 			if (mOnErrorListener != null) {
-				if (mOnErrorListener.onError(mMediaPlayer, framework_err,
-						impl_err)) {
+				if (mOnErrorListener.onError(mMediaPlayer, framework_err, impl_err)) {
 					return true;
 				}
 			}

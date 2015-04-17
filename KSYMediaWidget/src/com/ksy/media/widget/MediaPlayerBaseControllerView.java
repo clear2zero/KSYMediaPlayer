@@ -5,7 +5,6 @@ import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.FrameLayout;
 
 import com.ksy.media.data.MediaPlayerUtils;
 import com.ksy.media.data.MediaPlayerVideoQuality;
-import com.ksy.media.player.util.Constants;
 
 public abstract class MediaPlayerBaseControllerView extends FrameLayout {
 
@@ -199,7 +197,6 @@ public abstract class MediaPlayerBaseControllerView extends FrameLayout {
 	public boolean onTouchEvent(MotionEvent event) {
 
 		final int action = event.getAction();
-		Log.d(Constants.LOG_TAG, "touch in Base");
 
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
