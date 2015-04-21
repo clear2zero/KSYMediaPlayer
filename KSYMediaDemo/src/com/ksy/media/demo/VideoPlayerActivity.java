@@ -87,13 +87,13 @@ public class VideoPlayerActivity extends Activity implements
 		Log.d(Constants.LOG_TAG, "input url = " + url);
 
 		playerView.setPlayerViewCallback(this);
-		// String path = "rtmp://192.168.135.185/myLive/guoli1234";
+//		 String path = "rtsp://xgrammyawardsx.is.livestream-api.com/livestreamiphone/grammyawards";
 		// String path = "http://live.3gv.ifeng.com/zixun.m3u8"; // vod
 //		 String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
 		
 		// String path = "http://www.modrails.com/videos/passenger_nginx.mov";
 		 File file = new File(Environment.getExternalStorageDirectory(),
-		 "a.mp4");
+		 "a.3gp");
 		playerView.play(file.getPath());
 		// Log.d("eflake", file.getAbsolutePath())
 		// playerView.play(file.getPath());
