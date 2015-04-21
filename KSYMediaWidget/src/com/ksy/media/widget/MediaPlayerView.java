@@ -83,6 +83,7 @@ public class MediaPlayerView extends RelativeLayout {
 	private volatile boolean mScreenshotPreparing = false;
 
 	private boolean mVideoReady = false;
+
 	private boolean mStartAfterPause = false;
 
 	private int mPausePosition = 0;
@@ -103,7 +104,6 @@ public class MediaPlayerView extends RelativeLayout {
 	private int mFullScreenNavigationBarHeight;
 	private int mDeviceNavigationType = MediaPlayerUtils.DEVICE_NAVIGATION_TYPE_UNKNOWN;
 	private int mDisplaySizeMode = MediaPlayerMovieRatioView.MOVIE_RATIO_MODE_16_9;
-	private GlobleScreenShoot screenshot;
 
 	private NetReceiver mNetReceiver;
 	private NetStateChangedListener mNetChangedListener;
@@ -112,6 +112,8 @@ public class MediaPlayerView extends RelativeLayout {
 	private float mCurrentPlayingVolumeRatio = 1f;
 	public static float MAX_PLAYING_RATIO = 4f;
 	public static float MAX_PLAYING_VOLUME_RATIO = 3.0f;
+	// add for replay
+	private boolean mRecyclePlay = false;
 
 	private DRMRetrieverManager mDrmManager;
 	private DRMRetrieverResponseHandler mDrmHandler;
@@ -447,6 +449,10 @@ public class MediaPlayerView extends RelativeLayout {
 		this.mPlayerViewCallback = callback;
 	}
 
+	public void setmRecyclePlay(boolean mRecyclePlay) {
+		this.mRecyclePlay = mRecyclePlay;
+	}
+	
 	public int getPlayMode() {
 
 		return this.mPlayMode;
@@ -733,15 +739,27 @@ public class MediaPlayerView extends RelativeLayout {
 
 	IMediaPlayer.OnCompletionListener mOnCompletionListener = new IMediaPlayer.OnCompletionListener() {
 
+
 		@Override
 		public void onCompletion(IMediaPlayer mp) {
 
 			Log.i(Constants.LOG_TAG, "================onCompletion============");
-			mMediaPlayerLargeControllerView.hide();
-			mMediaPlayerSmallControllerView.hide();
-			mMediaPlayerEventActionView.updateEventMode(MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_COMPLETE, null);
-			mMediaPlayerEventActionView.show();
-			WakeLocker.release();
+			if (mRecyclePlay) {
+				Log.i(Constants.LOG_TAG, "==replay==");
+				mMediaPlayerEventActionView.hide();
+				if (mMediaPlayerController != null) {
+					mMediaPlayerController.start();
+				} else {
+					mMediaPlayerVideoView.start();
+				}
+			} else {
+				mMediaPlayerLargeControllerView.hide();
+				mMediaPlayerSmallControllerView.hide();
+				mMediaPlayerEventActionView.updateEventMode(MediaPlayerEventActionView.EVENT_ACTION_VIEW_MODE_COMPLETE, null);
+				mMediaPlayerEventActionView.show();
+				WakeLocker.release();
+			}
+			
 		}
 
 	};

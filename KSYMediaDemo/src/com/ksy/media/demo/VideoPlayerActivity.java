@@ -36,30 +36,30 @@ public class VideoPlayerActivity extends Activity implements
 				.findViewById(R.id.input);
 
 		startPlayer("");
-		
-//		new AlertDialog.Builder(this).setTitle("User Input")
-//				.setView(dialogView)
-//				.setPositiveButton("Confirm", new OnClickListener() {
-//
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						String inputString = editInput.getText().toString();
-//						if (!TextUtils.isEmpty(inputString)) {
-//							startPlayer(inputString);
-//						} else {
-//							Toast.makeText(VideoPlayerActivity.this,
-//									"Paht or URL can not be null",
-//									Toast.LENGTH_LONG).show();
-//						}
-//
-//					}
-//				}).setNegativeButton("Cancel", new OnClickListener() {
-//
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.dismiss();
-//					}
-//				}).show();
+
+		// new AlertDialog.Builder(this).setTitle("User Input")
+		// .setView(dialogView)
+		// .setPositiveButton("Confirm", new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// String inputString = editInput.getText().toString();
+		// if (!TextUtils.isEmpty(inputString)) {
+		// startPlayer(inputString);
+		// } else {
+		// Toast.makeText(VideoPlayerActivity.this,
+		// "Paht or URL can not be null",
+		// Toast.LENGTH_LONG).show();
+		// }
+		//
+		// }
+		// }).setNegativeButton("Cancel", new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// dialog.dismiss();
+		// }
+		// }).show();
 	}
 
 	@Override
@@ -87,13 +87,13 @@ public class VideoPlayerActivity extends Activity implements
 		Log.d(Constants.LOG_TAG, "input url = " + url);
 
 		playerView.setPlayerViewCallback(this);
-//		 String path = "rtsp://xgrammyawardsx.is.livestream-api.com/livestreamiphone/grammyawards";
+//		String path = "rtmp://192.168.135.185:1935/myLive/guoyankai";
 		// String path = "http://live.3gv.ifeng.com/zixun.m3u8"; // vod
-//		 String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
-		
+		// String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
+
 		// String path = "http://www.modrails.com/videos/passenger_nginx.mov";
 		 File file = new File(Environment.getExternalStorageDirectory(),
-		 "a.3gp");
+		 "a.mp4");
 		playerView.play(file.getPath());
 		// Log.d("eflake", file.getAbsolutePath())
 		// playerView.play(file.getPath());
