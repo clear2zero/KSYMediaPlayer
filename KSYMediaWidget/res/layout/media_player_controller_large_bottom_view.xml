@@ -6,7 +6,7 @@
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="8dp"
-    android:background="#99CCCCCC" >
+    android:background="#99000000" >
 
     <LinearLayout
         android:id="@+id/layout_video_playback_next"
@@ -54,14 +54,16 @@
 
         <LinearLayout
             android:id="@+id/video_start_pause_layout"
-            android:layout_width="70dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="32dp"
             android:layout_height="match_parent"
             android:gravity="center" >
 
             <ImageView
                 android:id="@+id/video_start_pause_image_view"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:scaleType="center"
                 android:src="@drawable/player_start_pause_selector" />
         </LinearLayout>

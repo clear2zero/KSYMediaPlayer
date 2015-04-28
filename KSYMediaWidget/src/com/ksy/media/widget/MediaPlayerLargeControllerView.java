@@ -56,8 +56,6 @@ public class MediaPlayerLargeControllerView extends
 	private ImageView mVideoRatioBackView;
 	private ImageView mVideoRatioForwardView;
 	private ImageView mVideoCropView;
-	private ImageView mVideoVolumeUpView;
-	private ImageView mVideoVolumeDownView;
 
 	public MediaPlayerLargeControllerView(Context context, AttributeSet attrs,
 			int defStyle) {
@@ -91,8 +89,6 @@ public class MediaPlayerLargeControllerView extends
 		mVideoRatioBackView = (ImageView) findViewById(R.id.video_fast_back_view);
 		mVideoRatioForwardView = (ImageView) findViewById(R.id.video_fast_forward_view);
 		mVideoCropView = (ImageView) findViewById(R.id.crop_view);
-		mVideoVolumeUpView = (ImageView) findViewById(R.id.volume_up_view);
-		mVideoVolumeDownView = (ImageView) findViewById(R.id.volume_down_view);
 
 		mQualityLayout = (LinearLayout) findViewById(R.id.video_quality_layout);
 		mQualityTextView = (TextView) findViewById(R.id.video_quality_text_view);
@@ -125,8 +121,6 @@ public class MediaPlayerLargeControllerView extends
 	protected void initListeners() {
 
 		mScreenModeImageView.setOnClickListener(this);
-		mVideoVolumeUpView.setOnClickListener(this);
-		mVideoVolumeDownView.setOnClickListener(this);
 		mVideoCropView.setOnClickListener(this);
 		mVideoRatioBackView.setOnClickListener(this);
 		mVideoRatioForwardView.setOnClickListener(this);
@@ -349,7 +343,7 @@ public class MediaPlayerLargeControllerView extends
 			if (durTime > 0 && curTime <= durTime) {
 				mCurrentTimeTextView.setText(MediaPlayerUtils
 						.getVideoDisplayTime(curTime));
-				mTotalTimeTextView.setText(MediaPlayerUtils
+				mTotalTimeTextView.setText("/"+MediaPlayerUtils
 						.getVideoDisplayTime(durTime));
 			}
 		}
@@ -420,12 +414,6 @@ public class MediaPlayerLargeControllerView extends
 			show();
 		} else if (id == mVideoCropView.getId()) {
 			mMediaPlayerController.onMovieCrop();
-			show();
-		} else if (id == mVideoVolumeDownView.getId()) {
-			mMediaPlayerController.onVolumeDown();
-			show();
-		} else if (id == mVideoVolumeUpView.getId()) {
-			mMediaPlayerController.onVolumeUp();
 			show();
 		} else if (id == mScreenModeImageView.getId()) {
 			mMediaPlayerController

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_alignParentTop="true"
-    android:background="#33CCCCCC" >
+    android:background="#77000000" >
 
    <RelativeLayout
         android:id="@+id/controller_top_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:background="#99CCCCCC"
+        android:background="#77000000"
          >
 
         <RelativeLayout 
@@ -30,16 +30,7 @@
 	            android:id="@+id/back_image_view"
 	            android:src="@drawable/player_controller_back_selector"
 	            />
-            <ImageView
-	            android:layout_width="60dp"
-	            android:layout_height="60dp"
-	            android:layout_centerVertical="true"
-	            android:layout_marginLeft="2dp"
-	            android:layout_marginRight="10dp"
-	            android:id="@+id/image_logo"
-	            android:layout_toRightOf="@id/back_image_view"
-	            android:src="@drawable/player_controller_loading_logol"
-	            />
+            
         </RelativeLayout>
 
         <TextView
@@ -52,43 +43,18 @@
             android:gravity="left|center_vertical"
             android:singleLine="true"
             android:ellipsize="end"
-            android:textSize="22sp"
-            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textColor="#bbffffff"
             android:layout_toRightOf="@id/back_layout" />
         
-        <ImageView
-	            android:layout_width="60dp"
-	            android:layout_height="60dp"
-	            android:layout_centerVertical="true"
-	            android:layout_marginRight="20dp"
-	            android:id="@+id/volume_up_view"
-	            android:layout_alignTop="@id/title_text_view"
-	            android:layout_alignBottom="@id/title_text_view"
-	            android:layout_alignParentRight="true"
-	            android:src="@drawable/ic_volume_up_black_48dp"
-	            />
-        
-        <ImageView
-	            android:layout_width="60dp"
-	            android:layout_height="60dp"
-	            android:layout_centerVertical="true"
-	            android:layout_marginRight="20dp"
-	            android:id="@+id/volume_down_view"
-	            android:layout_toLeftOf="@id/volume_up_view"
-	            android:layout_alignTop="@id/volume_up_view"
-	            android:layout_alignBottom="@id/volume_up_view"
-	            android:src="@drawable/ic_volume_down_black_48dp"
-	            />
          <ImageView
-	            android:layout_width="60dp"
-	            android:layout_height="60dp"
+	            android:layout_width="24dp"
+	            android:layout_height="24dp"
 	            android:layout_centerVertical="true"
-	            android:layout_marginRight="20dp"
+	            android:layout_alignParentRight="true"
+	            android:layout_marginRight="16dp"
 	            android:id="@+id/crop_view"
-	            android:layout_toLeftOf="@id/volume_down_view"
-	            android:layout_alignTop="@id/volume_down_view"
-	            android:layout_alignBottom="@id/volume_down_view"
-	            android:src="@drawable/ic_crop_free_black_48dp"
+	            android:src="@drawable/ic_camera_alt_white_48dp"
 	            />
     </RelativeLayout>
 

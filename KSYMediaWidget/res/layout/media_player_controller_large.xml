@@ -3,101 +3,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-	<include android:id="@+id/controller_top_layout"
-	    android:layout_width="match_parent"
-    	android:layout_height="40dp"
-    	android:layout_alignParentTop="true"
-        layout="@layout/media_player_controller_large_top_view"/>
-	
     <include
-        android:id="@+id/controller_bottom_layout"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_above="@+id/video_progress_layout"
-        android:layout_marginBottom="48dp"
-        android:layout_centerHorizontal="true"
-        layout="@layout/media_player_controller_large_bottom_view" />
+        android:id="@+id/controller_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        layout="@layout/media_player_controller_large_top_view" />
 
     <RelativeLayout
         android:id="@+id/video_progress_layout"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:background="#BBCCCCCC" >
+        android:background="#77000000" >
 
-        <TextView
-            android:id="@+id/video_current_time_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:layout_alignParentLeft="true"
-            android:textSize="18sp"
-            android:text="00:00:00" />
+        <ImageView
+            android:id="@+id/video_start_pause_image_view"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/player_start_pause_selector" />
 
-         <ImageView
+        <ImageView
             android:id="@+id/video_window_screen_image_view"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/player_full_mode" />
 
-         <TextView
+        <TextView
             android:id="@+id/video_total_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/video_current_time_text_view"
             android:gravity="center"
             android:singleLine="true"
-            android:textColor="@android:color/black"
-             android:textSize="18sp"
-             android:layout_toLeftOf="@id/video_window_screen_image_view"
-            android:text="99:99:99" />
-         
-        <com.ksy.media.widget.MediaPlayerVideoSeekBar
-            android:id="@+id/video_seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:maxHeight="5dp"
-            android:minHeight="5dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:thumbOffset="16dp"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@id/video_total_time_text_view"
-            android:layout_toRightOf="@id/video_current_time_text_view"
-            android:progressDrawable="@drawable/player_controller_video_progress_seekbar_style_large_selector"
-            android:thumb="@drawable/player_controller_video_progress_seekbar_thumb_selector" />
-        
-       
+            android:text="99:99:99"
+            android:textColor="#bbffffff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/video_current_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/video_total_time_text_view"
+            android:layout_alignBottom="@+id/video_total_time_text_view"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/video_start_pause_image_view"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="00:00:00"
+            android:textColor="#bbffffff"
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <com.ksy.media.widget.MediaPlayerBrightView
         android:id="@+id/widget_light_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_centerInParent="true"
-        android:background="#CCCCCC"
+        android:background="#77000000"
+        android:padding="10dp"
         android:visibility="gone" />
 
     <com.ksy.media.widget.MediaPlayerMovieRatioView
         android:id="@+id/widget_video_ratio_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_centerInParent="true"
-        android:background="#CCCCCC"
+        android:background="#77000000"
+        android:padding="10dp"
         android:visibility="gone" >
     </com.ksy.media.widget.MediaPlayerMovieRatioView>
 
@@ -107,9 +86,9 @@
         android:id="@+id/widget_volume_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_centerInParent="true"
-        android:background="#CCCCCC"
+        android:background="#77000000"
+        android:padding="10dp"
         android:visibility="gone" />
 
     <!-- 进度调节 -->
@@ -118,10 +97,10 @@
         android:id="@+id/widget_seek_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:background="#CCCCCC"
+        android:background="#77000000"
+        android:padding="10dp"
         android:visibility="gone" />
 
     <!-- 屏幕锁 -->
@@ -133,9 +112,8 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="60dp"
-        android:clickable="true" 
-        android:background="#33CCCCCC"
-        >
+        android:background="#77000000"
+        android:clickable="true" >
 
         <ImageView
             android:id="@+id/iv_lock"
@@ -144,14 +122,38 @@
             android:background="@drawable/player_controller_lock_selector"
             android:duplicateParentState="true" />
     </com.ksy.media.widget.MediaPlayerLockView>
-	<!-- 音量 -->
-	<com.ksy.media.widget.MediaPlayerControllerVolumeView 
-	    android:id="@+id/widget_controller_volume"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
-	    android:layout_centerVertical="true"
-	    android:background="#99CCCCCC">
-	    
-	</com.ksy.media.widget.MediaPlayerControllerVolumeView>
+
+    <!-- 音量 -->
+
+    <com.ksy.media.widget.MediaPlayerControllerVolumeView
+        android:id="@+id/widget_controller_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="#77000000" >
+    </com.ksy.media.widget.MediaPlayerControllerVolumeView>
+
+    <com.ksy.media.widget.MediaPlayerVideoSeekBar
+        android:id="@+id/video_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/widget_controller_volume"
+        android:maxHeight="5dp"
+        android:minHeight="5dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:progressDrawable="@drawable/player_controller_video_progress_seekbar_style_large_selector"
+        android:thumb="@drawable/player_controller_video_progress_seekbar_thumb_selector"
+        android:thumbOffset="16dp" />
+
+    <include
+        android:id="@+id/controller_bottom_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/widget_controller_volume"
+        android:layout_centerHorizontal="true"
+        layout="@layout/media_player_controller_large_bottom_view" />
+
 </RelativeLayout>

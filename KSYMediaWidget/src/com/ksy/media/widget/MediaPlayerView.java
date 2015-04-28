@@ -3,8 +3,10 @@ package com.ksy.media.widget;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -72,9 +74,9 @@ public class MediaPlayerView extends RelativeLayout {
 	private final int ORIENTATION_LANDSCAPE_NORMAL = 270;
 
 	private volatile boolean mNeedGesture = true;
-	private volatile boolean mNeedLightGesture = false;
-	private volatile boolean mNeedVolumeGesture = false;
-	private volatile boolean mNeedSeekGesture = false;
+	private volatile boolean mNeedLightGesture = true;
+	private volatile boolean mNeedVolumeGesture = true;
+	private volatile boolean mNeedSeekGesture = true;
 
 	private volatile int mScreenOrientation = ORIENTATION_UNKNOWN;
 	private volatile int mPlayMode = MediaPlayMode.PLAYMODE_FULLSCREEN;
@@ -119,7 +121,6 @@ public class MediaPlayerView extends RelativeLayout {
 	private DRMRetrieverResponseHandler mDrmHandler;
 
 	public MediaPlayerView(Context context, AttributeSet attrs, int defStyle) {
-
 		super(context, attrs, defStyle);
 		init(context, attrs, defStyle);
 	}
