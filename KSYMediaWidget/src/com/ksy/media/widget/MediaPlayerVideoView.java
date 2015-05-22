@@ -1,5 +1,6 @@
 package com.ksy.media.widget;
 
+import java.io.File;
 import java.io.IOException;
 
 import android.app.Activity;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -263,8 +265,12 @@ public class MediaPlayerVideoView extends SurfaceView implements IMediaPlayerCon
 				ksyMediaPlayer.setAvCodecOption("skip_loop_filter", "48");
 				ksyMediaPlayer.setFrameDrop(12);
 				ksyMediaPlayer.setBufferSize(IMediaPlayer.MEDIA_BUFFERSIZE_DEFAULT);
-				ksyMediaPlayer.setAnalyseDuration(IMediaPlayer.MEDIA_ANALYSE_DURATION_DEFAULT);
-				// ksyMediaPlayer.setTimeout(IMediaPlayer.MEDIA_TIME_OUT_DEFAULT);
+				ksyMediaPlayer.setAnalyseDuration(IMediaPlayer.MEDIA_ANALYSE_DURATION_DEFAULT * 2);
+				ksyMediaPlayer.setTimeout(IMediaPlayer.MEDIA_TIME_OUT_DEFAULT);
+				ksyMediaPlayer.setLowDelayEnabled(true);
+				// 设置缓存礼金
+				ksyMediaPlayer.clearCachedFiles(new File(Environment.getExternalStorageDirectory(), "ksy_cached_temp").getPath());
+				ksyMediaPlayer.setCachedDir(new File(Environment.getExternalStorageDirectory(), "ksy_cached_temp").getPath());
 				if (mUserAgent != null) {
 					ksyMediaPlayer.setAvFormatOption("user_agent", mUserAgent);
 				}

@@ -23,6 +23,9 @@ public interface IMediaPlayer {
 	public static final int MEDIA_INFO_TIMED_TEXT_ERROR = 900;
 
 	public static final int MEDIA_ERROR_SERVER_DIED = 100;
+
+	public static final int MEDIA_PLAYBACK_STATE_CHANGED = 102;
+
 	public static final int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;
 
 	public static final int MEDIA_ERROR_UNKNOWN = 10000;
@@ -43,7 +46,7 @@ public interface IMediaPlayer {
 	public static final float MEDIA_VIDEO_RATE_DEFAULT = 1.0f;
 	public static final float MEDIA_AUDIO_AMPLIFY_DEFAULT = 1.0f;
 
-	public static final int MEDIA_TIME_OUT_DEFAULT = 20 * 1000;
+	public static final int MEDIA_TIME_OUT_DEFAULT = 40 * 1000;
 
 	public abstract void setDisplay(SurfaceHolder sh);
 
@@ -183,5 +186,11 @@ public interface IMediaPlayer {
 	public abstract void setDRMKey(String version, String key);
 
 	public abstract void setTimeout(int timeout);
+
+	public abstract boolean setCachedDir(String cachedPath);
+
+	public abstract boolean clearCachedFiles(String cachedPath);
+
+	public abstract void setLowDelayEnabled(boolean ennable);
 
 }

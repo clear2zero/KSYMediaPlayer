@@ -1,5 +1,6 @@
 package com.ksy.media.player;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -30,6 +31,7 @@ import com.ksy.media.player.annotations.CalledByNative;
 import com.ksy.media.player.option.AvFormatOption;
 import com.ksy.media.player.pragma.DebugLog;
 import com.ksy.media.player.util.Constants;
+import com.ksy.media.player.util.IOUtils;
 
 /**
  * 
@@ -95,12 +97,10 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsLibLoaded) {
-				Log.d(TAG, "loadLibrariesOnce");
 				libLoader.loadLibrary("ksyffmpeg");
 				libLoader.loadLibrary("ksyutil");
 				libLoader.loadLibrary("ksysdl");
 				libLoader.loadLibrary("ksyplayer");
-				Log.d(TAG, "loadLibrariesOnce End");
 				mIsLibLoaded = true;
 			}
 		}
@@ -112,9 +112,7 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 
 		synchronized (KSYMediaPlayer.class) {
 			if (!mIsNativeInitialized) {
-				Log.d(TAG, "native init begin");
 				native_init();
-				Log.d(TAG, "native init end");
 				mIsNativeInitialized = true;
 			}
 		}
@@ -1036,6 +1034,86 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 		}
 	}
 
+	/**
+	 * 设置缓存目录
+	 * 
+	 * @param cachedPath
+	 *            必须为文件夹路劲
+	 */
+	@Override
+	public boolean setCachedDir(String cachedPath) {
+
+		if (null == cachedPath || "".equals(cachedPath)) {
+			Log.e(Constants.LOG_TAG, "the cached path is null , so the streaming cached function failure");
+			return false;
+		}
+		File file = new File(cachedPath);
+		if (file.isFile()) {
+			Log.e(Constants.LOG_TAG, "the cached path must be a forder , so the streaming cached function failure");
+			return false;
+		}
+
+		if (!file.exists()) {
+			if (!file.mkdirs()) {
+				Log.e(Constants.LOG_TAG, "the cached forder create fail , so the streaming cached function failure");
+				return false;
+			}
+		}
+		Log.i(Constants.LOG_TAG, "the cached forder create success , streaming will cached with path :" + cachedPath);
+		_setCachedDir(cachedPath);
+		return true;
+	}
+
+	/**
+	 * 清空缓存文件夹 以及文件夹所有层级目录的文件，缓存文件夹会会重新创建
+	 * 
+	 * @param cachedPath
+	 *            需要清空的缓存目录
+	 * 
+	 * @exception 文件夹不存在
+	 *                ，路劲指向文件
+	 */
+
+	@Override
+	public boolean clearCachedFiles(String cachedPath) {
+
+		if (null == cachedPath || "".equals(cachedPath)) {
+			Log.e(Constants.LOG_TAG, "the cached path is null , clear nothing");
+			return false;
+		}
+		File file = new File(cachedPath);
+		if (file.isFile()) {
+			Log.e(Constants.LOG_TAG, "the cached path must be a forder , clear nothing");
+			return false;
+		}
+
+		if (!file.exists()) {
+			Log.e(Constants.LOG_TAG, "the cached path not exist, clear nothing");
+			return false;
+		}
+
+		boolean success = IOUtils.deleteDir(new File(cachedPath));
+
+		if (!success) {
+			Log.e(Constants.LOG_TAG, "clear the cached path occur an problem !");
+			return false;
+		}
+
+		if (!file.mkdirs()) {
+			Log.e(Constants.LOG_TAG, "the cached forder recreate failed !");
+			return true;
+		}
+
+		Log.e(Constants.LOG_TAG, "the cached forder clear success , recreate cached forder success");
+		return true;
+	}
+
+	@Override
+	public void setLowDelayEnabled(boolean ennable) {
+
+		_setLowDelayEnabled(ennable);
+	}
+
 	private native void _setAudioAmplify(float ratio);
 
 	private native void _setVideoRate(float rate);
@@ -1049,6 +1127,10 @@ public final class KSYMediaPlayer extends BaseMediaPlayer {
 	private native void _setDRMKey(String version, String key);
 
 	private native void _setTimeout(int timeout);
+
+	private native void _setCachedDir(String cachedPath);
+
+	private native void _setLowDelayEnabled(boolean enabled);
 
 	@Override
 	public void setLogEnabled(boolean enable) {

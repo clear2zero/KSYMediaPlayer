@@ -1,10 +1,7 @@
 package com.ksy.media.demo;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,17 +81,18 @@ public class VideoPlayerActivity extends Activity implements
 	}
 
 	private void startPlayer(String url) {
+
 		Log.d(Constants.LOG_TAG, "input url = " + url);
 
 		playerView.setPlayerViewCallback(this);
-//		String path = "rtmp://192.168.135.185:1935/myLive/guoyankai";
+		// String path = "rtmp://192.168.135.185:1935/myLive/guoyankai";
 		// String path = "http://live.3gv.ifeng.com/zixun.m3u8"; // vod
-		// String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
+		String path = "rtmp://192.168.135.185/myLive/drm"; // with drm sec
 
 		// String path = "http://www.modrails.com/videos/passenger_nginx.mov";
-		 File file = new File(Environment.getExternalStorageDirectory(),
-		 "a.mp4");
-		playerView.play(file.getPath());
+		// File file = new File(Environment.getExternalStorageDirectory(),
+		// "a.mp4");
+		playerView.play(path);
 		// Log.d("eflake", file.getAbsolutePath())
 		// playerView.play(file.getPath());
 	}

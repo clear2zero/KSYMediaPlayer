@@ -3,8 +3,11 @@ package com.ksy.media.player.util;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.security.SignatureException;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
@@ -23,15 +26,19 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String REQUEST_METHOD_TAG = "https";
 	public static final String SIGNATURE_KEY_TAG = "signature";
-	public static final String ACCESS_KEY_ID_KEY_TAG = "accesskeyid";
+	public static final String ACCESS_KEY_ID_KEY_TAG = "accesskey";
 	public static final String EXPIRE_KEY_TAG = "expire";
 	public static final String NONCE_KEY_TAG = "nonce";
-	public static final String CEK_URL_KEY_TAG = "cekurl";
-	public static final String CEK_VERSION_KEY_TAG = "cekver";
-	public static final String ENCODING_FORMAT_DEFAULT = "UTF-8";
+	public static final String CEK_URL_KEY_TAG = "resource";
+	public static final String CEK_VERSION_KEY_TAG = "version";
+
+	public static final String SERVICE_VALUE = "service";
 
 	public static final String KSC_DRM_HOST_PORT = "115.231.96.89:80";
 	public static final String KSC_DRM_REQUEST_METHOD = "GetCek";
+	public static final String ENCODING = "UTF-8";
+
+	public Calendar calendar = Calendar.getInstance();
 
 	private static final AllowAllHostnameVerifier HOSTNAME_VERIFIER = new AllowAllHostnameVerifier();
 	private static X509TrustManager xtm = new X509TrustManager() {
@@ -61,7 +68,7 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 	private DRMRetrieverResponseHandler mResponseHandler;
 
 	public enum DRMMethod {
-		NewCek("NewCek"), GetCek("GetCek"), DelCek("DelCek");
+		GetCek("GetCek");
 
 		private DRMMethod(String method) {
 
@@ -76,17 +83,14 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 		final String mKSCDRMHostPort;
 		final String mCustomerName;
 		final DRMMethod mDRMMethod;
-		final String mSignature;
+		String mSignature;
 		final String mAccessKey;
 		final String mExpire;
 		final String mNonce;
 		final String mCekUrl;
 		final String mCekVersion;
-		final String mEcodingFormat;
 
-		public DRMFullURL(String kSCDRMHostPort, String customerName, DRMMethod drmMethod,
-				String signature, String accessKey, String expire, String noce, String cekUrl,
-				String version, String ecodingFormat) {
+		public DRMFullURL(String kSCDRMHostPort, String customerName, DRMMethod drmMethod, String signature, String accessKey, String expire, String noce, String cekUrl, String version) {
 
 			this.mKSCDRMHostPort = kSCDRMHostPort;
 			this.mCustomerName = customerName;
@@ -97,13 +101,33 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 			this.mNonce = noce;
 			this.mCekUrl = cekUrl;
 			this.mCekVersion = version;
-			this.mEcodingFormat = ecodingFormat;
 			this.mUrlType = URL_TYPE_TO_KSY_SERVER;
+		}
+
+		public DRMFullURL(String accessKey, String secretKey, String cekUrl, String version) {
+
+			this.mKSCDRMHostPort = KSC_DRM_HOST_PORT;
+			this.mCustomerName = SERVICE_VALUE;
+			this.mDRMMethod = DRMMethod.GetCek;
+			this.mAccessKey = accessKey;
+			this.mCekUrl = cekUrl;
+			this.mCekVersion = version;
+			this.mExpire = String.valueOf(System.currentTimeMillis() / 1000 + 3600);
+			this.mNonce = this.mExpire;
+
+			try {
+				this.mSignature = AuthUtils.calAuthorizationForDRM(secretKey, this.mExpire, this.mNonce);
+			} catch (SignatureException e) {
+				this.mSignature = "";
+			}
+
+			this.mUrlType = URL_TYPE_TO_KSY_SERVER;
+
 		}
 
 		public DRMFullURL(String cekUrl, String cekVersion) {
 
-			this(null, null, null, null, null, null, null, cekUrl, cekVersion, null);
+			this(null, null, null, null, null, null, null, cekUrl, cekVersion);
 			this.mUrlType = URL_TYPE_TO_APP_SERVER;
 		}
 
@@ -114,12 +138,12 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 			StringBuffer stringBuffer = new StringBuffer(REQUEST_METHOD_TAG);
 			stringBuffer.append("://").append(mKSCDRMHostPort).append("/");
 			stringBuffer.append(mCustomerName).append("/").append(mDRMMethod).append("?");
-			stringBuffer.append(SIGNATURE_KEY_TAG).append("=").append(mSignature).append("&");
-			stringBuffer.append(ACCESS_KEY_ID_KEY_TAG).append("=").append(mAccessKey).append("&");
+			stringBuffer.append(SIGNATURE_KEY_TAG).append("=").append(URLEncoder.encode(mSignature, ENCODING)).append("&");
+			stringBuffer.append(ACCESS_KEY_ID_KEY_TAG).append("=").append(URLEncoder.encode(mAccessKey, ENCODING)).append("&");
 			stringBuffer.append(EXPIRE_KEY_TAG).append("=").append(mExpire).append("&");
 			stringBuffer.append(NONCE_KEY_TAG).append("=").append(mNonce).append("&");
 			stringBuffer.append(CEK_URL_KEY_TAG).append("=").append(mCekUrl).append("&");
-			stringBuffer.append(CEK_VERSION_KEY_TAG).append("=").append(String.valueOf(mCekVersion));
+			stringBuffer.append(CEK_VERSION_KEY_TAG).append("=").append(mCekVersion);
 			Log.d(Constants.LOG_TAG, "retrieve drm full url :" + stringBuffer.toString());
 			return stringBuffer.toString();
 		}
@@ -129,8 +153,9 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 			if (this.mUrlType == URL_TYPE_TO_APP_SERVER) {
 				if (this.mCekUrl == null || "".equals(this.mCekUrl))
 					return false;
-				if (Integer.valueOf(mCekVersion) < 0)
+				if (this.mCekVersion == null || "".equals(this.mCekVersion))
 					return false;
+				return true;
 			}
 			if (this.mKSCDRMHostPort == null || "".equals(this.mKSCDRMHostPort))
 				return false;
@@ -148,16 +173,7 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 				return false;
 			if (this.mCekUrl == null || "".equals(this.mCekUrl))
 				return false;
-
-			try {
-				int version = Integer.valueOf(mCekVersion);
-				if (Integer.valueOf(version) < 0)
-					return false;
-			} catch (NumberFormatException e) {
-				return false;
-			}
-
-			if (this.mEcodingFormat == null || "".equals(this.mEcodingFormat))
+			if (this.mCekVersion == null || "".equals(this.mCekVersion))
 				return false;
 			return true;
 		}
@@ -186,7 +202,7 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 
 	public abstract DRMFullURL retriveDRMFullUrl(String cekVersion, String cekUrl) throws Exception;
 
-	public abstract DRMKey retriveDRMKeyFromAppServer(DRMFullURL fullURL);
+	public abstract DRMKey retriveDRMKeyFromAppServer(String cekVersion, String cekUrl);
 
 	private void retriveDRMKeyFromKSYServer(DRMFullURL fullURL) {
 
@@ -239,6 +255,8 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 			return;
 		}
 
+		Log.i(Constants.LOG_TAG, "full url:" + fullURL.toString());
+
 		if (fullURL.mUrlType == DRMFullURL.URL_TYPE_TO_KSY_SERVER && !fullURL.validate()) {
 			if (mHandler != null) {
 				mHandler.sendFailedMessage(0, "retrive drm full is not validate", new Exception(), mResponseHandler);
@@ -255,7 +273,7 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 
 		if (fullURL.mUrlType == DRMFullURL.URL_TYPE_TO_APP_SERVER) {
 			try {
-				DRMKey key = retriveDRMKeyFromAppServer(fullURL);
+				DRMKey key = retriveDRMKeyFromAppServer(fullURL.mCekVersion, fullURL.mCekUrl);
 				if (mHandler != null) {
 					mHandler.sendSuccessMessage(key, mResponseHandler);
 				}
@@ -269,4 +287,5 @@ public abstract class IDRMRetriverRequest implements Runnable, Serializable {
 		}
 
 	}
+
 }
